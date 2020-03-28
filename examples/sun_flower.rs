@@ -1,4 +1,5 @@
 extern crate nannou;
+extern crate chrono;
 
 use nannou::color::*;
 use nannou::noise::{NoiseFn, Perlin};
@@ -6,6 +7,7 @@ use nannou::prelude::*;
 
 mod util;
 use util::interp::{Interp, Interpolate};
+use util::captured_frame_path;
 
 fn main() {
   nannou::sketch(view).run();
@@ -104,17 +106,4 @@ fn view(app: &App, frame: Frame) {
   // credit: https://github.com/nannou-org/nannou/blob/6dd78a5a7c966d46f25a4f56aeedfc3f4e54c7f5/examples/simple_capture.rs
   let file_path = captured_frame_path(app, &frame);
   app.main_window().capture_frame_threaded(file_path);
-}
-
-fn captured_frame_path(app: &App, frame: &Frame) -> std::path::PathBuf {
-  // Create a path that we want to save this frame to.
-  app
-    .project_path()
-    .expect("failed to locate `project_path`")
-    // Capture all frames to a directory called `/<path_to_nannou>/nannou/simple_capture`.
-    .join("assets")
-    // Name each file after the number of the frame.
-    .join(format!("{}_{:03}", app.exe_name().unwrap(), frame.nth()))
-    // The extension will be PNG. We also support tiff, bmp, gif, jpeg, webp and some others.
-    .with_extension("png")
 }

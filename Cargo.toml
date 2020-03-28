@@ -1,0 +1,7 @@
+[package]
+name = "generative-art-rs"
+version = "999.999.999"
+authors = ["ericyd <eric@ericyd.com>"]
+
+[dependencies]
+nannou = "0.13"

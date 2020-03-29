@@ -10,7 +10,7 @@ use util::interp::{Interp, Interpolate};
 use util::captured_frame_path;
 
 fn main() {
-  nannou::sketch(view).run();
+  nannou::sketch(view).size(1024, 768).run();
 }
 
 fn view(app: &App, frame: Frame) {

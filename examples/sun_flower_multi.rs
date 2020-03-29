@@ -1,5 +1,5 @@
-extern crate nannou;
 extern crate chrono;
+extern crate nannou;
 
 use nannou::color::*;
 use nannou::noise::{NoiseFn, Perlin};
@@ -7,9 +7,8 @@ use nannou::prelude::*;
 use nannou::window::Id;
 
 mod util;
-use util::interp::{Interp, Interpolate};
 use util::captured_frame_path;
-
+use util::interp::{Interp, Interpolate};
 
 fn main() {
   nannou::app(model).update(update).view(view).run();
@@ -22,17 +21,17 @@ struct Model {
 
 fn model(app: &App) -> Model {
   let a = app
-      .new_window()
-      .title("points based on concentric circles")
-      .event(event)
-      .build()
-      .unwrap();
+    .new_window()
+    .title("points based on concentric circles")
+    .event(event)
+    .build()
+    .unwrap();
   let b = app
-      .new_window()
-      .title("points based on rectangular grid")
-      .event(event)
-      .build()
-      .unwrap();
+    .new_window()
+    .title("points based on rectangular grid")
+    .event(event)
+    .build()
+    .unwrap();
   Model { a, b }
 }
 
@@ -45,23 +44,23 @@ fn view(app: &App, model: &Model, frame: Frame) {
     // two frames are necessary for capture_frame to work properly
     number_of_updates: 2,
   });
-    match frame.window_id() {
-        id if id == model.a => circular_start_points(id, app, frame),
-        id if id == model.b => rectangular_start_points(id, app, frame),
-        _ => (),
-    }
+  match frame.window_id() {
+    id if id == model.a => circular_start_points(id, app, frame),
+    id if id == model.b => rectangular_start_points(id, app, frame),
+    _ => (),
+  }
 }
 
 fn circular_start_points(id: Id, app: &App, frame: Frame) {
   let win = match app.window(id) {
     Some(window) => window.rect(),
-    None => return
+    None => return,
   };
 
   // Prepare to draw.
   let draw = match app.draw_for_window(id) {
     Some(draw) => draw,
-    None => return
+    None => return,
   };
 
   // TODO: remove duplicate code
@@ -85,10 +84,15 @@ fn circular_start_points(id: Id, app: &App, frame: Frame) {
     let radius_factor = i as f64 / (resolution as f64 - 1.0);
     let start_radius = Interp::lin(0.0, 800.0, radius_factor);
 
-    let points_in_circle = Interp::exp(resolution as f64 * 2.0, resolution as f64 * 4.0, radius_factor).round() as i32;
+    let points_in_circle = Interp::exp(
+      resolution as f64 * 2.0,
+      resolution as f64 * 4.0,
+      radius_factor,
+    )
+    .round() as i32;
     for j in 0..points_in_circle {
       let factor = j as f32 / points_in_circle as f32;
-  
+
       let mut current_x = start_radius * (factor as f64 * pi2 as f64).cos() + randomize_start();
       let mut current_y = start_radius * (factor as f64 * pi2 as f64).sin() + randomize_start();
 
@@ -148,18 +152,16 @@ fn circular_start_points(id: Id, app: &App, frame: Frame) {
   // app.main_window().capture_frame_threaded(file_path);
 }
 
-
-
 fn rectangular_start_points(id: Id, app: &App, frame: Frame) {
   let win = match app.window(id) {
     Some(window) => window.rect(),
-    None => return
+    None => return,
   };
 
   // Prepare to draw.
   let draw = match app.draw_for_window(id) {
     Some(draw) => draw,
-    None => return
+    None => return,
   };
 
   // TODO: remove duplicate code

@@ -1,13 +1,13 @@
-extern crate nannou;
 extern crate chrono;
+extern crate nannou;
 
 use nannou::color::*;
 use nannou::noise::{NoiseFn, Perlin};
 use nannou::prelude::*;
 
 mod util;
-use util::interp::{Interp, Interpolate};
 use util::captured_frame_path;
+use util::interp::{Interp, Interpolate};
 
 fn main() {
   nannou::sketch(view).size(1024, 768).run();
@@ -42,10 +42,15 @@ fn view(app: &App, frame: Frame) {
     let radius_factor = i as f64 / (resolution as f64 - 1.0);
     let start_radius = Interp::lin(0.0, 800.0, radius_factor);
 
-    let points_in_circle = Interp::exp(resolution as f64 * 2.0, resolution as f64 * 4.0, radius_factor).round() as i32;
+    let points_in_circle = Interp::exp(
+      resolution as f64 * 2.0,
+      resolution as f64 * 4.0,
+      radius_factor,
+    )
+    .round() as i32;
     for j in 0..points_in_circle {
       let factor = j as f32 / points_in_circle as f32;
-  
+
       // slightly randomize starting position
       let randomize_start = { || (random_f64() * 7.0) - 3.5 };
       let mut current_x = start_radius * (factor as f64 * pi2 as f64).cos() + randomize_start();

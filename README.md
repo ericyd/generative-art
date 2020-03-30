@@ -18,4 +18,4 @@ Note that the `--release` flag is technically optional, but it is _soooooooo_ mu
 
 ## Where can I see the finished products without running the code?
 
-Still figuring that out. I may end up committing them to the repo but I'd rather not.
+[Gallery](./Gallery.md)

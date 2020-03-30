@@ -1,3 +1,6 @@
+// cargo run --release --example sun_flower
+// https://www.instagram.com/p/B-V8VntJtzT/
+
 extern crate chrono;
 extern crate nannou;
 

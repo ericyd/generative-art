@@ -8,7 +8,7 @@ pub mod blob;
 pub mod circle;
 pub mod interp;
 
-pub fn captured_frame_path(app: &App, frame: &Frame) -> std::path::PathBuf {
+pub fn captured_frame_path_multi(app: &App, frame: &Frame, letter: char) -> std::path::PathBuf {
   // Create a path that we want to save this frame to.
   app
     .project_path()
@@ -17,10 +17,15 @@ pub fn captured_frame_path(app: &App, frame: &Frame) -> std::path::PathBuf {
     .join(app.exe_name().unwrap())
     // Name each file after the number of the frame.
     .join(format!(
-      "{}_{:03}",
+      "{}_{:03}{}",
       Local::now().format("%Y-%m-%dT%H-%M-%S"),
-      frame.nth()
+      frame.nth(),
+      letter
     ))
     // instagram only works with jpeg :shrug:
     .with_extension("jpeg")
+}
+
+pub fn captured_frame_path(app: &App, frame: &Frame) -> std::path::PathBuf {
+  captured_frame_path_multi(app, frame, '_')
 }

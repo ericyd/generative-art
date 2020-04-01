@@ -18,10 +18,10 @@ pub struct Blob {
   // but honestly Rust's type system is so annoying some times,
   // I'm just trying to be quick-n-dirty here
   color: [f32; 4],
-  fuzziness: f32
+  fuzziness: f32,
+  rotation: f32,
 }
 
-// TODO: add a "rotate" method/property
 impl Blob {
   pub fn new() -> Blob {
     Blob {
@@ -32,14 +32,15 @@ impl Blob {
       height: 1.0,
       seed: Interp::lin(1.0, 10.0.powi(11), random_f32()),
       color: [random_f32(), random_f32(), random_f32(), random_f32()],
-      fuzziness: 0.0
+      fuzziness: 0.0,
+      rotation: 0.,
     }
   }
 
   pub fn draw(&self, draw: &Draw) {
     let perlin = Perlin::new();
 
-    // **heavily** inspired by https://observablehq.com/@makio135/generating-svgs/10
+    // **heavily** borrowed from https://observablehq.com/@makio135/generating-svgs/10
     let points = (0..=360).map(|i| {
       let angle = deg_to_rad(i as f32);
       let cos = angle.cos();
@@ -54,12 +55,12 @@ impl Blob {
       // let y = (sin * r + self.y) * self.y_stretch;
 
       let r = 1.0 + noise * (self.noise_scale.powf(3.0));
-      let mut x = cos * r * self.width + self.x;
-      let mut y = sin * r * self.height + self.y;
-      if (self.fuzziness > 0.0) {
-        x = x + perlin.get([x as f64, y as f64, self.seed as f64]).cos() as f32 * self.fuzziness;
-        y = y + perlin.get([x as f64, y as f64, self.seed as f64]).sin() as f32 * self.fuzziness;
-      }
+      let x = cos * r * self.width + self.x;
+      let y = sin * r * self.height + self.y;
+      let (x, y) = self.rotate(x, y);
+      // add fuzziness. If fuzziness is 0, no fuzziness is applied
+      let x = x + perlin.get([x as f64, y as f64, self.seed as f64]).cos() as f32 * self.fuzziness;
+      let y = y + perlin.get([x as f64, y as f64, self.seed as f64]).sin() as f32 * self.fuzziness;
       pt2(x, y)
     });
 
@@ -123,6 +124,35 @@ impl Blob {
   pub fn fuzziness(mut self, fuzziness: f32) -> Self {
     self.fuzziness = fuzziness;
     self
+  }
+
+  pub fn rotate_rad(mut self, rotation: f32) -> Self {
+    self.rotation = rotation;
+    self
+  }
+
+  pub fn rotate_deg(mut self, rotation: f32) -> Self {
+    self.rotation = deg_to_rad(rotation);
+    self
+  }
+
+  // SO FTW https://stackoverflow.com/a/2259502
+  fn rotate(&self, x: f32, y: f32) -> (f32, f32) {
+    let sin = self.rotation.sin();
+    let cos = self.rotation.cos();
+
+    // translate point back to origin:
+    let x = x - self.x;
+    let y = y - self.y;
+
+    // rotate point
+    let xnew = x * cos - y * sin;
+    let ynew = x * sin + y * cos;
+
+    // translate point back:
+    let x = xnew + self.x;
+    let y = ynew + self.y;
+    (x, y)
   }
 }
 

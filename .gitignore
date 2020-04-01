@@ -11,3 +11,5 @@ Cargo.lock
 
 # Ignoring assets for now so I can save images at will and not accidentally commit them
 /assets/
+
+ideas.md

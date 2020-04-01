@@ -14,8 +14,11 @@ cargo run --release --example name_of_example
 
 Where `name_of_example` corresponds to the filename (minus the `.rs` extension) of the example you want to run.
 
-Note that the `--release` flag is technically optional, but it is _soooooooo_ much faster with it that you'll definitely want to use it by default.
+**Notes**
+* the `--release` flag is technically optional, but it is _soooooooo_ much faster with it that you'll definitely want to use it by default.
+* any examples prepended with "xp_" are intended as "exploratory" sketches - not intended as final output
 
 ## Where can I see the finished products without running the code?
 
 [Gallery](./Gallery.md)
+

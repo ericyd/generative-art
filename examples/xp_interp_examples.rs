@@ -63,7 +63,8 @@ fn view(app: &App, frame: Frame) {
     let x_reverse_exp = Interp::reverse_exp(-400.0, 400.0, factor);
     let x_sin4 = Interp::sin_4(-400.0, 400.0, factor);
 
-    println!("-------
+    println!(
+      "-------
 x_lin: {}
 x_exp: {}
 x_sin: {}
@@ -72,19 +73,59 @@ x_cos: {}
 x_inv: {}
 x_log: {}
 x_euler: {}
-x_reverse_exp: {}", x_lin, x_exp, x_sin, x_sin3, x_cos, x_inv, x_log, x_euler, x_reverse_exp);
+x_reverse_exp: {}",
+      x_lin, x_exp, x_sin, x_sin3, x_cos, x_inv, x_log, x_euler, x_reverse_exp
+    );
 
-    draw.line().start(pt2(-400.0, -400.0)).end(pt2(-400.0, 400.0)).weight(1.0).hsla(255.0, 1.0, 1.0, 1.0);
-    draw.line().start(pt2(400.0, -400.0)).end(pt2(400.0, 400.0)).weight(1.0).hsla(255.0, 1.0, 1.0, 1.0);
+    draw
+      .line()
+      .start(pt2(-400.0, -400.0))
+      .end(pt2(-400.0, 400.0))
+      .weight(1.0)
+      .hsla(255.0, 1.0, 1.0, 1.0);
+    draw
+      .line()
+      .start(pt2(400.0, -400.0))
+      .end(pt2(400.0, 400.0))
+      .weight(1.0)
+      .hsla(255.0, 1.0, 1.0, 1.0);
 
     let ys = [-200.0, -150.0, -100.0, -50.0, 0.0, 50.0, 100.0];
-    draw.ellipse().x_y(x_lin as f32, ys[0]).radius(5.0).hsla(100.0, 0.5, 0.5, 1.0);
-    draw.ellipse().x_y(x_exp as f32, ys[1]).radius(5.0).hsla(100.0, 0.5, 0.5, 1.0);
-    draw.ellipse().x_y(x_sin as f32, ys[2]).radius(5.0).hsla(100.0, 0.5, 0.5, 1.0);
-    draw.ellipse().x_y(x_sin3 as f32, ys[3]).radius(5.0).hsla(100.0, 0.5, 0.5, 1.0);
-    draw.ellipse().x_y(x_cos as f32, ys[4]).radius(5.0).hsla(100.0, 0.5, 0.5, 1.0);
-    draw.ellipse().x_y(x_reverse_exp as f32, ys[5]).radius(5.0).hsla(100.0, 0.5, 0.5, 1.0);
-    draw.ellipse().x_y(x_sin4 as f32, ys[6]).radius(5.0).hsla(100.0, 0.5, 0.5, 1.0);
+    draw
+      .ellipse()
+      .x_y(x_lin as f32, ys[0])
+      .radius(5.0)
+      .hsla(100.0, 0.5, 0.5, 1.0);
+    draw
+      .ellipse()
+      .x_y(x_exp as f32, ys[1])
+      .radius(5.0)
+      .hsla(100.0, 0.5, 0.5, 1.0);
+    draw
+      .ellipse()
+      .x_y(x_sin as f32, ys[2])
+      .radius(5.0)
+      .hsla(100.0, 0.5, 0.5, 1.0);
+    draw
+      .ellipse()
+      .x_y(x_sin3 as f32, ys[3])
+      .radius(5.0)
+      .hsla(100.0, 0.5, 0.5, 1.0);
+    draw
+      .ellipse()
+      .x_y(x_cos as f32, ys[4])
+      .radius(5.0)
+      .hsla(100.0, 0.5, 0.5, 1.0);
+    draw
+      .ellipse()
+      .x_y(x_reverse_exp as f32, ys[5])
+      .radius(5.0)
+      .hsla(100.0, 0.5, 0.5, 1.0);
+    draw
+      .ellipse()
+      .x_y(x_sin4 as f32, ys[6])
+      .radius(5.0)
+      .hsla(100.0, 0.5, 0.5, 1.0);
 
     // these are outside the bounds of the mix/max for interpolation,
     // or do not meet the min/max of the bounds, therefore they are not very useful to us.

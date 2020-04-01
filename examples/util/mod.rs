@@ -4,6 +4,7 @@ extern crate nannou;
 use chrono::offset::Local;
 use nannou::prelude::*;
 
+pub mod circle;
 pub mod interp;
 
 pub fn captured_frame_path(app: &App, frame: &Frame) -> std::path::PathBuf {
@@ -11,15 +12,14 @@ pub fn captured_frame_path(app: &App, frame: &Frame) -> std::path::PathBuf {
   app
     .project_path()
     .expect("failed to locate `project_path`")
-    // Capture all frames to a directory called `/<path_to_nannou>/nannou/simple_capture`.
     .join("assets")
+    .join(app.exe_name().unwrap())
     // Name each file after the number of the frame.
     .join(format!(
-      "{}_{}_{:03}",
-      app.exe_name().unwrap(),
+      "{}_{:03}",
       Local::now().format("%Y-%m-%dT%H-%M-%S"),
       frame.nth()
     ))
-    // The extension will be PNG. We also support tiff, bmp, gif, jpeg, webp and some others.
-    .with_extension("png")
+    // instagram only works with jpeg :shrug:
+    .with_extension("jpeg")
 }

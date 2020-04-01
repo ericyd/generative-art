@@ -4,6 +4,7 @@ extern crate nannou;
 use chrono::offset::Local;
 use nannou::prelude::*;
 
+pub mod blob;
 pub mod circle;
 pub mod interp;
 

@@ -36,7 +36,7 @@ impl Display for Circle {
     // into a buffer (the first argument)
     write!(
       f,
-      "Circle[x: {}, y: {}, radius: {}]",
+      "Circle<x: {}, y: {}, radius: {}>",
       self.x, self.y, self.radius
     )
   }

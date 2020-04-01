@@ -107,3 +107,14 @@ impl Interpolate<f32> for Interp {
     start + x.log10() * (end - start)
   }
 }
+
+// I thought I was sooooo cool making a struct with all my interpolators...
+// turns out most of the time you just need a good ol' lerp
+pub fn lerp(start: f32, end: f32, x: f32) -> f32 {
+  Interp::lin(start, end, x)
+}
+
+// "next float"
+pub fn nextf(start: f32, end: f32) -> f32 {
+  Interp::lin(start, end, random_f32())
+}

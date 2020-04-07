@@ -1,6 +1,4 @@
 use super::interp::{Interp, Interpolate};
-use nannou::color::*;
-use nannou::draw::properties::ColorScalar;
 use nannou::draw::Draw;
 use nannou::noise::{NoiseFn, Perlin};
 use nannou::prelude::*;
@@ -38,36 +36,42 @@ impl Blob {
   }
 
   pub fn draw(&self, draw: &Draw) {
-    let perlin = Perlin::new();
-
-    // **heavily** borrowed from https://observablehq.com/@makio135/generating-svgs/10
-    let points = (0..=360).map(|i| {
-      let angle = deg_to_rad(i as f32);
-      let cos = angle.cos();
-      let sin = angle.sin();
-      // the `* 0.5 + 0.5` factor makes the resulting blob more uniformly convex,
-      // though I'm not sure if that's desirable or not
-      let noise = perlin.get([cos as f64, sin as f64, self.seed as f64]) as f32 * 0.5 + 0.5;
-
-      // alternative using radius and "stretch" rather than explicit width and height
-      // let r = self.radius * (1.0 + noise * (self.noise_scale.powf(3.0)));
-      // let x = (cos * r + self.x) * self.x_stretch;
-      // let y = (sin * r + self.y) * self.y_stretch;
-
-      let r = 1.0 + noise * (self.noise_scale.powf(3.0));
-      let x = cos * r * self.width + self.x;
-      let y = sin * r * self.height + self.y;
-      let (x, y) = self.rotate(x, y);
-      // add fuzziness. If fuzziness is 0, no fuzziness is applied
-      let x = x + perlin.get([x as f64, y as f64, self.seed as f64]).cos() as f32 * self.fuzziness;
-      let y = y + perlin.get([x as f64, y as f64, self.seed as f64]).sin() as f32 * self.fuzziness;
-      pt2(x, y)
-    });
-
     draw
       .polygon()
       .hsla(self.color[0], self.color[1], self.color[2], self.color[3])
-      .points(points);
+      .points(self.points());
+  }
+
+  pub fn points(&self) -> Vec<Vector2> {
+    let perlin = Perlin::new();
+
+    // **heavily** borrowed from https://observablehq.com/@makio135/generating-svgs/10
+    (0..=360)
+      .map(|i| {
+        let angle = deg_to_rad(i as f32);
+        let cos = angle.cos();
+        let sin = angle.sin();
+        // the `* 0.5 + 0.5` factor makes the resulting blob more uniformly convex,
+        // though I'm not sure if that's desirable or not
+        let noise = perlin.get([cos as f64, sin as f64, self.seed as f64]) as f32 * 0.5 + 0.5;
+
+        // alternative using radius and "stretch" rather than explicit width and height
+        // let r = self.radius * (1.0 + noise * (self.noise_scale.powf(3.0)));
+        // let x = (cos * r + self.x) * self.x_stretch;
+        // let y = (sin * r + self.y) * self.y_stretch;
+
+        let r = 1.0 + noise * (self.noise_scale.powf(3.0));
+        let x = cos * r * self.width + self.x;
+        let y = sin * r * self.height + self.y;
+        let (x, y) = self.rotate(x, y);
+        // add fuzziness. If fuzziness is 0, no fuzziness is applied
+        let x =
+          x + perlin.get([x as f64, y as f64, self.seed as f64]).cos() as f32 * self.fuzziness;
+        let y =
+          y + perlin.get([x as f64, y as f64, self.seed as f64]).sin() as f32 * self.fuzziness;
+        pt2(x, y)
+      })
+      .collect()
   }
 
   pub fn x_y(mut self, x: f32, y: f32) -> Self {

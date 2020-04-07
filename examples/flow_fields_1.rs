@@ -24,10 +24,30 @@ struct Model {
 }
 
 fn model(app: &App) -> Model {
-  let a = app.new_window().size(1024, 1024).title("Window A").build().unwrap();
-  let b = app.new_window().size(1024, 1024).title("Window B").build().unwrap();
-  let c = app.new_window().size(1024, 1024).title("Window C").build().unwrap();
-  let d = app.new_window().size(1024, 1024).title("Window D").build().unwrap();
+  let a = app
+    .new_window()
+    .size(1024, 1024)
+    .title("Window A")
+    .build()
+    .unwrap();
+  let b = app
+    .new_window()
+    .size(1024, 1024)
+    .title("Window B")
+    .build()
+    .unwrap();
+  let c = app
+    .new_window()
+    .size(1024, 1024)
+    .title("Window C")
+    .build()
+    .unwrap();
+  let d = app
+    .new_window()
+    .size(1024, 1024)
+    .title("Window D")
+    .build()
+    .unwrap();
   Model { a, b, c, d }
 }
 

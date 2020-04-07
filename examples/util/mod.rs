@@ -4,8 +4,11 @@ extern crate nannou;
 use chrono::offset::Local;
 use nannou::prelude::*;
 
+#[allow(dead_code)]
 pub mod blob;
+#[allow(dead_code)]
 pub mod circle;
+#[allow(dead_code)]
 pub mod interp;
 
 pub fn captured_frame_path_multi(app: &App, frame: &Frame, letter: char) -> std::path::PathBuf {

@@ -70,8 +70,8 @@ pub fn honeycomb_circles(
 }
 
 fn honeycomb_circle(other: Circle, angle: f32, distance: f32) -> Circle {
-  let x = angle.cos() * distance + other.x;
-  let y = angle.sin() * distance + other.y;
+  let x = angle.cos() * (other.radius * 2. + distance) + other.x;
+  let y = angle.sin() * (other.radius * 2. + distance) + other.y;
   let radius = other.radius;
   Circle::new(x, y, radius)
 }

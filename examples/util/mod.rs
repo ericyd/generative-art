@@ -9,8 +9,11 @@ pub mod blob;
 #[allow(dead_code)]
 pub mod circle;
 #[allow(dead_code)]
+pub mod hexagon;
+#[allow(dead_code)]
 pub mod interp;
 
+#[allow(dead_code)]
 pub fn captured_frame_path_multi(app: &App, frame: &Frame, letter: char) -> std::path::PathBuf {
   // Create a path that we want to save this frame to.
   app
@@ -29,6 +32,7 @@ pub fn captured_frame_path_multi(app: &App, frame: &Frame, letter: char) -> std:
     .with_extension("jpeg")
 }
 
+#[allow(dead_code)]
 pub fn captured_frame_path(app: &App, frame: &Frame) -> std::path::PathBuf {
   captured_frame_path_multi(app, frame, '_')
 }

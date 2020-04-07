@@ -23,7 +23,7 @@ use std::env;
 
 mod util;
 use util::captured_frame_path;
-use util::interp::{lerp};
+use util::interp::lerp;
 
 type Oscillator = fn(f32) -> f32;
 

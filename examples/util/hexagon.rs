@@ -1,5 +1,5 @@
-use nannou::prelude::*;
 use nannou::geom::point::Point2;
+use nannou::prelude::*;
 use std::fmt::{self, Display, Formatter};
 
 #[derive(Debug, Copy, Clone)]

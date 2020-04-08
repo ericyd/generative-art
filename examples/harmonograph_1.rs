@@ -174,7 +174,7 @@ fn view(app: &App, model: &Model, frame: Frame) {
   let win = app.window_rect();
   app.set_loop_mode(LoopMode::NTimes {
     // two frames are necessary for capture_frame to work properly
-    number_of_updates: 1,
+    number_of_updates: 2,
   });
 
   // Prepare to draw.

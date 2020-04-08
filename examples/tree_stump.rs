@@ -84,9 +84,10 @@ fn view(app: &App, model: &Model, frame: Frame) {
   let draw = app.draw();
 
   // Set background
-  let bg = hsl(7. / 255., 0.68, 0.15); // burnt umber
-  let bg = hsl(208. / 360., 0.34, 0.51); // nice blue
-  let bg = hsl(280. / 255., 0.64, 0.53); // nice yellow
+  let _bg = hsl(7. / 255., 0.68, 0.15); // burnt umber
+  let _bg = hsl(208. / 360., 0.34, 0.51); // nice blue
+  let _bg = hsl(280. / 255., 0.64, 0.53); // nice yellow
+  let bg = hsl(93. / 360., 0.22, 0.49); // nice green
   draw.background().color(bg);
 
   let noise_scale = 0.8;

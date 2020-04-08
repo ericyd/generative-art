@@ -1,4 +1,4 @@
-// cargo run --release --example tree_stump
+// https://www.instagram.com/p/B-u7RBwnQN-/
 extern crate chrono;
 extern crate nannou;
 

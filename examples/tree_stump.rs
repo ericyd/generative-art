@@ -4,13 +4,12 @@ extern crate nannou;
 
 use nannou::color::*;
 use nannou::prelude::*;
-use std::collections::HashMap;
-use std::env;
 
 mod util;
 use util::blob::Blob;
 use util::captured_frame_path;
 use util::interp::lerp;
+use util::args::ArgParser;
 
 fn main() {
   nannou::app(model).view(view).size(1024, 1024).run();
@@ -25,42 +24,11 @@ struct Model {
 }
 
 fn model(app: &App) -> Model {
-  // simple argument collector
-  let args: Vec<String> = env::args().collect();
-  let arg_map = args
-    .iter()
-    .enumerate()
-    .fold(HashMap::new(), |mut map, (i, arg)| match arg.get(0..2) {
-      Some(slice) if Some(slice) == Some("--") => {
-        if i >= env::args().len() - 1 {
-          map
-        } else {
-          map.insert(arg.get(2..).unwrap(), args[i + 1].clone());
-          map
-        }
-      }
-      _ => map,
-    });
-
-  let x_origin = match arg_map.get("x-origin") {
-    Some(num) => num.parse::<f32>().unwrap(),
-    None => -400.,
-  };
-
-  let y_origin = match arg_map.get("y-origin") {
-    Some(num) => num.parse::<f32>().unwrap(),
-    None => -340.,
-  };
-
-  let radius = match arg_map.get("radius") {
-    Some(num) => num.parse::<i32>().unwrap(),
-    None => 1300,
-  };
-
-  let seed = match arg_map.get("seed") {
-    Some(num) => num.parse::<f32>().unwrap(),
-    None => 35.,
-  };
+  let args = ArgParser::new();
+  let x_origin = args.get_f32("x-origin", -400.);
+  let y_origin = args.get_f32("y-origin", -340.);
+  let radius = args.get_i32("radius", 1300);
+  let seed = args.get_f32("seed", 35.);
 
   let _a = app.new_window().title("window a").build().unwrap();
 

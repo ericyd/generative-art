@@ -19,11 +19,11 @@ extern crate nannou;
 use nannou::color::*;
 use nannou::prelude::*;
 use std::collections::HashMap;
-use std::env;
 
 mod util;
 use util::captured_frame_path;
 use util::interp::lerp;
+use util::args::ArgParser;
 
 type Oscillator = fn(f32) -> f32;
 
@@ -65,90 +65,21 @@ struct Model {
 }
 
 fn model(app: &App) -> Model {
-  // simple argument collector
-  let args: Vec<String> = env::args().collect();
-  let arg_map = args
-    .iter()
-    .enumerate()
-    .fold(HashMap::new(), |mut map, (i, arg)| match arg.get(0..2) {
-      Some(slice) if Some(slice) == Some("--") => {
-        if i >= env::args().len() - 1 {
-          map
-        } else {
-          map.insert(arg.get(2..).unwrap(), args[i + 1].clone());
-          map
-        }
-      }
-      _ => map,
-    });
-
+  let args = ArgParser::new();
   // set default values for drawing, using args if available
-  let radius = match arg_map.get("radius") {
-    Some(num) => num.parse::<f32>().unwrap(),
-    None => 300.,
-  };
-
-  let line_weight = match arg_map.get("line-weight") {
-    Some(num) => num.parse::<f32>().unwrap(),
-    None => 1.,
-  };
-
-  let line_length = match arg_map.get("line-length") {
-    Some(num) => num.parse::<i32>().unwrap(),
-    None => 100,
-  };
-
-  let x_mod_depth = match arg_map.get("x-mod-depth") {
-    Some(num) => num.parse::<f32>().unwrap(),
-    None => 2.002,
-  };
-
-  let y_mod_depth = match arg_map.get("y-mod-depth") {
-    Some(num) => num.parse::<f32>().unwrap(),
-    None => 2.002,
-  };
-
-  let x_origin = match arg_map.get("x-origin") {
-    Some(num) => num.parse::<f32>().unwrap(),
-    None => 0.,
-  };
-
-  let y_origin = match arg_map.get("y-origin") {
-    Some(num) => num.parse::<f32>().unwrap(),
-    None => 0.,
-  };
-
-  let resolution = match arg_map.get("resolution") {
-    Some(num) => num.parse::<f32>().unwrap(),
-    None => 1.,
-  };
-
-  let solid = match arg_map.get("solid") {
-    Some(thing) => thing.parse::<bool>().unwrap(),
-    None => true,
-  };
-
-  let x_oscillator = match arg_map.get("x-oscillator") {
-    Some(thing) => thing,
-    None => "sin",
-  }
-  .to_string();
-
-  let y_oscillator = match arg_map.get("y-oscillator") {
-    Some(thing) => thing,
-    None => "collapse",
-  }
-  .to_string();
-
-  let color_start = match arg_map.get("color-start") {
-    Some(num) => num.parse::<f32>().unwrap(),
-    None => 0.0,
-  };
-
-  let color_end = match arg_map.get("color-end") {
-    Some(num) => num.parse::<f32>().unwrap(),
-    None => 1.0,
-  };
+  let radius = args.get_f32("radius", 300.);
+  let line_weight = args.get_f32("line-weight", 1.);
+  let line_length = args.get_i32("line-length", 100);
+  let x_mod_depth = args.get_f32("x-mod-depth", 2.002);
+  let y_mod_depth = args.get_f32("y-mod-depth", 2.002);
+  let x_origin = args.get_f32("x-origin", 0.);
+  let y_origin = args.get_f32("y-origin", 0.);
+  let resolution = args.get_f32("resolution", 1.);
+  let solid = args.get_bool("solid", true);
+  let x_oscillator = args.get_string("x-oscillator", "sin");
+  let y_oscillator = args.get_string("y-oscillator", "collapse");
+  let color_start = args.get_f32("color-start", 0.);
+  let color_end = args.get_f32("color-end", 1.);
 
   let _a = app.new_window().title("window a").build().unwrap();
   Model {

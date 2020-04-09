@@ -1,19 +1,17 @@
+// Something about using a module in examples - it works better to ignore dead code warnings
+#![allow(dead_code)]
 extern crate chrono;
 extern crate nannou;
 
 use chrono::offset::Local;
 use nannou::prelude::*;
 
-#[allow(dead_code)]
+pub mod args;
 pub mod blob;
-#[allow(dead_code)]
 pub mod circle;
-#[allow(dead_code)]
 pub mod hexagon;
-#[allow(dead_code)]
 pub mod interp;
 
-#[allow(dead_code)]
 pub fn captured_frame_path_multi(app: &App, frame: &Frame, letter: char) -> std::path::PathBuf {
   // Create a path that we want to save this frame to.
   app
@@ -32,7 +30,6 @@ pub fn captured_frame_path_multi(app: &App, frame: &Frame, letter: char) -> std:
     .with_extension("jpeg")
 }
 
-#[allow(dead_code)]
 pub fn captured_frame_path(app: &App, frame: &Frame) -> std::path::PathBuf {
   captured_frame_path_multi(app, frame, '_')
 }

@@ -16,10 +16,9 @@ extern crate nannou;
 use nannou::color::*;
 use nannou::noise::{NoiseFn, Perlin};
 use nannou::prelude::*;
-use std::collections::HashMap;
-use std::env;
 
 mod util;
+use util::args::ArgParser;
 use util::captured_frame_path;
 use util::interp::lerp;
 
@@ -39,44 +38,13 @@ struct Model {
 }
 
 fn model(app: &App) -> Model {
-  // simple argument collector
-  let args: Vec<String> = env::args().collect();
-  let arg_map = args
-    .iter()
-    .enumerate()
-    .fold(HashMap::new(), |mut map, (i, arg)| match arg.get(0..2) {
-      Some(slice) if Some(slice) == Some("--") => {
-        if i >= env::args().len() - 1 {
-          map
-        } else {
-          map.insert(arg.get(2..).unwrap(), args[i + 1].clone());
-          map
-        }
-      }
-      _ => map,
-    });
-
-  let seed = match arg_map.get("seed") {
-    Some(num) => num.parse::<f32>().unwrap(),
-    None => random_f32() * 100.,
-  };
-
-  let noise_scale = match arg_map.get("noise") {
-    Some(num) => num.parse::<f32>().unwrap(),
-    None => 300.,
-  };
-
+  let args = ArgParser::new();
+  let seed = args.get_f32("seed", random_f32() * 100.);
+  let noise_scale = args.get_f32("noise", 300.);
   // number of vertices in each polyline
-  let num_steps = match arg_map.get("steps") {
-    Some(num) => num.parse::<i32>().unwrap(),
-    None => 500,
-  };
-
+  let num_steps = args.get_i32("steps", 500);
   // distance between each vertex in polyline
-  let default_length = match arg_map.get("length") {
-    Some(num) => num.parse::<f32>().unwrap(),
-    None => 2.,
-  };
+  let default_length = args.get_f32("length", 2.);
 
   let _a = app.new_window().title("window a").build().unwrap();
 

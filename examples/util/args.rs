@@ -53,6 +53,13 @@ impl ArgParser {
     }
   }
 
+  pub fn get_usize(&self, key: &str, default: usize) -> usize {
+    match self.map.get(key) {
+      Some(num) => num.parse::<usize>().unwrap(),
+      None => default,
+    }
+  }
+
   pub fn get_bool(&self, key: &str, default: bool) -> bool {
     match self.map.get(&String::from(key)) {
       Some(num) => num.parse::<bool>().unwrap(),

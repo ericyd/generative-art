@@ -9,6 +9,7 @@ use nannou::prelude::*;
 pub mod args;
 pub mod blob;
 pub mod circle;
+pub mod color;
 pub mod hexagon;
 pub mod interp;
 

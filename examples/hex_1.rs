@@ -9,12 +9,12 @@ use nannou::prelude::*;
 mod util;
 use util::args::ArgParser;
 use util::captured_frame_path;
+use util::color::*;
 use util::hexagon::*;
 use util::interp::{lerp, nextf};
 
 const WIDTH: u32 = 1024;
 const HEIGHT: u32 = 1024;
-const PALETTE_1: [&str; 5] = ["#69D2E7", "#A7DBD8", "#E0E4CC", "#F38630", "#FA6900"];
 
 fn main() {
   nannou::app(model).run();
@@ -51,29 +51,6 @@ fn model(app: &App) -> Model {
   }
 }
 
-// convenience method to select a random element from an array
-fn select_random<T: Copy>(vec: &Vec<T>) -> T {
-  vec[(random_f32() * vec.len() as f32).floor() as usize]
-}
-
-// Could consider accepting and returning a Result,
-// but it feels like overkill for this use case
-fn hex_to_f32(hex: &str) -> f32 {
-  i32::from_str_radix(hex, 16).unwrap() as f32
-}
-
-fn palette_to_hsl(palette: Vec<&str>) -> Vec<Hsl> {
-  palette
-    .iter()
-    .map(|palette| {
-      let r = hex_to_f32(palette.get(1..3).unwrap()) / 255.;
-      let g = hex_to_f32(palette.get(3..5).unwrap()) / 255.;
-      let b = hex_to_f32(palette.get(5..7).unwrap()) / 255.;
-      Hsl::from(rgb(r, g, b))
-    })
-    .collect()
-}
-
 fn view(app: &App, model: &Model, frame: Frame) {
   // two frames are necessary for capture_frame to work properly
   app.set_loop_mode(LoopMode::loop_ntimes(3));
@@ -81,9 +58,7 @@ fn view(app: &App, model: &Model, frame: Frame) {
   let win = app.window_rect();
   let perlin = Perlin::new();
 
-  let rgbs = palette_to_hsl(PALETTE_1.to_vec());
-
-  let random_palette_1 = || select_random(&rgbs);
+  let palette = get_palette("red orange blue");
 
   let draw = app.draw();
   draw.background().color(hsl(47. / 360., 1., 0.94));
@@ -136,7 +111,7 @@ fn view(app: &App, model: &Model, frame: Frame) {
       // let lighter = Hsla::new(bg.0, bg.1, bg.2 * 1.15, 1.0);
       draw
         .polygon()
-        .stroke(random_palette_1())
+        .stroke(random_color(palette))
         .stroke_weight(model.stroke_weight)
         .points(hex.points())
         .hsla(0., 0., 0., 0.);

@@ -7,10 +7,10 @@ use nannou::noise::{NoiseFn, Perlin};
 use nannou::prelude::*;
 
 mod util;
+use util::args::ArgParser;
 use util::blob::Blob;
 use util::captured_frame_path;
 use util::interp::{lerp, Interp, Interpolate};
-use util::args::ArgParser;
 
 fn main() {
   nannou::app(model).view(view).size(1024, 1024).run();

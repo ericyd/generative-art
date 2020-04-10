@@ -21,9 +21,9 @@ use nannou::prelude::*;
 use std::collections::HashMap;
 
 mod util;
+use util::args::ArgParser;
 use util::captured_frame_path;
 use util::interp::lerp;
-use util::args::ArgParser;
 
 type Oscillator = fn(f32) -> f32;
 

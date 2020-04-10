@@ -13,3 +13,6 @@ Cargo.lock
 /assets/
 
 ideas.md
+
+# for those things I don't want clogging up my `git status` but aren't ready to be merged :D
+/wip/

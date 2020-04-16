@@ -33,21 +33,21 @@ impl ArgParser {
   }
 
   pub fn get_f32(&self, key: &str, default: f32) -> f32 {
-    match self.map.get(&String::from(key)) {
+    match self.map.get(key) {
       Some(num) => num.parse::<f32>().unwrap(),
       None => default,
     }
   }
 
   pub fn get_f64(&self, key: &str, default: f64) -> f64 {
-    match self.map.get(&String::from(key)) {
+    match self.map.get(key) {
       Some(num) => num.parse::<f64>().unwrap(),
       None => default,
     }
   }
 
   pub fn get_i32(&self, key: &str, default: i32) -> i32 {
-    match self.map.get(&String::from(key)) {
+    match self.map.get(key) {
       Some(num) => num.parse::<i32>().unwrap(),
       None => default,
     }
@@ -60,15 +60,22 @@ impl ArgParser {
     }
   }
 
+  pub fn get_u64(&self, key: &str, default: u64) -> u64 {
+    match self.map.get(key) {
+      Some(num) => num.parse::<u64>().unwrap(),
+      None => default,
+    }
+  }
+
   pub fn get_bool(&self, key: &str, default: bool) -> bool {
-    match self.map.get(&String::from(key)) {
+    match self.map.get(key) {
       Some(num) => num.parse::<bool>().unwrap(),
       None => default,
     }
   }
 
   pub fn get_string(&self, key: &str, default: &str) -> String {
-    match self.map.get(&String::from(key)) {
+    match self.map.get(key) {
       Some(thing) => thing.to_string(),
       None => default.to_string(),
     }

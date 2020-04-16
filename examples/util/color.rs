@@ -3,7 +3,7 @@ use nannou::prelude::*;
 // this is such a nice place to get simple color palettes
 // https://observablehq.com/@makio135/give-me-colors
 
-type Palette5<'a> = [&'a str; 5];
+pub type Palette5<'a> = [&'a str; 5];
 
 pub const PALETTES: [(&str, Palette5); 38] = [
   (

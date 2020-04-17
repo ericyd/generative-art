@@ -1,6 +1,7 @@
 // AGAINST ALL ODDS, THIS WORKS.....
 use std::collections::HashMap;
 use std::fmt::{self, Display, Formatter};
+use std::str::FromStr;
 
 #[derive(Debug)]
 pub struct ArgParser {
@@ -30,6 +31,19 @@ impl ArgParser {
       });
 
     ArgParser { map }
+  }
+
+  // Ok, obviously use this instead of the type-specific methods below.
+  // I didn't realize generics could be used this way, this is obviously better.
+  // The other methods are still around for earlier examples that are using them
+  pub fn get<T: FromStr>(&self, key: &str, default: T) -> T {
+    match self.map.get(key) {
+      Some(thing) => match thing.parse::<T>() {
+        Ok(val) => val,
+        Err(_err) => default,
+      },
+      None => default,
+    }
   }
 
   pub fn get_f32(&self, key: &str, default: f32) -> f32 {

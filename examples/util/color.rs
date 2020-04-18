@@ -5,7 +5,7 @@ use nannou::prelude::*;
 
 pub type Palette5<'a> = [&'a str; 5];
 
-pub const PALETTES: [(&str, Palette5); 39] = [
+pub const PALETTES: [(&str, Palette5); 40] = [
   (
     "pink green yellow",
     ["#f9b4ab", "#fdebd3", "#264e70", "#679186", "#bbd4ce"],
@@ -162,6 +162,10 @@ pub const PALETTES: [(&str, Palette5); 39] = [
   (
     "pastel1",
     ["#7bdff2", "#b2f7ef", "#eff7f6", "#f7d6e0", "#f2b5d4"],
+  ),
+  (
+    "colorleap1",
+    ["#F7A38A", "#F48A5B", "#5A8693", "#DEAE62", "#524A47"],
   ),
 ];
 

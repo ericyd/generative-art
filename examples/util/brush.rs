@@ -59,8 +59,6 @@ impl Brush {
     let n_lines = (self.width * 10.) as i32;
     for n in 0..n_lines {
       let factor = n as f32 / n_lines as f32;
-      // possible to "spread" into this method?, e.g.
-      // let color = hsla(&self.hsla[..]);
       let lum = if random_f32() < 0.05 {
         self.hsla[2] * 0.5
       } else if random_f32() < 0.5 {
@@ -70,6 +68,8 @@ impl Brush {
       };
       let alpha = nextf(0.7, self.hsla[3]);
       let spread = lerp(-self.width, self.width, factor);
+
+      // spread the incoming points based on the factor
       let new_points: Vec<Point2> = points
         .iter()
         .enumerate()
@@ -85,13 +85,23 @@ impl Brush {
         .flatten()
         .collect();
 
-      // instead of "staggering" the start and end, we simply chop the path since it's already a multi-point path
-      let middle_weight = 1. - (0.5 - factor).abs();
+      // instead of "staggering" the start and end, we simply chop the path since it's already a multi-point path.
+      // "edge_weight" applies the shortening more to the edges than the middle
+      let edge_weight = (0.5 - factor).abs() * 2.;
+
+      // ok, but I think the method below works better
+      // let chop_from_start =
+      //   (random_range(0., new_points.len() as f32 / 10.) * edge_weight).floor() as usize;
+      // let chop_from_end =
+      //   (random_range(0., new_points.len() as f32 / 2.) * edge_weight).floor() as usize;
+
       let chop_from_start =
-        (random_range(0., points.len() as f32 / 20.) * middle_weight).floor() as usize;
-      let chop_from_end =
-        (random_range(0., points.len() as f32 / 2.) * middle_weight).floor() as usize;
-      let new_points = new_points[chop_from_start..(new_points.len() - chop_from_end)].to_vec();
+        (random_range(edge_weight * 2., new_points.len() as f32 / 10.)).floor() as usize;
+      let chop_from_end = (random_range(edge_weight * 3., new_points.len() as f32 / 2.)
+        * edge_weight)
+        .floor() as usize;
+
+      let new_points = new_points[chop_from_start..(new_points.len() - 1 - chop_from_end)].to_vec();
 
       draw
         .polyline()
@@ -101,7 +111,8 @@ impl Brush {
     }
   }
 
-  // give the stroke a subtle arg by giving it half a sin curve
+  // give the stroke a subtle arg by giving it half a sin curve.
+  // Turns out this isn't super easy!
   fn slight_curve(&self, start: Point2, end: Point2, draw: &Draw) {
     let lum = if random_f32() < 0.05 {
       self.hsla[2] * 0.5

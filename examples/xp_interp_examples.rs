@@ -25,6 +25,7 @@
 // which, in some ways sounds expected since radius gets very small.
 // perhaps... needs to scale differently based on position ?
 
+extern crate chrono;
 extern crate nannou;
 
 use nannou::prelude::*;

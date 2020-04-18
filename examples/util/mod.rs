@@ -8,6 +8,7 @@ use nannou::prelude::*;
 
 pub mod args;
 pub mod blob;
+pub mod brush;
 pub mod circle;
 pub mod color;
 pub mod hexagon;

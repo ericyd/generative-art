@@ -144,13 +144,13 @@ fn view(app: &App, model: &Model, frame: Frame) {
 
   // Harmonograph 1
   let harmonograph_1 = Harmonograph::new()
-    .x_pendulums(vec![Pendulum::new(332.2, 48.06, 2.22, 0.03)])
+    .x_pendulums(vec![Pendulum::new(532.2, 48.06, 2.22, 0.03)])
     .y_pendulums(vec![
-      Pendulum::new(324.2, 48.06, 0.85, 0.03),
-      Pendulum::new(252.4, 8.07, 0.85, 0.03),
+      Pendulum::new(524.2, 48.06, 0.85, 0.03),
+      Pendulum::new(452.4, 8.07, 0.85, 0.03),
     ])
-    .resolution(1600.)
-    .length(8. * PI)
+    .resolution(2200.)
+    .length(26. * PI)
     .start(PI * 2.);
 
   let points = harmonograph_1.points();
@@ -160,14 +160,14 @@ fn view(app: &App, model: &Model, frame: Frame) {
     let factor = i as f32 / n_points as f32;
     let hue = lerp(model.color_start, model.color_end, factor);
     let lum = lerp(0.5, 0.7, factor);
-    (pt.clone(), hsla(hue, 0.5, lum, 0.7))
+    (pt.clone(), hsla(hue, 0.5, lum, 0.25))
   });
 
   colored_points.for_each(|(pt, color)| {
     draw
       .ellipse()
       .x_y(pt.x, pt.y)
-      .w_h(0.5, 0.5)
+      .w_h(0.15, 0.15)
       .color(color)
       .radius(model.line_weight);
   });
@@ -198,11 +198,11 @@ fn view(app: &App, model: &Model, frame: Frame) {
   });
 
   // do not filter points that are offscreen because it can cause unexpected line artifacts
-  draw
-    .polyline()
-    .start_cap_round()
-    .weight(model.line_weight)
-    .colored_points(colored_points);
+  // draw
+  //   .polyline()
+  //   .start_cap_round()
+  //   .weight(model.line_weight)
+  //   .colored_points(colored_points);
 
   // Harmonograph 3
   let harmonograph_3 = Harmonograph::new()
@@ -230,11 +230,11 @@ fn view(app: &App, model: &Model, frame: Frame) {
   });
 
   // do not filter points that are offscreen because it can cause unexpected line artifacts
-  draw
-    .polyline()
-    .start_cap_round()
-    .weight(model.line_weight)
-    .colored_points(colored_points);
+  // draw
+  //   .polyline()
+  //   .start_cap_round()
+  //   .weight(model.line_weight)
+  //   .colored_points(colored_points);
 
   // Write to the window frame.
   draw.to_frame(app, &frame).unwrap();

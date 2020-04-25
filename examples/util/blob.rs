@@ -4,6 +4,8 @@ use nannou::noise::{NoiseFn, Perlin};
 use nannou::prelude::*;
 use std::fmt::{self, Display, Formatter};
 
+pub type Line2 = Vec<Point2>;
+
 #[derive(Debug)]
 pub struct Blob {
   x: f32,
@@ -18,6 +20,7 @@ pub struct Blob {
   color: [f32; 4],
   fuzziness: f32,
   rotation: f32,
+  resolution: i32,
 }
 
 impl Blob {
@@ -32,6 +35,7 @@ impl Blob {
       color: [random_f32(), random_f32(), random_f32(), random_f32()],
       fuzziness: 0.0,
       rotation: 0.,
+      resolution: 360,
     }
   }
 
@@ -42,11 +46,11 @@ impl Blob {
       .points(self.points());
   }
 
-  pub fn points(&self) -> Vec<Vector2> {
+  pub fn points(&self) -> Line2 {
     let perlin = Perlin::new();
 
     // **heavily** borrowed from https://observablehq.com/@makio135/generating-svgs/10
-    (0..=360)
+    (0..=self.resolution)
       .map(|i| {
         let angle = deg_to_rad(i as f32);
         let cos = angle.cos();
@@ -140,6 +144,11 @@ impl Blob {
     self
   }
 
+  pub fn resolution(mut self, resolution: i32) -> Self {
+    self.resolution = resolution;
+    self
+  }
+
   // SO FTW https://stackoverflow.com/a/2259502
   fn rotate(&self, x: f32, y: f32) -> (f32, f32) {
     let sin = self.rotation.sin();
@@ -164,4 +173,31 @@ impl Display for Blob {
   fn fmt(&self, f: &mut Formatter) -> fmt::Result {
     write!(f, "Blob<>")
   }
+}
+
+pub fn meander(old_line: &Line2, depth: i32, divergence: f32) -> Line2 {
+  let mut line = old_line.clone();
+  for _recursion in 0..depth {
+    let temp_line = line.clone();
+    let iter_max = temp_line.len() - 1;
+
+    for i in 0..iter_max {
+      let one = temp_line[i];
+      let two = temp_line[i + 1];
+      let x_mid = (two.x + one.x) / 2.0;
+      let y_mid = (two.y + one.y) / 2.0;
+      let distance = one.distance(two);
+      let orientation = ((two.y - one.y) / (two.x - one.x)).atan();
+      let perpendicular = orientation + PI / 2.;
+      let offset = random_range(distance * -divergence, distance * divergence);
+
+      let new = pt2(
+        x_mid + perpendicular.cos() * offset,
+        y_mid + perpendicular.sin() * offset, // may be interesting to have random offset on both x and y?
+      );
+      line.insert(i * 2 + 1, new);
+    }
+  }
+
+  line
 }

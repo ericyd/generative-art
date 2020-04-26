@@ -4,7 +4,7 @@ use nannou::noise::{NoiseFn, Perlin};
 use nannou::prelude::*;
 use std::fmt::{self, Display, Formatter};
 
-pub type Line2 = Vec<Point2>;
+pub use super::Line2;
 
 #[derive(Debug)]
 pub struct Blob {

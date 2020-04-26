@@ -22,10 +22,22 @@ impl Circle {
     }
   }
 
-  fn has_intersection(&self, other: Circle) -> bool {
+  pub fn has_intersection(&self, other: Circle) -> bool {
+    self.has_padded_intersection(other, 0.0)
+  }
+
+  pub fn has_padded_intersection(&self, other: Circle, padding: f32) -> bool {
     let vec1 = Vector2::new(self.x, self.y);
     let vec2 = Vector2::new(other.x, other.y);
-    vec1.distance(vec2) < self.radius + other.radius
+    vec1.distance(vec2) < self.radius + other.radius + padding
+  }
+
+  pub fn contains(&self, point: Point2) -> bool {
+    self.contains_padded(point, 0.0)
+  }
+
+  pub fn contains_padded(&self, point: Point2, padding: f32) -> bool {
+    pt2(self.x, self.y).distance(point) < self.radius + padding
   }
 }
 

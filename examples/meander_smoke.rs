@@ -17,8 +17,8 @@ use nannou::prelude::*;
 mod util;
 use util::args::ArgParser;
 use util::blob::*;
-use util::captured_frame_path;
 use util::interp::*;
+use util::{captured_frame_path, smooth};
 
 type Line2 = Vec<Point2>;
 
@@ -82,7 +82,7 @@ fn view(app: &App, model: &Model, frame: Frame) {
   draw_bg(&draw, &app.window_rect());
 
   let base_line = generate_primary_line(model);
-  let blobs = apply_blobs_to_line(smooth(base_line), model);
+  let blobs = apply_blobs_to_line(smooth(&base_line), model);
   let river_lines = map_blobs_to_lines(blobs, model);
 
   draw_river(river_lines, &draw);
@@ -169,28 +169,4 @@ fn draw_river(river_lines: Vec<Line2>, draw: &Draw) {
       .weight(weight)
       .points(line.clone());
   }
-  // draw.polyline()
-  //   .color(hsla(0.0, 0.0, 1.0, 1.0))
-  //   // .weight(centerness * 4.)
-  //   .weight(4.0)
-  //   .points(river_lines[0].clone());
-}
-
-// TODO: investigate other smoothing algorithms
-fn smooth(line: Line2) -> Line2 {
-  let length = line.len();
-  line
-    .clone()
-    .iter()
-    .enumerate()
-    .map(|(i, pt)| {
-      // TODO: better edge handling
-      if i > length - 4 || i < 4 {
-        return pt.clone();
-      }
-      let x = &line[(i - 4)..(i + 3)].iter().map(|p| p.x).sum::<f32>() / 8.;
-      let y = &line[(i - 4)..(i + 3)].iter().map(|p| p.y).sum::<f32>() / 8.;
-      pt2(x, y)
-    })
-    .collect()
 }

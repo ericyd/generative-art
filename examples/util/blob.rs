@@ -52,7 +52,8 @@ impl Blob {
     // **heavily** borrowed from https://observablehq.com/@makio135/generating-svgs/10
     (0..=self.resolution)
       .map(|i| {
-        let angle = deg_to_rad(i as f32);
+        // cannot use `deg_to_rad` default because we may go above or below 360
+        let angle = i as f32 / self.resolution as f32 * 2.0 * PI;
         let cos = angle.cos();
         let sin = angle.sin();
         // the `* 0.5 + 0.5` factor makes the resulting blob more uniformly convex,

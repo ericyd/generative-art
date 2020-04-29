@@ -71,6 +71,45 @@ pub fn smooth_by(smoothness: usize, line: &Line2) -> Line2 {
     .collect()
 }
 
-// TODO: would be cool to make an "oversample_smooth_by" function
-// that oversamples a line and then smooths it.
-// Or, find an easier way to interpolate splines over sparse lines :D
+// creates a new line with length equal to
+//   old_line.len() * 2.powi(depth)
+// and shape/curve that is equivalent to the old line
+pub fn oversample(old_line: &Line2, depth: i32) -> Line2 {
+  meander(old_line, depth, 0.0)
+}
+
+// Finite subdivision algorithm to generate fractal line from a starting line.
+// The resulting line with have length equal to
+//   old_line.len() * 2.powi(depth)
+// divergence relates to the distance from the midpoint that the subdivided point will be offset.
+pub fn meander(old_line: &Line2, depth: i32, divergence: f32) -> Line2 {
+  let mut line = old_line.clone();
+  for _recursion in 0..depth {
+    let temp_line = line.clone();
+    let iter_max = temp_line.len() - 1;
+
+    for i in 0..iter_max {
+      let one = temp_line[i];
+      let two = temp_line[i + 1];
+      let x_mid = (two.x + one.x) / 2.0;
+      let y_mid = (two.y + one.y) / 2.0;
+      let distance = one.distance(two);
+      let orientation = ((two.y - one.y) / (two.x - one.x)).atan();
+      let perpendicular = orientation + PI / 2.;
+      // must use a conditional here because random_range doesn't like it when start == end
+      let offset = if divergence == 0.0 {
+        0.0
+      } else {
+        random_range(distance * -divergence, distance * divergence)
+      };
+
+      let new = pt2(
+        x_mid + perpendicular.cos() * offset,
+        y_mid + perpendicular.sin() * offset, // may be interesting to have random offset on both x and y?
+      );
+      line.insert(i * 2 + 1, new);
+    }
+  }
+
+  line
+}

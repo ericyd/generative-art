@@ -4,6 +4,7 @@ use nannou::noise::{NoiseFn, Perlin};
 use nannou::prelude::*;
 use std::fmt::{self, Display, Formatter};
 
+pub use super::meander;
 pub use super::Line2;
 
 #[derive(Debug)]
@@ -174,31 +175,4 @@ impl Display for Blob {
   fn fmt(&self, f: &mut Formatter) -> fmt::Result {
     write!(f, "Blob<>")
   }
-}
-
-pub fn meander(old_line: &Line2, depth: i32, divergence: f32) -> Line2 {
-  let mut line = old_line.clone();
-  for _recursion in 0..depth {
-    let temp_line = line.clone();
-    let iter_max = temp_line.len() - 1;
-
-    for i in 0..iter_max {
-      let one = temp_line[i];
-      let two = temp_line[i + 1];
-      let x_mid = (two.x + one.x) / 2.0;
-      let y_mid = (two.y + one.y) / 2.0;
-      let distance = one.distance(two);
-      let orientation = ((two.y - one.y) / (two.x - one.x)).atan();
-      let perpendicular = orientation + PI / 2.;
-      let offset = random_range(distance * -divergence, distance * divergence);
-
-      let new = pt2(
-        x_mid + perpendicular.cos() * offset,
-        y_mid + perpendicular.sin() * offset, // may be interesting to have random offset on both x and y?
-      );
-      line.insert(i * 2 + 1, new);
-    }
-  }
-
-  line
 }

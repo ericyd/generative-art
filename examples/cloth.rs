@@ -18,6 +18,7 @@ extern crate nannou;
 use nannou::color::*;
 use nannou::draw::Draw;
 use nannou::math::Matrix4;
+use nannou::noise::{NoiseFn, Perlin};
 use nannou::prelude::*;
 
 mod util;
@@ -39,6 +40,10 @@ struct Model {
   n_lines: i32,
   // resolution of the lines
   n_steps: i32,
+  // noise seed
+  seed: f64,
+  // controls "frequency" of noise "waves"
+  noise_scale: f64,
 }
 
 fn model(app: &App) -> Model {
@@ -61,6 +66,8 @@ fn model(app: &App) -> Model {
     left: args.get("left", win.left() + 100.0),
     n_lines: args.get("lines", 200),
     n_steps: args.get("steps", 300),
+    seed: args.get("seed", 15.0),
+    noise_scale: args.get("noise_scale", 350.0),
   }
 }
 
@@ -90,7 +97,7 @@ fn draw_lines(draw: &Draw, model: &Model) {
   //   https://docs.rs/nannou/0.13.0/nannou/math/struct.Matrix4.html
   //   https://docs.rs/nannou/0.13.0/nannou/prelude/trait.Transform.html
   let transformation_matrix = Matrix4::from_angle_x(nannou::math::Rad(PI / 6.0));
-  let ripple_origin = pt2(model.right + 100.0, model.top - 200.0);
+  let ripple_origin = pt2(model.right + 150.0, model.top - 200.0);
 
   // Draw all the vertical lines
   for i in 0..=model.n_lines {
@@ -100,7 +107,7 @@ fn draw_lines(draw: &Draw, model: &Model) {
       .map(|n| {
         let y_frac = n as f32 / model.n_steps as f32;
         let y = lerp(model.bottom, model.top, y_frac);
-        next_point(x, y, ripple_origin, 0.80)
+        next_point(x, y, ripple_origin, 0.80, model.seed, model.noise_scale)
       })
       .map(|(p, color)| (transformation_matrix.transform_point(p), color))
       .map(|(p, color)| (pt2(p.x, p.y), color));
@@ -117,7 +124,7 @@ fn draw_lines(draw: &Draw, model: &Model) {
       .map(|n| {
         let x_frac = n as f32 / model.n_steps as f32;
         let x = lerp(model.left, model.right, x_frac);
-        next_point(x, y, ripple_origin, 0.65)
+        next_point(x, y, ripple_origin, 0.65, model.seed, model.noise_scale)
       })
       .map(|(p, color)| (transformation_matrix.transform_point(p), color))
       .map(|(p, color)| (pt2(p.x, p.y), color));
@@ -131,11 +138,27 @@ fn next_point(
   y: f32,
   ripple_origin: Point2,
   hue: f32,
+  seed: f64,
+  noise_scale: f64,
 ) -> (nannou::math::cgmath::Point3<f32>, Hsla) {
+  let perlin = Perlin::new();
   let horiz_scale = 20.0;
   let hypot = ((x - ripple_origin.x) / horiz_scale).hypot((y - ripple_origin.y) / horiz_scale);
-  let z_scale = horiz_scale * 15.0 / (hypot + 5.0);
-  let z = (hypot.cos() + 1.0) * z_scale;
+  let z_scale = horiz_scale * 4.0;
+
+  // this is pretty boring, let's spice it up
+  // let z = (hypot.cos() + 1.0) * z_scale;
+  let z = (hypot.cos() + 1.0) / 2.0;
+  // huh... really interesting effects using weird params to this noise fn
+  let z = z
+    * perlin.get([
+      z as f64 / noise_scale,
+      x as f64 / noise_scale,
+      x as f64 / noise_scale,
+      seed,
+    ]) as f32;
+  let z = z * z_scale;
+
   // trying to make the x,y shift with the z offset, as if it were a cloth being distorted in 3D space.
   // I think there are likely better ways to do this, because this isn't a perfect effect, but it's OK for now.
   let orientation = ((y - ripple_origin.y) / (x - ripple_origin.x)).atan().abs();

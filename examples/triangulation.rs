@@ -90,13 +90,14 @@ fn view(app: &App, model: &Model, frame: Frame) {
 
   let delauney = triangulate(&points).expect("No triangulation exists.");
 
-  // I'd be willing to bet there's a better way to iterate through the triangulation
-  for (index, _) in delauney.triangles.iter().enumerate().step_by(3) {
-    let tri_points = (index..=index + 2)
-      .map(|i| delauney.triangles[i])
-      .map(|p| points[p].clone())
-      .map(|p| pt2(p.x as f32, p.y as f32));
-    let frac = index as f32 / delauney.triangles.len() as f32;
+  // delauney.triangles is flat array,
+  // where every 3 values represents the indices of the points of a triangle
+  for n in 0..delauney.triangles.len() / 3 {
+    let tri_points = (3 * n..=3 * n + 2) // indices of delauney.triangles
+      .map(|i| delauney.triangles[i]) // indices of points
+      .map(|p| points[p].clone()) // the actual points
+      .map(|p| pt2(p.x as f32, p.y as f32)); // proper data type
+    let frac = (3 * n) as f32 / delauney.triangles.len() as f32;
     let hue = 0.6 + frac / 2.0;
     let lum = 0.6 + frac / 10.0;
     draw

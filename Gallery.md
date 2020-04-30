@@ -1,5 +1,9 @@
 # Gallery
 
+For now, check out [my instagram, @ericydauenhauer](https://www.instagram.com/ericydauenhauer/)
+
+I may continue to update this gallery with some choice photos, but for now instagram is hosting them all anyway.
+
 <!-- #the100dayproject day 002 -->
 <a style="display:block" href="https://github.com/ericyd/generative-art-rs/blob/master/examples/looking_outside.rs">
   <img width="300px" height="300px" src="https://scontent-sea1-1.cdninstagram.com/v/t51.2885-15/e15/s320x320/92307972_833140563875078_5964700412392186325_n.jpg?_nc_ht=scontent-sea1-1.cdninstagram.com&_nc_cat=102&_nc_ohc=IMADC37l9XIAX9ULNta&oh=f098793fb62ff67632c28425e0a8612a&oe=5EB926AA" />

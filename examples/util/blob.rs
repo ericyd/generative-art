@@ -1,4 +1,3 @@
-use super::interp::{Interp, Interpolate};
 use nannou::draw::Draw;
 use nannou::noise::{NoiseFn, Perlin};
 use nannou::prelude::*;
@@ -29,10 +28,10 @@ impl Blob {
     Blob {
       x: 0.0,
       y: 0.0,
-      noise_scale: Interp::lin(0.5, 1.0, random_f32()),
+      noise_scale: random_range(0.5, 1.0),
       width: 1.0,
       height: 1.0,
-      seed: Interp::lin(1.0, 10.0.powi(11), random_f32()),
+      seed: random_range(1.0, 10.0.powi(11)),
       color: [random_f32(), random_f32(), random_f32(), random_f32()],
       fuzziness: 0.0,
       rotation: 0.,

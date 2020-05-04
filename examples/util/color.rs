@@ -5,7 +5,7 @@ use nannou::prelude::*;
 
 pub type Palette5<'a> = [&'a str; 5];
 
-pub const PALETTES: [(&str, Palette5); 41] = [
+pub const PALETTES: [(&str, Palette5); 42] = [
   (
     "pink green yellow",
     ["#f9b4ab", "#fdebd3", "#264e70", "#679186", "#bbd4ce"],
@@ -171,6 +171,10 @@ pub const PALETTES: [(&str, Palette5); 41] = [
     "eric1",
     ["#518030", "#94422b", "#4279a1", "#decc28", "#d69938"],
   ),
+  (
+    "eric2",
+    ["#AAD2FD", "#56A3FB", "#3571BB", "#4E9BBC", "#C0DDE7"],
+  ),
 ];
 
 // honestly not sure if this is a good way of doing this or not
@@ -216,14 +220,16 @@ fn hex_to_f32(hex: &str) -> f32 {
   i32::from_str_radix(hex, 16).unwrap() as f32
 }
 
+pub fn rgb_from_hex(hex: &str) -> Rgb {
+  let r = hex_to_f32(hex.get(1..3).unwrap()) / 255.;
+  let g = hex_to_f32(hex.get(3..5).unwrap()) / 255.;
+  let b = hex_to_f32(hex.get(5..7).unwrap()) / 255.;
+  Rgb::new(r, g, b)
+}
+
 pub fn palette_to_hsl(palette: Vec<&str>) -> Vec<Hsl> {
   palette
     .iter()
-    .map(|palette| {
-      let r = hex_to_f32(palette.get(1..3).unwrap()) / 255.;
-      let g = hex_to_f32(palette.get(3..5).unwrap()) / 255.;
-      let b = hex_to_f32(palette.get(5..7).unwrap()) / 255.;
-      Hsl::from(rgb(r, g, b))
-    })
+    .map(|palette| Hsl::from(rgb_from_hex(palette)))
     .collect()
 }

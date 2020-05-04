@@ -113,3 +113,22 @@ pub fn meander(old_line: &Line2, depth: i32, divergence: f32) -> Line2 {
 
   line
 }
+
+// SO FTW https://stackoverflow.com/a/2259502
+pub fn rotate(point: Point2, origin: Point2, radians: f32) -> Point2 {
+  let sin = radians.sin();
+  let cos = radians.cos();
+
+  // translate point back to origin:
+  let x = point.x - origin.x;
+  let y = point.y - origin.y;
+
+  // rotate point
+  let xnew = x * cos - y * sin;
+  let ynew = x * sin + y * cos;
+
+  // translate point back:
+  let x = xnew + origin.x;
+  let y = ynew + origin.y;
+  pt2(x, y)
+}

@@ -90,9 +90,9 @@ fn view(app: &App, model: &Model, frame: Frame) {
 
   let base_line = generate_primary_line(model);
   // sharp
-  // let blobs = apply_blobs_to_line(oversample(&base_line, 7), model);
+  // let blobs = apply_blobs_to_line(oversample(7, &base_line), model);
   // smooth
-  let blobs = apply_blobs_to_line(oversample(&smooth(&base_line), 7), model);
+  let blobs = apply_blobs_to_line(oversample(7, &smooth(&base_line)), model);
   let colored_lines = map_blobs_to_lines(blobs, model);
   draw_smoke(colored_lines, &draw);
 

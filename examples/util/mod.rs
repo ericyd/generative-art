@@ -74,7 +74,7 @@ pub fn smooth_by(smoothness: usize, line: &Line2) -> Line2 {
 // creates a new line with length equal to
 //   old_line.len() * 2.powi(depth)
 // and shape/curve that is equivalent to the old line
-pub fn oversample(old_line: &Line2, depth: i32) -> Line2 {
+pub fn oversample(depth: i32, old_line: &Line2) -> Line2 {
   meander(old_line, depth, 0.0)
 }
 

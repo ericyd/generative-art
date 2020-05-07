@@ -16,7 +16,12 @@ pub mod interp;
 
 pub type Line2 = Vec<Point2>;
 
-pub fn captured_frame_path_multi(app: &App, frame: &Frame, letter: char) -> std::path::PathBuf {
+pub fn captured_frame_path_multi(
+  app: &App,
+  frame: &Frame,
+  letter: char,
+  formatted: String,
+) -> std::path::PathBuf {
   // Create a path that we want to save this frame to.
   app
     .project_path()
@@ -25,17 +30,22 @@ pub fn captured_frame_path_multi(app: &App, frame: &Frame, letter: char) -> std:
     .join(app.exe_name().unwrap())
     // Name each file after the number of the frame.
     .join(format!(
-      "{}_{:03}{}",
+      "{}_{:03}{}{}",
       Local::now().format("%Y-%m-%dT%H-%M-%S"),
       frame.nth(),
-      letter
+      letter,
+      formatted
     ))
     // instagram only works with jpeg :shrug:
     .with_extension("jpeg")
 }
 
 pub fn captured_frame_path(app: &App, frame: &Frame) -> std::path::PathBuf {
-  captured_frame_path_multi(app, frame, '_')
+  captured_frame_path_multi(app, frame, '_', String::from(""))
+}
+
+pub fn formatted_frame_path(app: &App, frame: &Frame, formatted: String) -> std::path::PathBuf {
+  captured_frame_path_multi(app, frame, '_', formatted)
 }
 
 // simple default smoothing function

@@ -183,6 +183,6 @@ fn magnetic_field(
   draw.to_frame(app, &frame).unwrap();
 
   // credit: https://github.com/nannou-org/nannou/blob/6dd78a5a7c966d46f25a4f56aeedfc3f4e54c7f5/examples/simple_capture.rs
-  let file_path = captured_frame_path_multi(app, &frame, char_id);
+  let file_path = captured_frame_path_multi(app, &frame, char_id, String::from(""));
   app.window(id).unwrap().capture_frame_threaded(file_path);
 }

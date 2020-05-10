@@ -112,7 +112,7 @@ fn draw_lines(draw: &Draw, model: &Model) {
       .map(|(p, color)| (transformation_matrix.transform_point(p), color))
       .map(|(p, color)| (pt2(p.x, p.y), color));
 
-    draw.polyline().colored_points(points);
+    draw.polyline().points_colored(points);
   }
 
   // Draw all the horizontal lines
@@ -129,7 +129,7 @@ fn draw_lines(draw: &Draw, model: &Model) {
       .map(|(p, color)| (transformation_matrix.transform_point(p), color))
       .map(|(p, color)| (pt2(p.x, p.y), color));
 
-    draw.polyline().colored_points(points);
+    draw.polyline().points_colored(points);
   }
 }
 

@@ -188,6 +188,6 @@ fn draw_smoke(lines: Vec<Vec<(Point2, LinSrgba)>>, draw: &Draw) {
     let centerness = 1.0 - (0.5 - factor).abs() * 2.0;
     let weight = lerp(0.05, 4., centerness);
 
-    draw.polyline().weight(weight).colored_points(line.clone());
+    draw.polyline().weight(weight).points_colored(line.clone());
   }
 }

@@ -66,7 +66,7 @@ fn view(app: &App, model: &Model, frame: Frame) {
         .polyline()
         .caps_round()
         .weight(model.stroke_weight)
-        .colored_points(points);
+        .points_colored(points);
     }
   }
 

@@ -117,10 +117,7 @@ fn magnetic_field(
   };
 
   // Prepare to draw.
-  let draw = match app.draw_for_window(id) {
-    Some(draw) => draw,
-    None => return,
-  };
+  let draw = app.draw();
 
   let pi2 = PI * 2.0;
   // number of vertices in each polyline
@@ -175,7 +172,7 @@ fn magnetic_field(
         .polyline()
         .start_cap_round()
         .weight(line_weight)
-        .colored_points(points);
+        .points_colored(points);
     }
   }
 

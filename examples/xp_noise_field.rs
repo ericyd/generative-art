@@ -105,10 +105,7 @@ fn draw_noise<T: NoiseFn<[f64; 3]>>(id: Id, app: &App, frame: Frame, noisefn: T)
   };
 
   // Prepare to draw.
-  let draw = match app.draw_for_window(id) {
-    Some(draw) => draw,
-    None => return,
-  };
+  let draw = app.draw();
 
   draw.background().color(WHITE);
 

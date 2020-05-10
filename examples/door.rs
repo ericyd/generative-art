@@ -148,7 +148,7 @@ fn view(app: &App, model: &Model, frame: Frame) {
         .polyline()
         .start_cap_round()
         .weight(line_weight)
-        .colored_points(points);
+        .points_colored(points);
     }
   }
 
@@ -186,7 +186,7 @@ fn view(app: &App, model: &Model, frame: Frame) {
         .polyline()
         .start_cap_round()
         .weight(line_weight)
-        .colored_points(points);
+        .points_colored(points);
     }
   }
 

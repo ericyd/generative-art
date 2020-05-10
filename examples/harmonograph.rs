@@ -156,14 +156,14 @@ fn view(app: &App, model: &Model, frame: Frame) {
   let points = harmonograph_1.points();
   let n_points = points.len();
 
-  let colored_points = points.iter().enumerate().map(|(i, pt)| {
+  let points_colored = points.iter().enumerate().map(|(i, pt)| {
     let factor = i as f32 / n_points as f32;
     let hue = lerp(model.color_start, model.color_end, factor);
     let lum = lerp(0.5, 0.7, factor);
     (pt.clone(), hsla(hue, 0.5, lum, 0.25))
   });
 
-  colored_points.for_each(|(pt, color)| {
+  points_colored.for_each(|(pt, color)| {
     draw
       .ellipse()
       .x_y(pt.x, pt.y)
@@ -190,7 +190,7 @@ fn view(app: &App, model: &Model, frame: Frame) {
   let points = harmonograph_2.points();
   let n_points = points.len();
 
-  let colored_points = points.iter().enumerate().map(|(i, pt)| {
+  let points_colored = points.iter().enumerate().map(|(i, pt)| {
     let factor = i as f32 / n_points as f32;
     let hue = lerp(model.color_start + 0.4, model.color_end + 0.4, factor);
     let lum = lerp(0.4, 0.6, factor);
@@ -202,7 +202,7 @@ fn view(app: &App, model: &Model, frame: Frame) {
   //   .polyline()
   //   .start_cap_round()
   //   .weight(model.line_weight)
-  //   .colored_points(colored_points);
+  //   .points_colored(points_colored);
 
   // Harmonograph 3
   let harmonograph_3 = Harmonograph::new()
@@ -222,7 +222,7 @@ fn view(app: &App, model: &Model, frame: Frame) {
   let points = harmonograph_3.points();
   let n_points = points.len();
 
-  let colored_points = points.iter().enumerate().map(|(i, pt)| {
+  let points_colored = points.iter().enumerate().map(|(i, pt)| {
     let factor = i as f32 / n_points as f32;
     let hue = lerp(model.color_start + 0.4, model.color_end + 0.4, factor);
     let lum = lerp(0.4, 0.6, factor);
@@ -234,7 +234,7 @@ fn view(app: &App, model: &Model, frame: Frame) {
   //   .polyline()
   //   .start_cap_round()
   //   .weight(model.line_weight)
-  //   .colored_points(colored_points);
+  //   .points_colored(points_colored);
 
   // Write to the window frame.
   draw.to_frame(app, &frame).unwrap();

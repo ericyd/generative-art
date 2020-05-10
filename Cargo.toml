@@ -4,6 +4,6 @@ version = "999.999.999"
 authors = ["ericyd <eric@ericyd.com>"]
 
 [dependencies]
-nannou = "0.13"
+nannou = "0.14"
 chrono = "0.4"
 delaunator = "0.2.0"

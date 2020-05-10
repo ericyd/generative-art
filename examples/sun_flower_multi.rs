@@ -58,10 +58,7 @@ fn circular_start_points(id: Id, app: &App, frame: Frame) {
   };
 
   // Prepare to draw.
-  let draw = match app.draw_for_window(id) {
-    Some(draw) => draw,
-    None => return,
-  };
+  let draw = app.draw();
 
   // TODO: remove duplicate code
   let pi2 = PI * 2.0;
@@ -140,7 +137,7 @@ fn circular_start_points(id: Id, app: &App, frame: Frame) {
         .polyline()
         .start_cap_round()
         .weight(line_weight)
-        .colored_points(points);
+        .points_colored(points);
     }
   }
 
@@ -159,10 +156,7 @@ fn rectangular_start_points(id: Id, app: &App, frame: Frame) {
   };
 
   // Prepare to draw.
-  let draw = match app.draw_for_window(id) {
-    Some(draw) => draw,
-    None => return,
-  };
+  let draw = app.draw();
 
   // TODO: remove duplicate code
   let pi2 = PI * 2.0;
@@ -234,7 +228,7 @@ fn rectangular_start_points(id: Id, app: &App, frame: Frame) {
         .polyline()
         .start_cap_round()
         .weight(line_weight)
-        .colored_points(points);
+        .points_colored(points);
     }
   }
 

@@ -86,7 +86,7 @@ fn view(app: &App, frame: Frame) {
         current_y = new_y as f32;
       }
 
-      draw.polyline().weight(0.5).colored_points(points);
+      draw.polyline().weight(0.5).points_colored(points);
     }
   }
 

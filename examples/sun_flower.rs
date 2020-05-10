@@ -104,7 +104,7 @@ fn view(app: &App, frame: Frame) {
         .polyline()
         .start_cap_round()
         .weight(line_weight)
-        .colored_points(points);
+        .points_colored(points);
     }
   }
 

@@ -11,10 +11,16 @@ pub mod blob;
 pub mod brush;
 pub mod circle;
 pub mod color;
+pub mod grid;
 pub mod hexagon;
 pub mod interp;
+pub use self::grid::{grid, point_cloud};
 
 pub type Line2 = Vec<Point2>;
+// Why have two type aliases for the same thing?
+// Well, they have very different conceptual meaning,
+// even though their structure is the same
+pub type PointCloud = Vec<Point2>;
 
 pub fn captured_frame_path_multi(
   app: &App,

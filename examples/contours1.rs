@@ -48,9 +48,9 @@ fn main() {
 }
 
 struct Model {
-  // how many lines to draw
+  // how grid points on the x axis
   nx: usize,
-  // resolution of the lines
+  // how grid points on the y axis
   ny: usize,
   // noise seed
   seed: f64,

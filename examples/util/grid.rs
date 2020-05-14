@@ -1,24 +1,22 @@
 use super::PointCloud;
 use nannou::prelude::*;
 
-#[derive(Copy, Clone)]
-struct PointIndex {
-  x: usize,
-  y: usize,
-}
-
 /// Grid is an iterator that returns points in the half-open range
-/// x = [0,nx)
-/// y = [0,ny)
-/// https://stackoverflow.com/a/4396303
-/// That is, there will always be `nx` x elements and `ny` y elements,
-/// but the values will range from 0 to nx-1 for the x values,
-/// and from 0 to ny-1 for the y values.
+/// i in [0,nx)
+/// j in [0,ny)
+/// That is, there will always be `nx` i elements and `ny` j elements,
+/// but the values will range from 0 to nx-1 for the i values,
+/// and from 0 to ny-1 for the j values.
+/// (i,j) tuples are returned in column-major order.
+/// refs:
+///   https://en.wikipedia.org/wiki/Interval_(mathematics)#Including_or_excluding_endpoints
+///   https://en.wikipedia.org/wiki/Row-_and_column-major_order
 #[derive(Copy, Clone)]
 pub struct Grid {
   nx: usize,
   ny: usize,
-  curr: PointIndex,
+  curr: usize,
+  max: usize,
 }
 
 impl Grid {
@@ -26,7 +24,8 @@ impl Grid {
     Grid {
       nx,
       ny,
-      curr: PointIndex { x: 0, y: 0 },
+      curr: 0,
+      max: nx * ny - 1,
     }
   }
 }
@@ -34,28 +33,19 @@ impl Grid {
 impl Iterator for Grid {
   type Item = (usize, usize);
 
-  // When the `Iterator` is finished, `None` is returned.
-  // Otherwise, the next value is wrapped in `Some` and returned.
+  // Get the next (i,j) tuple, or None if it is maxed
   fn next(&mut self) -> Option<(usize, usize)> {
-    if self.ny - 1 > self.curr.y {
-      // without this super ugly nested conditional,
-      // the first y element is always skipped.
-      // I need to figure out a better way to determine the `next` element...
-      if self.curr.x == 0 && self.curr.y == 0 {
-        let val = Some((self.curr.x, self.curr.y));
-        self.curr.y += 1;
-        return val;
-      } else {
-        self.curr.y += 1;
-        return Some((self.curr.x, self.curr.y));
-      }
+    if self.curr > self.max {
+      return None;
     }
-    if self.nx - 1 > self.curr.x {
-      self.curr.y = 0;
-      self.curr.x += 1;
-      return Some((self.curr.x, self.curr.y));
-    }
-    None
+    // Current implementation is column-major order.
+    // For row-major order, just a simple adjustment:
+    // let x = self.curr % self.nx;
+    // let y = (self.curr - x) / self.nx;
+    let y = self.curr % self.ny;
+    let x = (self.curr - y) / self.ny;
+    self.curr += 1;
+    Some((x, y))
   }
 }
 

@@ -287,9 +287,8 @@ fn calc_contour(threshold: f32, triangles: &Vec<Triangle3D>) -> Vec<Line2> {
     .collect()
 }
 
-fn close_enough(p1: &Point2, p2: &Point2) -> bool {
-  let threshold = 0.1;
-  p1.distance(*p2) < threshold
+fn is_near(p1: &Point2, p2: &Point2) -> bool {
+  p1.distance(*p2) < 0.1
 }
 
 /// Kind of a tricky thing, building contiguous lines from a collection of segments!
@@ -317,15 +316,14 @@ fn connect_contour_segments(mut segments: Vec<Line2>) -> Vec<Line2> {
             .iter()
             .enumerate()
             .filter(|(_i, seg)| {
-              close_enough(line.last().unwrap(), &seg[0])
-                || close_enough(line.last().unwrap(), &seg[1])
+              is_near(line.last().unwrap(), &seg[0]) || is_near(line.last().unwrap(), &seg[1])
             })
             .collect();
           let no_head_segments = head_segments.is_empty();
           match head_segments.pop() {
             None => (),
             Some((index, new_seg)) => {
-              if close_enough(&new_seg[0], line.last().unwrap()) {
+              if is_near(&new_seg[0], line.last().unwrap()) {
                 line.push(new_seg[1]);
               } else {
                 line.push(new_seg[0]);
@@ -341,13 +339,13 @@ fn connect_contour_segments(mut segments: Vec<Line2>) -> Vec<Line2> {
           let mut tail_segments: Vec<(usize, &Line2)> = cloned_segments
             .iter()
             .enumerate()
-            .filter(|(_i, seg)| close_enough(&line[0], &seg[0]) || close_enough(&line[0], &seg[1]))
+            .filter(|(_i, seg)| is_near(&line[0], &seg[0]) || is_near(&line[0], &seg[1]))
             .collect();
           let no_tail_segments = tail_segments.is_empty();
           match tail_segments.pop() {
             None => (),
             Some((index, new_seg)) => {
-              if close_enough(&new_seg[0], &line[0]) {
+              if is_near(&new_seg[0], &line[0]) {
                 line.insert(0, new_seg[1]);
               } else {
                 line.insert(0, new_seg[0]);

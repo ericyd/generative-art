@@ -6,6 +6,10 @@ extern crate nannou;
 use chrono::offset::Local;
 use nannou::prelude::*;
 
+use std::fmt::Debug;
+use std::fs::File;
+use std::io::prelude::*;
+
 pub mod args;
 pub mod blob;
 pub mod brush;
@@ -36,7 +40,8 @@ pub fn captured_frame_path_multi(
     .join(app.exe_name().unwrap())
     // Name each file after the number of the frame.
     .join(format!(
-      "{}_{:03}{}{}",
+      "{}_{}_{:03}{}{}",
+      app.exe_name().unwrap(),
       Local::now().format("%Y-%m-%dT%H-%M-%S"),
       frame.nth(),
       letter,
@@ -52,6 +57,31 @@ pub fn captured_frame_path(app: &App, frame: &Frame) -> std::path::PathBuf {
 
 pub fn formatted_frame_path(app: &App, frame: &Frame, formatted: String) -> std::path::PathBuf {
   captured_frame_path_multi(app, frame, '_', formatted)
+}
+
+pub fn captured_frame_path_txt(app: &App, frame: &Frame) -> std::path::PathBuf {
+  // Create a path that we want to save this frame to.
+  app
+    .project_path()
+    .expect("failed to locate `project_path`")
+    .join("assets")
+    .join(app.exe_name().unwrap())
+    // Name each file after the number of the frame.
+    .join(format!(
+      "{}_{}_{:03}",
+      app.exe_name().unwrap(),
+      Local::now().format("%Y-%m-%dT%H-%M-%S"),
+      frame.nth()
+    ))
+    .with_extension("txt")
+}
+
+pub fn capture_model<T: Debug>(app: &App, frame: &Frame, model: &T) {
+  let path = captured_frame_path_txt(app, frame);
+  match File::create(path) {
+    Ok(mut file) => file.write_all(format!("{:?}", model).as_bytes()).unwrap(),
+    Err(err) => println!("{}", err),
+  }
 }
 
 // simple default smoothing function

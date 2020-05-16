@@ -53,7 +53,7 @@ fn model(app: &App) -> Model {
 
 fn view(app: &App, model: &Model, frame: Frame) {
   // two frames are necessary for capture_frame to work properly
-  app.set_loop_mode(LoopMode::loop_ntimes(3));
+  app.set_loop_mode(LoopMode::loop_ntimes(1));
 
   let win = app.window_rect();
   let perlin = Perlin::new();

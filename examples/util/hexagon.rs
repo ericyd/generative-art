@@ -35,10 +35,9 @@ impl Hexagon {
   }
 
   pub fn points(&self) -> Vec<Point2> {
-    (1..=6)
+    (0..6)
       .map(|n| {
-        let factor = n as f32 / 6.;
-        let theta = factor * 2. * PI;
+        let theta = map_range(n, 0, 6, 0.0, 2.0 * PI);
         let x = theta.cos() * self.radius + self.x;
         let y = theta.sin() * self.radius + self.y;
         pt2(x, y)
@@ -72,9 +71,9 @@ pub fn honeycomb_hex(
   for idx in 0..num_hexes {
     // try to "turn" PI/3 radians.
     // If there is an intersection, then just continue straight
-    let hex = honeycomb_hexagon(nodes[idx as usize], last_angle + (PI / 3.0), padding);
+    let hex = honeycomb_hexagon(&nodes[idx as usize], last_angle + (PI / 3.0), padding);
     if nodes.iter().any(|node| node.has_intersection(hex)) {
-      nodes.push(honeycomb_hexagon(nodes[idx as usize], last_angle, padding));
+      nodes.push(honeycomb_hexagon(&nodes[idx as usize], last_angle, padding));
     } else {
       nodes.push(hex);
       last_angle = if !hole_in_center && idx == 0 {
@@ -87,9 +86,20 @@ pub fn honeycomb_hex(
   nodes
 }
 
-fn honeycomb_hexagon(other: Hexagon, angle: f32, distance: f32) -> Hexagon {
-  let x = angle.cos() * ((other.radius * 2.) * (PI / 6.).cos() + distance) + other.x;
-  let y = angle.sin() * ((other.radius * 2.) * (PI / 6.).cos() + distance) + other.y;
+pub fn honeycomb_hexagon(other: &Hexagon, angle: f32, distance: f32) -> Hexagon {
+  // I don't really get this, I think the honeycomb_hex method is kind of broken... :shrug:
+  let center_to_center = (other.radius * 2.0) * (PI / 6.).cos();
+  let x = angle.cos() * (center_to_center + distance) + other.x;
+  let y = angle.sin() * (center_to_center + distance) + other.y;
+  let radius = other.radius;
+  Hexagon::new(x, y, radius)
+}
+
+pub fn next_hex(other: &Hexagon, angle: f32, distance: f32) -> Hexagon {
+  // distance from center of hexagon to center of other hexagon
+  let center_to_center = (other.radius) * (PI / 6.).cos();
+  let x = angle.cos() * (center_to_center + distance) + other.x;
+  let y = angle.sin() * (center_to_center + distance) + other.y;
   let radius = other.radius;
   Hexagon::new(x, y, radius)
 }

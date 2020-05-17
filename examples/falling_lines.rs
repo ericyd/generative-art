@@ -64,7 +64,7 @@ fn view(app: &App, model: &Model, frame: Frame) {
   draw.background().color(IVORY);
   let win = app.window_rect();
 
-  draw_paper_texture(&draw, &win, 10000);
+  draw_paper_texture(&draw, &win, 10000, 0.1);
 
   draw_lines(&draw, &win, model);
 

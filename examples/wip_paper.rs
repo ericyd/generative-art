@@ -8,7 +8,7 @@ use nannou::prelude::*;
 
 mod util;
 use util::args::ArgParser;
-use util::{captured_frame_path, rotate, Line2};
+use util::{captured_frame_path, draw_paper_texture, rotate, Line2};
 
 fn main() {
   nannou::app(model).run();
@@ -43,10 +43,10 @@ fn view(app: &App, model: &Model, frame: Frame) {
   let win = app.window_rect();
   draw.background().color(hsl(0.15, 0.4, 0.965));
 
-  draw_paper_texture(&draw, model, &win);
+  draw_paper_texture4(&draw, &win);
   let arc = arc(model);
   draw_arc(&draw, &arc, model.graphite);
-  draw_crosshatch(&draw, model, &arc);
+  draw_crosshatch2(&draw, model, &arc);
 
   // Write to the window frame. and capture image
   draw.to_frame(app, &frame).unwrap();
@@ -55,22 +55,74 @@ fn view(app: &App, model: &Model, frame: Frame) {
     .capture_frame(captured_frame_path(app, &frame));
 }
 
-// randomly generate short squiggles that are distored by Fbm noise (fractal brownian motion)
-fn draw_paper_texture(draw: &Draw, _model: &Model, win: &Rect) {
-  let fbm = Fbm::new();
-  let seed = random_f64();
-  let noise_scale = 60.0;
-  for _ in 0..=200 {
-    let y = win.y.lerp(random_f32());
-    let mut x = win.x.lerp(random_f32());
-    let points = (0..=200).map(|_| {
-      x += 1.;
-      let noise = fbm.get([x as f64 / noise_scale, y as f64 / noise_scale, seed]) as f32;
-      let y = y + noise * 10.;
-      pt2(x, y)
-    });
-    draw.polyline().color(hsl(0., 0., 0.915)).points(points);
+// simple gritty texture
+fn draw_paper_texture1(draw: &Draw, win: &Rect) {
+  for _ in 0..10000 {
+    let start_angle = random_range(0.0, PI);
+    let end_angle = random_range(0.0, PI);
+    let start = pt2(
+      start_angle.cos() * win.w() * 1.5,
+      start_angle.sin() * win.h() * 1.5,
+    );
+    let end = pt2(
+      end_angle.cos() * win.w() * -1.5,
+      end_angle.sin() * win.h() * -1.5,
+    );
+    draw
+      .line()
+      .start(start)
+      .end(end)
+      .color(hsla(0.0, 0.0, 0.1, 0.01));
   }
+}
+
+// nicer paper texture but collects around center too much
+fn draw_paper_texture2(draw: &Draw, win: &Rect) {
+  for n in 0..10000 {
+    let start_angle = random_range(0.0, PI);
+    let start_offset = random_range(win.w() / -2.0, win.w() / 2.0);
+    let end_offset = random_range(win.w() / -2.0, win.w() / 2.0);
+    let start = pt2(
+      start_angle.cos() * win.w() * 1.5 + start_offset,
+      start_angle.sin() * win.h() * 1.5 + start_offset,
+    );
+    let end = pt2(
+      start_angle.cos() * win.w() * -1.5 + end_offset,
+      start_angle.sin() * win.h() * -1.5 + end_offset,
+    );
+    draw
+      .line()
+      .start(start)
+      .end(end)
+      .color(hsla(0.0, 0.0, 0.1, 0.01));
+  }
+}
+
+// nicer paper texture, but is not uniform, collects at top left
+fn draw_paper_texture3(draw: &Draw, win: &Rect) {
+  for n in 0..10000 {
+    let start_angle = random_range(0.0, PI);
+    let start_offset = random_range(win.w() / -2.0, win.w() / 2.0);
+    let end_offset = random_range(win.w() / -2.0, win.w() / 2.0);
+    let start = pt2(
+      start_angle.cos() * win.w() * 1.5 + start_offset + win.left(),
+      start_angle.sin() * win.h() * 1.5 + start_offset + win.top(),
+    );
+    let end = pt2(
+      start_angle.cos() * win.w() * -1.5 + end_offset + win.left(),
+      start_angle.sin() * win.h() * -1.5 + end_offset + win.top(),
+    );
+    draw
+      .line()
+      .start(start)
+      .end(end)
+      .color(hsla(0.0, 0.0, 0.1, 0.01));
+  }
+}
+
+// Create "paper" texture by drawing many many lines that are rotated randomly between 0 and PI
+fn draw_paper_texture4(draw: &Draw, win: &Rect) {
+  draw_paper_texture(draw, win, 10000);
 }
 
 fn arc(model: &Model) -> Line2 {

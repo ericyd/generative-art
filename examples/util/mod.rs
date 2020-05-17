@@ -178,3 +178,52 @@ pub fn rotate(point: Point2, origin: Point2, radians: f32) -> Point2 {
   let y = ynew + origin.y;
   pt2(x, y)
 }
+
+// Create "paper" texture by drawing many many lines that are rotated randomly between 0 and PI
+pub fn draw_paper_texture(draw: &Draw, win: &Rect, n: usize) {
+  let scale_x = win.w() * 1.5;
+  let scale_y = win.h() * 1.5;
+  // draw lines centered around top left corner
+  let x_offset = win.left() * 1.25;
+  let y_offset = win.top() * 1.25;
+  for _ in 0..n {
+    let start_angle = random_range(0.0, PI);
+    let start_offset = random_range(win.w() / -2.0, win.w() / 2.0);
+    let end_offset = random_range(win.w() / -2.0, win.w() / 2.0);
+    let start = pt2(
+      start_angle.cos() * scale_x + start_offset + x_offset,
+      start_angle.sin() * scale_y + start_offset + y_offset,
+    );
+    let end = pt2(
+      start_angle.cos() * -scale_x + end_offset + x_offset,
+      start_angle.sin() * -scale_y + end_offset + y_offset,
+    );
+    draw
+      .line()
+      .start(start)
+      .end(end)
+      .color(hsla(0.0, 0.0, 0.1, 0.01));
+  }
+
+  // draw lines centered around bottom right corner
+  let x_offset = win.right() * 1.25;
+  let y_offset = win.bottom() * 1.25;
+  for _ in 0..n {
+    let start_angle = random_range(0.0, PI);
+    let start_offset = random_range(win.w() / -2.0, win.w() / 2.0);
+    let end_offset = random_range(win.w() / -2.0, win.w() / 2.0);
+    let start = pt2(
+      start_angle.cos() * scale_x + start_offset + x_offset,
+      start_angle.sin() * scale_y + start_offset + y_offset,
+    );
+    let end = pt2(
+      start_angle.cos() * -scale_x + end_offset + x_offset,
+      start_angle.sin() * -scale_y + end_offset + y_offset,
+    );
+    draw
+      .line()
+      .start(start)
+      .end(end)
+      .color(hsla(0.0, 0.0, 0.1, 0.01));
+  }
+}

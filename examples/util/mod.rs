@@ -19,6 +19,8 @@ pub mod grid;
 pub mod hexagon;
 pub mod interp;
 pub use self::grid::{grid, point_cloud};
+pub mod gravity;
+pub use self::gravity::{GravitationalBody, GravitySystem};
 
 pub type Line2 = Vec<Point2>;
 // Why have two type aliases for the same thing?
@@ -180,7 +182,7 @@ pub fn rotate(point: Point2, origin: Point2, radians: f32) -> Point2 {
 }
 
 // Create "paper" texture by drawing many many lines that are rotated randomly between 0 and PI
-pub fn draw_paper_texture(draw: &Draw, win: &Rect, n: usize) {
+pub fn draw_paper_texture(draw: &Draw, win: &Rect, n: usize, alpha: f32) {
   let scale_x = win.w() * 1.5;
   let scale_y = win.h() * 1.5;
   // draw lines centered around top left corner
@@ -202,7 +204,7 @@ pub fn draw_paper_texture(draw: &Draw, win: &Rect, n: usize) {
       .line()
       .start(start)
       .end(end)
-      .color(hsla(0.0, 0.0, 0.1, 0.01));
+      .color(hsla(0.0, 0.0, 0.1, alpha));
   }
 
   // draw lines centered around bottom right corner
@@ -224,6 +226,10 @@ pub fn draw_paper_texture(draw: &Draw, win: &Rect, n: usize) {
       .line()
       .start(start)
       .end(end)
-      .color(hsla(0.0, 0.0, 0.1, 0.01));
+      .color(hsla(0.0, 0.0, 0.1, alpha));
   }
+}
+
+fn chance() -> bool {
+  random_f32() < 0.5
 }

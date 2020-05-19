@@ -5,7 +5,7 @@ use nannou::prelude::*;
 
 pub type Palette5<'a> = [&'a str; 5];
 
-pub const PALETTES: [(&str, Palette5); 43] = [
+pub const PALETTES: [(&str, Palette5); 44] = [
   (
     "pink green yellow",
     ["#f9b4ab", "#fdebd3", "#264e70", "#679186", "#bbd4ce"],
@@ -179,6 +179,10 @@ pub const PALETTES: [(&str, Palette5); 43] = [
     "eric3", // retro
     ["#52c4b9", "#e06c3f", "#e6b150", "#733b3e", "#faf3c8"],
   ),
+  (
+    "gray", // retro
+    ["#111111", "#333333", "#555555", "#777777", "#999999"],
+  ),
 ];
 
 // honestly not sure if this is a good way of doing this or not
@@ -215,7 +219,7 @@ pub fn random_hsl(palette: Vec<Hsl>) -> Hsl {
 
 // convenience method to select a random element from an array
 fn select_random<T: Copy>(vec: &Vec<T>) -> T {
-  vec[(random_f32() * vec.len() as f32).floor() as usize]
+  vec[random_range(0, vec.len())]
 }
 
 // Could consider accepting and returning a Result,

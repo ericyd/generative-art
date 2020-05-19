@@ -3,9 +3,9 @@ use nannou::prelude::*;
 
 #[derive(Debug, Clone)]
 pub struct GravitationalBody {
-  mass: f32,
-  x: f32,
-  y: f32,
+  pub mass: f32,
+  pub x: f32,
+  pub y: f32,
 }
 
 impl GravitationalBody {
@@ -118,7 +118,7 @@ pub struct GravitySystem {
   // "force of gravity"
   g: f32,
   // list of gravitational bodies in the system
-  bodies: Vec<GravitationalBody>,
+  pub bodies: Vec<GravitationalBody>,
   n_bodies: i32,
 }
 

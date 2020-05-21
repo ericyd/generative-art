@@ -122,7 +122,7 @@ fn draw_paper_texture3(draw: &Draw, win: &Rect) {
 
 // Create "paper" texture by drawing many many lines that are rotated randomly between 0 and PI
 fn draw_paper_texture4(draw: &Draw, win: &Rect) {
-  draw_paper_texture(draw, win, 10000);
+  draw_paper_texture(draw, win, 10000, 0.01);
 }
 
 fn arc(model: &Model) -> Line2 {

@@ -10,34 +10,106 @@
 // xp_diffusion2
 // Average update time (8401 samples): 5.1928344
 // Slightly faster, not much
+//
+// xp_diffusion3
+// Average update time (8401 samples): 4.683609
+// ooh! getting better!
 
 extern crate chrono;
 extern crate nannou;
 
-use std::time::{Duration, SystemTime};
+use std::time::SystemTime;
 
 use nannou::color::*;
-use nannou::noise::{Curve, NoiseFn, Perlin, Worley};
 use nannou::prelude::*;
 
 mod util;
 use util::args::ArgParser;
-use util::blob::Blob;
-use util::interp::{lerp, nextf, Interp, Interpolate};
+use util::{capture_model, captured_frame_path};
 
 fn main() {
   nannou::app(model).update(update).view(view).run();
 }
 
+#[derive(Debug)]
 struct Model {
-  grid: Grid,
+  // default 200
   nx: usize,
+  // default 200
   ny: usize,
+  loops: u64,
+  // diffusivity (D) of quantity "A" and "B"
+  // should be in (0,1)
+  // default 1.0
+  d_a: f32,
+  // default 0.5
+  d_b: f32,
+  // the "feed" or "source" rate of quantity "A" (white)
+  // should be not a ton greater than 0.1
+  // default: 0.055
+  f: f32,
+  // the "kill" or "sink" rate of quantity "B" (black)
+  // default: 0.062
+  k: f32,
+  // "delta t" - time differential between steps
+  // probably should stay at 1.0
+  // default 1.0
+  dt: f32,
+  grid: Grid,
   update_times: Vec<u128>,
 }
 
-type Grid = Vec<Vec<Pixel>>;
+struct Grid {
+  pixels: Vec<Vec<Pixel>>,
+}
 
+impl Grid {
+  fn new(nx: usize, ny: usize) -> Self {
+    let mut pixels = Vec::with_capacity(nx);
+    for i in 0..nx {
+      pixels.push(Vec::with_capacity(ny));
+
+      // initialize with full "A" quantity
+      for _j in 0..ny {
+        pixels[i].push(Pixel::new(1., 0.));
+      }
+    }
+    Self { pixels }
+  }
+
+  fn current_at(&self, i: usize, j: usize, a_b: usize) -> f32 {
+    self.pixels[i][j].current[a_b]
+  }
+
+  fn set_current(&mut self, i: usize, j: usize, a: f32, b: f32) {
+    self.pixels[i][j].current = [a, b];
+  }
+
+  fn set_next(&mut self, i: usize, j: usize, a: f32, b: f32) {
+    self.pixels[i][j].next = [a, b];
+  }
+
+  fn swap(&mut self) {
+    for row in &mut self.pixels {
+      for pixel in row {
+        pixel.swap();
+      }
+    }
+  }
+}
+
+// implement Debug custom because otherwise
+// capture_model logs a billion rows of Pixels
+impl std::fmt::Debug for Grid {
+  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    f.debug_struct("Grid")
+      .field("n_rows", &self.pixels.len())
+      .field("n_columns", &self.pixels.first().unwrap().len())
+      .finish()
+  }
+}
+
+#[derive(Debug, Clone, Copy)]
 struct Pixel {
   current: [f32; 2],
   next: [f32; 2],
@@ -51,21 +123,8 @@ impl Pixel {
     }
   }
 
-  fn current(&mut self, a: f32, b: f32) {
-    self.current = [a, b];
-  }
-
-  fn next(&mut self, a: f32, b: f32) {
-    self.next = [a, b];
-  }
-
-  fn swap(&self) -> Self {
-    // self.current = self.next;
-    // self
-    Self {
-      current: self.next,
-      next: self.next,
-    }
+  fn swap(&mut self) {
+    self.current = self.next;
   }
 }
 
@@ -87,7 +146,7 @@ fn laplace(i: usize, j: usize, grid: &Grid, a_b: usize, nx: usize, ny: usize) ->
   (min_i..=max_i)
     .map(|ii| {
       (min_j..=max_j)
-        .map(|jj| grid[i + ii - 1][j + jj - 1].current[a_b] * convolution[ii][jj])
+        .map(|jj| grid.current_at(i + ii - 1, j + jj - 1, a_b) * convolution[ii][jj])
         .sum::<f32>()
     })
     .sum::<f32>()
@@ -96,24 +155,16 @@ fn laplace(i: usize, j: usize, grid: &Grid, a_b: usize, nx: usize, ny: usize) ->
 fn model(app: &App) -> Model {
   let args = ArgParser::new();
   // grid holds our quantity concentrations in the form [a, b]
-  let nx = args.get("nx", 200);
-  let ny = args.get("ny", 200);
+  let nx = args.get("size", 200);
+  let ny = args.get("size", 200);
   // grid holds our quantity concentrations in the form [a, b]
-  let mut grid = Vec::with_capacity(nx);
-  for i in 0..nx {
-    grid.push(Vec::with_capacity(ny));
-
-    // initialize with full "A" quantity
-    for _j in 0..ny {
-      grid[i].push(Pixel::new(1., 0.));
-    }
-  }
+  let mut grid = Grid::new(nx, ny);
 
   // drop a "circular" blob of quantity "B" in the middle
   for i in nx / 2 - 10..nx / 2 + 10 {
     for j in ny / 2 - 10..ny / 2 + 10 {
       if ((i - nx / 2) as f32).hypot((j - ny / 2) as f32) < 10. {
-        grid[i][j].current(0.0, 1.0);
+        grid.set_current(i, j, 0.0, 1.0);
       }
     }
   }
@@ -121,37 +172,43 @@ fn model(app: &App) -> Model {
   app
     .new_window()
     .title(app.exe_name().unwrap())
+    .size(nx as u32, ny as u32)
     .build()
     .unwrap();
-  // app.set_loop_mode(LoopMode::loop_ntimes(args.get("loops", 1000000000000)))
+  let loops = args.get("loops", 32751);
+  app.set_loop_mode(LoopMode::loop_ntimes(loops as usize));
   Model {
     grid,
     nx,
     ny,
     update_times: vec![],
+    loops,
+    // diffusivity (D) of quantity "A" and "B"
+    d_a: args.get("d_a", 1.0),
+    d_b: args.get("d_b", 0.5),
+    // the "feed" or "source" rate of quantity "A"
+    f: args.get("f", 0.055),
+    // the "kill" or "sink" rate of quantity "B"
+    k: args.get("k", 0.062),
+    // "delta t" - time differential between steps
+    dt: args.get("dt", 1.0),
   }
 }
 
 // all calculations and grid updates and next/grid swaps should happen here
 fn update(_app: &App, model: &mut Model, _update: Update) {
   let now = SystemTime::now();
-  // diffusivity (D) of quantity "A" and "B"
-  let d_a = 1.0;
-  let d_b = 0.5;
-  // the "feed" or "source" rate of quantity "A"
-  let f = 0.055;
-  // the "kill" or "sink" rate of quantity "B"
-  let k = 0.062;
-  // "delta t" - time differential between steps
-  let dt = 1.0;
+  let Model {
+    d_a, d_b, f, k, dt, ..
+  } = *model;
 
   let nx = model.nx;
   let ny = model.nx;
 
   for i in 0..nx {
     for j in 0..ny {
-      let a = model.grid[i][j].current[0];
-      let b = model.grid[i][j].current[1];
+      let a = model.grid.current_at(i, j, 0);
+      let b = model.grid.current_at(i, j, 1);
 
       let source = f * (1.0 - a);
       let sink = (k + f) * b;
@@ -164,16 +221,14 @@ fn update(_app: &App, model: &mut Model, _update: Update) {
       let a_prime = a + (diffusion_a - reaction + source) * dt;
       let b_prime = b + (diffusion_b + reaction - sink) * dt;
 
-      model.grid[i][j].next(constrain(a_prime), constrain(b_prime));
+      model
+        .grid
+        .set_next(i, j, constrain(a_prime), constrain(b_prime));
     }
   }
 
   // swap next and grid
-  model.grid = model
-    .grid
-    .iter()
-    .map(|row| row.iter().map(|pixel| pixel.swap()).collect())
-    .collect();
+  model.grid.swap();
   match now.elapsed() {
     Ok(elapsed) => model.update_times.push(elapsed.as_millis()),
     Err(e) => println!("Update Error: {:?}", e),
@@ -183,7 +238,7 @@ fn update(_app: &App, model: &mut Model, _update: Update) {
 // the only thing this should do is draw the model.grid (or maybe model.next)
 fn view(app: &App, model: &Model, frame: Frame) {
   // the view takes substantially longer to execute than the update, so only draw sometimes
-  if frame.nth() % 50 != 0 {
+  if frame.nth() % 50 != 0 && frame.nth() < model.loops - 1 {
     return;
   }
   let now = SystemTime::now();
@@ -207,8 +262,8 @@ fn view(app: &App, model: &Model, frame: Frame) {
 
   for i in 0..nx {
     for j in 0..ny {
-      let a = model.grid[i][j].current[0];
-      let b = model.grid[i][j].current[1];
+      let a = model.grid.current_at(i, j, 0);
+      let b = model.grid.current_at(i, j, 1);
 
       let x = win.x.lerp(i as f32 / nx as f32);
       let y = win.y.lerp(j as f32 / ny as f32);
@@ -232,7 +287,12 @@ fn view(app: &App, model: &Model, frame: Frame) {
   draw.to_frame(app, &frame).unwrap();
 
   // save image
-  // app.main_window().capture_frame_threaded(util::captured_frame_path(app, &frame));
+  if frame.nth() >= model.loops - 1 {
+    app
+      .main_window()
+      .capture_frame_threaded(captured_frame_path(app, &frame));
+    capture_model(app, &frame, model);
+  }
 
   match now.elapsed() {
     Ok(elapsed) => {

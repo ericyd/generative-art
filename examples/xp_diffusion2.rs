@@ -1,33 +1,35 @@
-// this is the same as diffusion1 but uses a "2d" array instead of a 1d array for the grid
+// trying to do this, with a regular update, because
+// it's really hard to see what is happening in realtime
 
 // http://www.karlsims.com/rd.html
 
+// After 8401 frames, average update time is 5.445661
+// Let's experiment with some data structures to speed that up!!
+
 extern crate chrono;
 extern crate nannou;
-// extern crate ndarray;
 
-// use ndarray::{arr3, Array, Array1, Array2, ShapeBuilder};
+use std::time::{Duration, SystemTime};
 
 use nannou::color::*;
 use nannou::noise::{Curve, NoiseFn, Perlin, Worley};
 use nannou::prelude::*;
 
 mod util;
+use util::args::ArgParser;
 use util::blob::Blob;
 use util::interp::{lerp, nextf, Interp, Interpolate};
 
 fn main() {
-  nannou::sketch(view).size(1024, 768).run();
+  nannou::app(model).update(update).view(view).run();
 }
 
-fn constrain(val: f32) -> f32 {
-  if val < 0. {
-    0.
-  } else if val > 1.0 {
-    1.0
-  } else {
-    val
-  }
+struct Model {
+  grid: Vec<Vec<[f32; 2]>>,
+  next: Vec<Vec<[f32; 2]>>,
+  nx: usize,
+  ny: usize,
+  update_times: Vec<u128>,
 }
 
 fn laplace(i: usize, j: usize, grid: &Vec<Vec<[f32; 2]>>, a_b: usize, nx: usize, ny: usize) -> f32 {
@@ -54,41 +56,11 @@ fn laplace(i: usize, j: usize, grid: &Vec<Vec<[f32; 2]>>, a_b: usize, nx: usize,
     .sum::<f32>()
 }
 
-fn view(app: &App, frame: Frame) {
-  let win = app.window_rect();
-  app.set_loop_mode(LoopMode::NTimes {
-    // two frames are necessary for capture_frame to work properly
-    number_of_updates: 1,
-  });
-
-  // Prepare to draw.
-  let draw = app.draw();
-
-  // set background color
-  // let bg = Alpha::<Hsl<_, _>, f32>::new(RgbHue::from_degrees(36.0), 0.59, 0.90, 1.0);
-  draw.background().color(WHITE);
-
-  //set up the geometry of the problem
-  let xmin = win.x.start;
-  let xmax = win.x.end;
-  let ymin = win.y.start;
-  let ymax = win.y.end;
-  let nx = 100;
-  let ny = 100;
-  let iterations = 5006;
-  let pixel_width = (xmax - xmin) / nx as f32;
-  let pixel_height = (ymax - ymin) / ny as f32;
-
-  // diffusivity (D) of quantity "A" and "B"
-  let d_a = 1.0;
-  let d_b = 0.5;
-  // the "feed" or "source" rate of quantity "A"
-  let f = 0.055;
-  // the "kill" or "sink" rate of quantity "B"
-  let k = 0.062;
-  // "delta t" - time differential between steps
-  let dt = 1.0;
-
+fn model(app: &App) -> Model {
+  let args = ArgParser::new();
+  // grid holds our quantity concentrations in the form [a, b]
+  let nx = args.get("nx", 200);
+  let ny = args.get("ny", 200);
   // grid holds our quantity concentrations in the form [a, b]
   let mut grid = Vec::with_capacity(nx);
   let mut next = Vec::with_capacity(nx);
@@ -112,35 +84,94 @@ fn view(app: &App, frame: Frame) {
     }
   }
 
-  for _it in 0..iterations {
-    for i in 0..nx {
-      for j in 0..ny {
-        let a = grid[i][j][0];
-        let b = grid[i][j][1];
-
-        let source = f * (1.0 - a);
-        let sink = (k + f) * b;
-        let reaction = a * b.powi(2);
-
-        // apply convolution
-        let diffusion_a = d_a * laplace(i, j, &grid, 0, nx, ny);
-        let diffusion_b = d_b * laplace(i, j, &grid, 1, nx, ny);
-
-        let a_prime = a + (diffusion_a - reaction + source) * dt;
-        let b_prime = b + (diffusion_b + reaction - sink) * dt;
-
-        next[i][j] = [constrain(a_prime), constrain(b_prime)];
-      }
-    }
-
-    // swap next and grid
-    grid = (*next).to_vec();
+  app
+    .new_window()
+    .title(app.exe_name().unwrap())
+    .build()
+    .unwrap();
+  // app.set_loop_mode(LoopMode::loop_ntimes(args.get("loops", 1000000000000)))
+  Model {
+    grid,
+    nx,
+    ny,
+    next,
+    update_times: vec![],
   }
+}
+
+// all calculations and grid updates and next/grid swaps should happen here
+fn update(_app: &App, model: &mut Model, _update: Update) {
+  let now = SystemTime::now();
+  // diffusivity (D) of quantity "A" and "B"
+  let d_a = 1.0;
+  let d_b = 0.5;
+  // the "feed" or "source" rate of quantity "A"
+  let f = 0.055;
+  // the "kill" or "sink" rate of quantity "B"
+  let k = 0.062;
+  // "delta t" - time differential between steps
+  let dt = 1.0;
+
+  let nx = model.nx;
+  let ny = model.nx;
 
   for i in 0..nx {
     for j in 0..ny {
-      let a = grid[i][j][0];
-      let b = grid[i][j][1];
+      let a = model.grid[i][j][0];
+      let b = model.grid[i][j][1];
+
+      let source = f * (1.0 - a);
+      let sink = (k + f) * b;
+      let reaction = a * b.powi(2);
+
+      // apply convolution
+      let diffusion_a = d_a * laplace(i, j, &model.grid, 0, nx, ny);
+      let diffusion_b = d_b * laplace(i, j, &model.grid, 1, nx, ny);
+
+      let a_prime = a + (diffusion_a - reaction + source) * dt;
+      let b_prime = b + (diffusion_b + reaction - sink) * dt;
+
+      model.next[i][j] = [constrain(a_prime), constrain(b_prime)];
+    }
+  }
+
+  // swap next and grid
+  model.grid = (*model.next).to_vec();
+  match now.elapsed() {
+    Ok(elapsed) => model.update_times.push(elapsed.as_millis()),
+    Err(e) => println!("Update Error: {:?}", e),
+  }
+}
+
+// the only thing this should do is draw the model.grid (or maybe model.next)
+fn view(app: &App, model: &Model, frame: Frame) {
+  // the view takes substantially longer to execute than the update, so only draw sometimes
+  if frame.nth() % 50 != 0 {
+    return;
+  }
+  let now = SystemTime::now();
+  let win = app.window_rect();
+
+  let xmin = win.x.start;
+  let xmax = win.x.end;
+  let ymin = win.y.start;
+  let ymax = win.y.end;
+  let nx = model.nx;
+  let ny = model.ny;
+  let pixel_width = (xmax - xmin) / nx as f32;
+  let pixel_height = (ymax - ymin) / ny as f32;
+
+  // Prepare to draw.
+  let draw = app.draw();
+
+  // set background color
+  // let bg = Alpha::<Hsl<_, _>, f32>::new(RgbHue::from_degrees(36.0), 0.59, 0.90, 1.0);
+  draw.background().color(WHITE);
+
+  for i in 0..nx {
+    for j in 0..ny {
+      let a = model.grid[i][j][0];
+      let b = model.grid[i][j][1];
 
       let x = win.x.lerp(i as f32 / nx as f32);
       let y = win.y.lerp(j as f32 / ny as f32);
@@ -164,10 +195,30 @@ fn view(app: &App, frame: Frame) {
   draw.to_frame(app, &frame).unwrap();
 
   // save image
-  app
-    .main_window()
-    .capture_frame_threaded(util::captured_frame_path(app, &frame));
-  // if frame.nth() > 0 {
-  // }
-  // std::process::exit(0)
+  // app.main_window().capture_frame_threaded(util::captured_frame_path(app, &frame));
+
+  match now.elapsed() {
+    Ok(elapsed) => {
+      let n_updates = model.update_times.len();
+      println!(
+        "
+        Average update time ({} samples): {}
+        View time: {}",
+        n_updates,
+        model.update_times.iter().sum::<u128>() as f32 / n_updates as f32,
+        elapsed.as_millis()
+      );
+    }
+    Err(e) => println!("View Error: {:?}", e),
+  }
+}
+
+fn constrain(val: f32) -> f32 {
+  if val < 0. {
+    0.
+  } else if val > 1.0 {
+    1.0
+  } else {
+    val
+  }
 }

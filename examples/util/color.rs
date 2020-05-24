@@ -218,7 +218,7 @@ pub fn random_hsl(palette: Vec<Hsl>) -> Hsl {
 }
 
 // convenience method to select a random element from an array
-fn select_random<T: Copy>(vec: &Vec<T>) -> T {
+pub fn select_random<T: Copy>(vec: &Vec<T>) -> T {
   vec[random_range(0, vec.len())]
 }
 

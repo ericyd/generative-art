@@ -3,7 +3,7 @@
 // https://tylerxhobbs.com/essays/2017/a-generative-approach-to-simulating-watercolor-paints
 //
 // Algorithm in a nutshell:
-// 1. Generate a bunch of hexagons that are distorted several times
+// 1. Generate a bunch of octagons that are distorted several times
 //    with the `meander` algorithm
 // 2. Loop of those shapes several times and draw them each, distorted several
 //    more times with the same algorithm.
@@ -106,7 +106,7 @@ fn generate_shapes(model: &Model, win: &Rect) -> Vec<(Vec<Point2>, Hsla)> {
   let palette = palette_to_hsl(PALETTE.to_vec());
   (0..model.n_blobs)
     .map(|_| {
-      let hex = hexagon(
+      let oct = octagon(
         random_range(win.w() / 10.0, win.w() / 3.0),
         random_range(win.left() * 1.3, win.right() * 1.3),
         random_range(win.bottom() * 1.3, win.top() * 1.3),
@@ -119,7 +119,7 @@ fn generate_shapes(model: &Model, win: &Rect) -> Vec<(Vec<Point2>, Hsla)> {
         random_range(l * 0.9, l * 1.1),
         1.0 / (model.n_layers / 2) as f32,
       );
-      (meander(&hex, 4, 0.5), color)
+      (meander(&oct, 4, 0.5), color)
     })
     .collect()
 }

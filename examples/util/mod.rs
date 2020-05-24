@@ -49,8 +49,7 @@ pub fn captured_frame_path_multi(
       letter,
       formatted
     ))
-    // instagram only works with jpeg :shrug:
-    .with_extension("jpeg")
+    .with_extension("png")
 }
 
 pub fn captured_frame_path(app: &App, frame: &Frame) -> std::path::PathBuf {

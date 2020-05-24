@@ -108,8 +108,8 @@ fn generate_shapes(model: &Model, win: &Rect) -> Vec<(Vec<Point2>, Hsla)> {
     .map(|_| {
       let hex = hexagon(
         random_range(win.w() / 10.0, win.w() / 3.0),
-        random_range(win.left(), win.right()),
-        random_range(win.bottom(), win.top()),
+        random_range(win.left() * 1.3, win.right() * 1.3),
+        random_range(win.bottom() * 1.3, win.top() * 1.3),
       );
       let (h, s, l) = select_random(&palette).into_components();
       let h = h.to_positive_degrees() / 360.0;

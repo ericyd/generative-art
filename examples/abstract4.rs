@@ -83,7 +83,7 @@ fn draw_circles(draw: &Draw, model: &Model) {
     Brush::new()
       .width(model.width)
       .hsla(0., 0., 0.14, 1.0)
-      .arc(points, pt2(0., 0.), draw);
+      .path(points, draw);
   }
 }
 

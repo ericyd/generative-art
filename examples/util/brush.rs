@@ -93,62 +93,13 @@ impl Brush {
     }
   }
 
-  // This is subtly different than path because path does not handle the transition around PI and 2*PI very well.
-  // The arctan goes from negative to positive, and flips the spread lines.
-  // This method just retains the same arc shape and adjusts the radius
-  // This makes a lot of assumptions about the arc, primarily that each point is 1 degree separation
-  pub fn arc(&self, points: Vec<Point2>, origin: Point2, draw: &Draw) {
-    let n_lines = (self.width * 10.) as i32;
-    for n in 0..n_lines {
-      let frac = n as f32 / n_lines as f32;
-      let (lum, alpha) = self.adjust_lum_alpha();
-      let spread = lerp(-self.width, self.width, frac);
-
-      let start_angle = ((points[0].y - origin.y) / (points[0].x - origin.x)).atan();
-
-      // spread the incoming points based on the frac
-      let new_points: Vec<Point2> = points
-        .iter()
-        .enumerate()
-        .flat_map(|(i, pt)| {
-          if i == points.len() - 1 || i % 2 == 0 {
-            return vec![];
-          }
-          let start = pt;
-          let end = points[i as usize + 1];
-          let orientation = start_angle + deg_to_rad(i as f32);
-          let (start, end) = self.spread_by_angle(*start, end, spread, orientation);
-          vec![start, end]
-        })
-        .collect();
-
-      // instead of "staggering" the start and end, we simply chop the path since it's already a multi-point path.
-      // "edge_weight" applies the shortening more to the edges than the middle
-      let edge_weight = (0.5 - frac).abs() * 2.;
-
-      let chop_from_start =
-        (random_range(edge_weight * 2., new_points.len() as f32 / 10.)).floor() as usize;
-      let chop_from_end = (random_range(edge_weight * 3., new_points.len() as f32 / 2.)
-        * edge_weight)
-        .floor() as usize;
-
-      let new_points = new_points[chop_from_start..(new_points.len() - 1 - chop_from_end)].to_vec();
-
-      draw
-        .polyline()
-        .color(hsla(self.hsla[0], self.hsla[1], lum, alpha))
-        .weight(0.5)
-        .points(new_points);
-    }
-  }
-
   // give the stroke a subtle arc by giving it half a sin curve.
   // Turns out this isn't super easy!
   fn slight_curve(&self, start: Point2, end: Point2, draw: &Draw) {
     let (lum, alpha) = self.adjust_lum_alpha();
     let x_range = end.x - start.x;
     let y_range = end.y - start.y;
-    let angle = (y_range / x_range).atan();
+    let angle = y_range.atan2(x_range);
     let segments = 20;
     let dx = x_range / segments as f32;
     let dy = y_range / segments as f32;
@@ -173,7 +124,7 @@ impl Brush {
 
   fn spread(&self, start: Point2, end: Point2, spread: f32) -> (Point2, Point2) {
     // spread points at a right angle from the original line
-    let orientation = ((end.y - start.y) / (end.x - start.x)).atan();
+    let orientation = (end.y - start.y).atan2(end.x - start.x);
     let angle = orientation + PI / 2.;
     self.spread_by_angle(start, end, spread, angle)
   }
@@ -197,7 +148,7 @@ impl Brush {
   fn stagger(&self, start: Point2, end: Point2, stagger_frac: f32) -> (Point2, Point2) {
     let middle_weight = 1. - (0.5 - stagger_frac).abs();
     let distance = start.distance(end);
-    let orientation = ((end.y - start.y) / (end.x - start.x)).atan();
+    let orientation = (end.y - start.y).atan2(end.x - start.x);
 
     let start_offset = nextf(-0.1, 0.1) * middle_weight;
     let start_x = start.x + orientation.cos() * distance * start_offset;

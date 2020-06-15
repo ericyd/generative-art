@@ -25,7 +25,7 @@ void draw() {
   shader.set("u_time", millis() / 1000.0);
   shader(shader);
   rect(0,0,width,height);
-  saveFrame("assets/img_" + now() + ".png");
+  // saveFrame("assets/img_" + now() + ".png");
 //   exit();
 }
 

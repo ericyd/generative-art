@@ -40,3 +40,22 @@ processing-java --sketch=`pwd`/processing/sketch_name --run
 ## Where can I see the finished products without running the code?
 
 [Gallery](./Gallery.md)
+
+----
+
+## Why is the primary branch named `main` instead of `master`?
+
+To support [anti-racist language in tech!](https://dev.to/damcosset/replacing-master-in-git-2jim)
+
+If you'd like to do the same:
+
+```bash
+$  git checkout master
+$  git pull origin master
+$  git branch -M main
+$  git push origin main
+# Update Settings/Branches/Default branch to main on GitHub or your git server of choice
+$  git push origin :master
+```
+
+If you ascribe more to the stance that [renaming master is harmful](https://dev.to/dandv/8-problems-with-replacing-master-in-git-2hck) then my recommendation to you is to stop being so fragile, it's really no big deal.

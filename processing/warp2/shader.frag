@@ -1,12 +1,13 @@
 // Very similar to warp except uses a much simpler noise function that doesn't rely on random
-// values as much. Doesn't actually need to rely on random values at all!
+// values as much. Doesn't really need to rely on random values at all!
+//
+// Play with live version: https://www.shadertoy.com/view/ttlyRs
 //
 // Modified from: https://www.shadertoy.com/view/4s23zz
 // Original author credit:
 //   Created by inigo quilez - iq/2013
 //   License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
 //   See http://www.iquilezles.org/www/articles/warp/warp.htm for details
-//
 //
 // The article linked above describes it much better than I ever could.
 // All I really did was take the original example and refactor certain parts so I
@@ -83,8 +84,7 @@ float noise (in vec2 st) {
 
 const mat2 mtx = mat2( SCALE1,  SCALE2, -SCALE2,  SCALE1 );
 
-float fbm6( vec2 p )
-{
+float fbm6( vec2 p ) {
     float f = 0.0;
 
     for (int i = 0; i < 6; i++) {
@@ -102,8 +102,7 @@ vec2 fbm6_2( vec2 p ) {
 }
 
 
-float opaqueMagic( vec2 q, out vec2 o, out vec2 n )
-{
+float opaqueMagic( vec2 q, out vec2 o, out vec2 n ) {
     // shift the distortion over time
     q += ROTATION * sin(vec2(0.11,0.13) * iTime + length( q ) * ROTATION * 50.);
 
@@ -128,9 +127,10 @@ float opaqueMagic( vec2 q, out vec2 o, out vec2 n )
     return f;
 }
 
-void main() // processing version, and rename Frag.* -> gl_Frag.*
-// void mainImage( out vec4 FragColor, in vec2 doNotUse) // shadertoy version
-{
+// processing version, and rename FragColor -> gl_FragColor
+void main() {
+// shadertoy version, and rename gl_FragColor -> FragColor
+// void mainImage( out vec4 FragColor, in vec2 doNotUse) {
     vec3 tot = vec3(0.0);
     vec3 color1 = vec3(0.99, 0.45, 0.20);
     vec3 color2 = vec3(0.48, 0.75, 0.99);

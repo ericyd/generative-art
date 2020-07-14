@@ -21,6 +21,8 @@ pub mod interp;
 pub use self::grid::{grid, point_cloud};
 pub mod gravity;
 pub use self::gravity::{GravitationalBody, GravitySystem};
+pub mod prism;
+pub use self::prism::Prism;
 
 pub type Line2 = Vec<Point2>;
 // Why have two type aliases for the same thing?

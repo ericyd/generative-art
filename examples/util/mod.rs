@@ -184,6 +184,11 @@ pub fn rotate(point: Point2, origin: Point2, radians: f32) -> Point2 {
 
 // Create "paper" texture by drawing many many lines that are rotated randomly between 0 and PI
 pub fn draw_paper_texture(draw: &Draw, win: &Rect, n: usize, alpha: f32) {
+  draw_paper_texture_color(draw, win, n, hsla(0.0, 0.0, 0.1, alpha))
+}
+
+// Create "paper" texture by drawing many many lines that are rotated randomly between 0 and PI
+pub fn draw_paper_texture_color(draw: &Draw, win: &Rect, n: usize, color: Hsla) {
   let scale_x = win.w() * 1.5;
   let scale_y = win.h() * 1.5;
   // draw lines centered around top left corner
@@ -201,11 +206,7 @@ pub fn draw_paper_texture(draw: &Draw, win: &Rect, n: usize, alpha: f32) {
       start_angle.cos() * -scale_x + end_offset + x_offset,
       start_angle.sin() * -scale_y + end_offset + y_offset,
     );
-    draw
-      .line()
-      .start(start)
-      .end(end)
-      .color(hsla(0.0, 0.0, 0.1, alpha));
+    draw.line().start(start).end(end).color(color);
   }
 
   // draw lines centered around bottom right corner
@@ -223,11 +224,7 @@ pub fn draw_paper_texture(draw: &Draw, win: &Rect, n: usize, alpha: f32) {
       start_angle.cos() * -scale_x + end_offset + x_offset,
       start_angle.sin() * -scale_y + end_offset + y_offset,
     );
-    draw
-      .line()
-      .start(start)
-      .end(end)
-      .color(hsla(0.0, 0.0, 0.1, alpha));
+    draw.line().start(start).end(end).color(color);
   }
 }
 

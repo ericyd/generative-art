@@ -11,9 +11,8 @@ use nannou::prelude::*;
 mod util;
 use util::args::ArgParser;
 use util::captured_frame_path;
-use util::draw_paper_texture;
+use util::draw_paper_texture_color;
 use util::Line2;
-use util::Prism;
 
 fn main() {
   nannou::app(model).update(update).run();
@@ -136,16 +135,17 @@ fn view(app: &App, model: &Model, frame: Frame) {
   let win = app.window_rect();
   let draw = app.draw();
   draw.background().color(WHITE);
-  draw_paper_texture(&draw, &win, 5000, 0.05);
+  draw_paper_texture_color(&draw, &win, 5000, hsla(0.15, 0.8, 0.3, 0.05));
 
   let angle = PI / 9.;
   let mut existing_points = vec![];
 
-  for _i in 0..model.n_lines {
+  for i in 0..model.n_lines {
+    let scale = map_range(i, 0, model.n_lines - 1, 0.1, 0.8);
     let points = Walker::new(
       pt2(
-        win.x.lerp(random_f32()) * 0.5,
-        win.y.lerp(random_f32()) * 0.5,
+        win.x.lerp(random_f32()) * scale,
+        win.y.lerp(random_f32()) * scale,
       ),
       angle,
     )

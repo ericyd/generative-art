@@ -231,3 +231,16 @@ pub fn draw_paper_texture_color(draw: &Draw, win: &Rect, n: usize, color: Hsla) 
 fn chance() -> bool {
   random_f32() < 0.5
 }
+
+// TODO: there's gotta be a better implementation...
+pub fn quantize_to(quantizer: f32) -> impl Fn(f32) -> f32 {
+  move |input| {
+    let remainder = input % quantizer;
+    match (quantizer / 2. < remainder.abs(), input > 0.) {
+      (true, true) => input + (quantizer - remainder.abs()),
+      (true, false) => input - (quantizer - remainder.abs()),
+      (false, true) => input - remainder.abs(),
+      (false, false) => input + remainder.abs(),
+    }
+  }
+}

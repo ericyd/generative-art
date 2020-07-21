@@ -23,7 +23,7 @@ use super::Line2;
 use nannou::prelude::*;
 
 pub struct Prism {
-  vertex: Point2,
+  pub vertex: Point2,
   width: f32,
   height: f32,
   depth: f32,

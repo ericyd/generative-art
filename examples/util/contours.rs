@@ -1,3 +1,5 @@
+// The contouring is an implementation of Bruce Hill's "Meandering Triangles" contour algorithm:
+// https://blog.bruce-hill.com/meandering-triangles
 use nannou::noise::{Fbm, MultiFractal, NoiseFn};
 use nannou::prelude::*;
 
@@ -71,7 +73,7 @@ impl Triangle3D {
 
 /// Calculates the Delauney triangulation for the given PointCloud,
 /// then maps the 2D points to 3D using an elevation function for the z coodinate.
-pub fn calc_triangles(fbm_opts: &FbmOptions, grid: PointCloud) -> Vec<Triangle3D> {
+pub fn calc_triangles(elevation_fn: impl Fn(f64, f64) -> f32, grid: PointCloud) -> Vec<Triangle3D> {
   println!("Triangulating ...");
   let points: Vec<Point> = grid
     .iter()
@@ -86,7 +88,6 @@ pub fn calc_triangles(fbm_opts: &FbmOptions, grid: PointCloud) -> Vec<Triangle3D
   // delauney.triangles is flat array,
   // where every 3 values represents the indices of the points of a triangle
   println!("Mapping to Triangle3D ...");
-  let elevation = fbm_elevation_fn(fbm_opts);
   (0..delauney.triangles.len() / 3)
     .map(|n| {
       let vertices: Vec<Point3> = (3 * n..=3 * n + 2) // indices of delauney.triangles
@@ -94,7 +95,7 @@ pub fn calc_triangles(fbm_opts: &FbmOptions, grid: PointCloud) -> Vec<Triangle3D
         .map(|p| points[p].clone()) // the actual points
         .map(|p| {
           // 3D point
-          pt3(p.x as f32, p.y as f32, elevation(p.x, p.y))
+          pt3(p.x as f32, p.y as f32, elevation_fn(p.x, p.y))
         })
         .collect();
       Triangle3D { vertices }
@@ -134,8 +135,8 @@ pub fn is_somewhat_near(p1: &Point2, p2: &Point2) -> bool {
 /// theoretically exist as a closed line in multiple places on the topography,
 /// e.g. in localized peaks and valleys.
 ///
-/// I don't believe this is a perfect script,
-/// it sometimes results in unclosed lines that should be closed
+/// This is not a perfect algorithm,
+/// it sometimes returns unclosed lines that should be closed
 pub fn connect_contour_segments(mut segments: Vec<Deque2>) -> Vec<Deque2> {
   let mut contour_lines = vec![];
 

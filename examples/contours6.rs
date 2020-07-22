@@ -105,7 +105,8 @@ fn view(app: &App, model: &Model, frame: Frame) {
     win.top() * 1.25,
   );
 
-  let triangles = calc_triangles(&model.fbm_opts, grid);
+  let elevation_fn = fbm_elevation_fn(&model.fbm_opts);
+  let triangles = calc_triangles(elevation_fn, grid);
 
   draw_elevation_map(&draw, model, &win);
 

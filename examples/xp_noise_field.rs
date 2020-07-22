@@ -119,7 +119,7 @@ fn draw_noise<T: NoiseFn<[f64; 3]>>(id: Id, app: &App, frame: Frame, noisefn: T)
     for _y in 0..=win.h() as i32 {
       let y = map_range(_y, 0, win.h() as i32, win.bottom(), win.top());
       // let y = map_range(_y, 0, win.h(), win.bottom(), win.top());
-      let noise = noisefn.get([x as f64 / noise_scale, y as f64 / noise_scale, 10.0]) as f32;
+      let noise = noisefn.get([x as f64 / noise_scale, y as f64 / noise_scale, seed]) as f32;
       noises.push(noise);
       // println!("{}, {}, {}", noise, x, y);
       let val = map_range(noise, -1.0, 1.0, 0.0, 255.0) / 255.0;

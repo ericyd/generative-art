@@ -25,6 +25,8 @@ pub mod prism;
 pub use self::prism::Prism;
 pub mod walker;
 pub use self::walker::PrismaticWalker;
+pub mod contours;
+pub use self::contours::{Deque2, Triangle3D};
 
 pub type Line2 = Vec<Point2>;
 // Why have two type aliases for the same thing?

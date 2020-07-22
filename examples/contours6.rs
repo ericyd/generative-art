@@ -169,15 +169,16 @@ fn draw_elevation_map(draw: &Draw, model: &Model, win: &Rect) {
       let y = map_range(_y, 0, win.h() as i32, win.bottom(), win.top());
 
       let elevation = elevation_map(x.into(), y.into());
+      let frac = map_range(elevation / model.z_scale, 0.3, 0.7, 0.0, 1.0);
       let hue = if elevation < model.z_scale / 2. {
-        0.07
+        map_range(frac, 0., 1., 0.04, 0.07)
       } else {
-        0.59
+        map_range(frac, 0., 1., 0.55, 0.61)
       };
       let color = hsla(
         hue,
-        0.5,
-        map_range(elevation, 0., model.z_scale, 0.3, 0.8),
+        map_range(frac, 0., 1., 0.4, 0.7),
+        map_range(frac, 0., 1., 0.3, 0.8),
         1.,
       );
       draw.rect().color(color).x_y(x, y).w_h(1.0, 1.0);
@@ -523,14 +524,14 @@ fn draw_contour_polygons(
 }
 
 fn draw_contour_lines(draw: &Draw, model: &Model, n: usize, contour: Vec<Deque2>) {
-  let hue = if n < model.n_contours / 2 { 0.07 } else { 0.59 };
+  let hue = if n > model.n_contours / 2 { 0.07 } else { 0.59 };
   let stroke = hsla(
     hue,
-    0.5,
-    map_range(n, 0, model.n_contours - 1, 0.05, 0.3),
+    0.8,
+    map_range(n, 0, model.n_contours - 1, 0.1, 0.3),
     1.,
   );
   for line in contour {
-    draw.polyline().color(stroke).weight(2.0).points(line);
+    draw.polyline().color(stroke).weight(1.5).points(line);
   }
 }

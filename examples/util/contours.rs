@@ -1,6 +1,6 @@
 // The contouring is an implementation of Bruce Hill's "Meandering Triangles" contour algorithm:
 // https://blog.bruce-hill.com/meandering-triangles
-use nannou::noise::{Fbm, MultiFractal, NoiseFn};
+use nannou::noise::{Fbm, MultiFractal, NoiseFn, RidgedMulti};
 use nannou::prelude::*;
 
 use std::collections::VecDeque;
@@ -261,6 +261,60 @@ pub fn fbm_elevation_fn(opts: &FbmOptions) -> impl Fn(f64, f64) -> f32 {
   } = *opts;
   // Fractal brownian motion looks real cool here! And is super configurable
   let noisefn = Fbm::new()
+    .set_octaves(opts.octaves)
+    .set_frequency(opts.frequency)
+    .set_lacunarity(opts.lacunarity)
+    .set_persistence(opts.persistence);
+
+  move |x, y| {
+    let noise = noisefn.get([x / noise_scale, y / noise_scale, seed]) as f32;
+    map_range(noise, -1.0, 1.0, 0.0, z_scale)
+  }
+}
+
+#[derive(Debug)]
+pub struct RidgedOptions {
+  // influences "frequency" of noise "waves"
+  pub noise_scale: f64,
+  // maximum "height" of points
+  pub z_scale: f32,
+  // noise seed
+  pub seed: f64,
+  // These all relate to the "MultiFractal" trait in the noise module
+  pub octaves: usize,
+  pub frequency: f64,
+  pub lacunarity: f64,
+  pub persistence: f64,
+}
+
+impl RidgedOptions {
+  pub fn default() -> Self {
+    Self {
+      noise_scale: 800.0,
+      z_scale: 1.0,
+      seed: random_range(1.0, 10000.0),
+      octaves: 8,
+      frequency: random_range(1.2, 1.8),
+      lacunarity: random_range(2.0, 2.6),
+      persistence: random_range(0.28, 0.38),
+    }
+  }
+}
+
+/// Returns a closure that calculates the elevation for a given (x,y) coordinate.
+/// The elevation is based on a noise function which is modulated by the
+/// model.seed and model.noise_scale parameters.
+/// The height of the resulting "topography" ranges from 0.0 to model.z_scale
+pub fn ridged_elevation_fn(opts: &RidgedOptions) -> impl Fn(f64, f64) -> f32 {
+  // need to extract these values so they can be moved into the closure
+  let RidgedOptions {
+    noise_scale,
+    z_scale,
+    seed,
+    ..
+  } = *opts;
+  // Fractal brownian motion looks real cool here! And is super configurable
+  let noisefn = RidgedMulti::new()
     .set_octaves(opts.octaves)
     .set_frequency(opts.frequency)
     .set_lacunarity(opts.lacunarity)

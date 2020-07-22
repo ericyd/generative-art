@@ -1,17 +1,8 @@
-// Same as contour6 with new color function.
-// Algorithm in a nutshell:
-//    1. create elevation function using noise
-//    2. apply color to the elevation map on a per-pixel basis
-//    3. draw contour lines over the colored plot
-// The main advantage being that we don't need to worry about connecting the contours
-// into polygons to color them in properly.
-// It turns out, it is quite a tricky thing to do properly, connecting lines into polygons!
-// Probably there are better implementations out there but mine sucked, so this works
-// much better.
+// Same as contour7 but using RidgedMulti noise function for the elevation map
 //
-// cargo run --release --example contours7 -- --loops 10
-// cargo run --release --example contours7 -- --grid 400 --noise-scale 800.0 --z-scale 350.0 --seed 652.3919081860134 --octaves 8 --frequency 1.7598356010257492 --lacunarity 2.4589143963376885 --persistence 0.3778940660523947 --n-contours 292 --min-contour 0.01 --max-contour 0.99 --stroke-weight 0.7
-// cargo run --release --example contours7 -- --grid 300 --noise-scale 800.0 --z-scale 350.0 --seed 94495.74815492425 --octaves 8 --frequency 1.5656483551621354 --lacunarity 2.1502877368729374 --persistence 0.29562066528218933 --n-contours 356 --min-contour 0.01 --max-contour 0.99 --stroke-weight 1.2
+// cargo run --release --example contours8 -- --loops 10
+// cargo run --release --example contours8 -- --grid 200 --n-contours 50 --frequency 1 --lacunarity 4 --persistence 0.5 --octaves 2
+// cargo run --release --example contours8 -- --grid 400 --noise-scale 1000.0 --z-scale 350.0 --seed 49607.74897115164 --octaves 4 --frequency 1.05 --lacunarity 6.0 --persistence 0.85 --n-contours 50 --min-contour 0.01 --max-contour 0.99 --stroke-weight 1.0
 extern crate chrono;
 extern crate delaunator;
 extern crate nannou;
@@ -34,7 +25,7 @@ fn main() {
 struct Model {
   // how grid points on each the x axis and y axis
   grid: usize,
-  fbm_opts: FbmOptions,
+  topo_opts: RidgedOptions,
   // Number of contour thresholds to draw
   n_contours: usize,
   // the min/max percent of the z_scale at which to draw contours.
@@ -58,7 +49,7 @@ fn model(app: &App) -> Model {
 
   Model {
     grid: args.get("grid", 100),
-    fbm_opts: FbmOptions::default(),
+    topo_opts: RidgedOptions::default(),
     n_contours: args.get("n-contours", 70),
     min_contour: args.get("min-contour", 0.01),
     max_contour: args.get("max-contour", 0.99),
@@ -68,17 +59,17 @@ fn model(app: &App) -> Model {
 
 fn update(_app: &App, model: &mut Model, _update: Update) {
   let args = ArgParser::new();
-  model.fbm_opts = FbmOptions {
+  model.topo_opts = RidgedOptions {
     seed: args.get("seed", random_range(1.0, 100000.0)),
-    noise_scale: args.get("noise-scale", 800.0),
+    noise_scale: args.get("noise-scale", 1000.0),
     z_scale: args.get("z-scale", 350.0),
-    octaves: args.get("octaves", 8),
-    frequency: args.get("frequency", random_range(1.2, 1.8)),
-    lacunarity: args.get("lacunarity", random_range(2.0, 2.6)),
-    persistence: args.get("persistence", random_range(0.28, 0.38)),
+    octaves: args.get("octaves", random_range(1, 6)),
+    frequency: args.get("frequency", random_range(0.9, 1.2)),
+    lacunarity: args.get("lacunarity", random_range(3.0, 6.0)),
+    persistence: args.get("persistence", random_range(1.01, 1.5)),
   };
-  model.n_contours = args.get("n-contours", random_range(150, 250));
-  model.stroke_weight = args.get("stroke-weight", random_range(0.5, 3.0));
+  model.n_contours = args.get("n-contours", random_range(40, 60));
+  model.stroke_weight = args.get("stroke-weight", random_range(0.5, 2.0));
 }
 
 fn view(app: &App, model: &Model, frame: Frame) {
@@ -104,7 +95,7 @@ fn view(app: &App, model: &Model, frame: Frame) {
     win.top() * 1.25,
   );
 
-  let elevation_fn = fbm_elevation_fn(&model.fbm_opts);
+  let elevation_fn = ridged_elevation_fn(&model.topo_opts);
   let triangles = calc_triangles(elevation_fn, grid);
 
   draw_elevation_map(&draw, model, &win);
@@ -114,8 +105,8 @@ fn view(app: &App, model: &Model, frame: Frame) {
       n,
       0,
       model.n_contours - 1,
-      model.fbm_opts.z_scale * model.min_contour,
-      model.fbm_opts.z_scale * model.max_contour,
+      model.topo_opts.z_scale * model.min_contour,
+      model.topo_opts.z_scale * model.max_contour,
     );
     println!(
       "drawing contour {} of {} ({} threshold)",
@@ -124,10 +115,11 @@ fn view(app: &App, model: &Model, frame: Frame) {
       threshold
     );
     let contour_segments = calc_contour(threshold, &triangles);
-    let (h, s, l) = get_color(n as f32 / (model.n_contours - 1) as f32).into_components();
+    let frac = n as f32 / (model.n_contours - 1) as f32;
+    let (h, s, l) = get_color(frac).into_components();
     draw_contour_lines(
       &draw,
-      hsl(h.to_positive_degrees() / 360., s * 2., l / 5.),
+      Hsl::new(h, s, l / 5.),
       model.stroke_weight,
       contour_segments,
     );
@@ -143,14 +135,16 @@ fn view(app: &App, model: &Model, frame: Frame) {
 
 fn draw_elevation_map(draw: &Draw, model: &Model, win: &Rect) {
   println!("Painting elevation map ...");
-  let elevation_map = fbm_elevation_fn(&model.fbm_opts);
+  let elevation_map = ridged_elevation_fn(&model.topo_opts);
 
   for (i, j) in grid(win.w() as usize + 1, win.h() as usize + 1) {
     let x = map_range(i, 0, win.w() as usize, win.left(), win.right());
     let y = map_range(j, 0, win.h() as usize, win.bottom(), win.top());
     let elevation = elevation_map(x.into(), y.into());
-    let frac = map_range(elevation / model.fbm_opts.z_scale, 0.3, 0.7, 0.0, 1.0);
-    let color = get_color(frac);
+    let frac = elevation / model.topo_opts.z_scale;
+    // for some reason the color returned from get_color has really low saturation (even though it should be 100%)
+    // so we bump it up a bit manually.
+    let color = get_color(frac).saturate(1.0);
     draw.rect().color(color).x_y(x, y).w_h(1.0, 1.0);
   }
 }
@@ -166,11 +160,9 @@ fn draw_contour_lines(draw: &Draw, stroke: Hsl, stroke_weight: f32, contour: Vec
 }
 
 fn get_color(frac: f32) -> Hsl {
-  let s = map_range(frac, 0.0, 1.0, 0.5, 0.8);
-  let l = map_range(frac, 0.0, 1.0, 0.2, 0.8);
   // For some reason, `overlay` is only available on LinSrgba struct*
   // *also distinctly possible that I'm wrong about that
-  let start = LinSrgba::from(hsla(0.99, s, l, 1.0 - frac));
-  let end = LinSrgba::from(hsla(0.63, s, l, frac));
+  let start = LinSrgba::from(hsla(219. / 360., 0.90, 0.05, 1.0 - frac));
+  let end = LinSrgba::from(hsla(200. / 360., 0.96, 0.9, frac));
   Hsl::from(start.overlay(end))
 }

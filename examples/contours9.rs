@@ -1,8 +1,9 @@
 // Same as contour7 but using RidgedMulti noise function for the elevation map
 //
-// cargo run --release --example contours8 -- --loops 10
-// cargo run --release --example contours8 -- --grid 200 --n-contours 50 --frequency 1 --lacunarity 4 --persistence 0.5 --octaves 2
-// cargo run --release --example contours8 -- --grid 400 --noise-scale 1000.0 --z-scale 350.0 --seed 49607.74897115164 --octaves 4 --frequency 1.05 --lacunarity 6.0 --persistence 0.85 --n-contours 50 --min-contour 0.01 --max-contour 0.99 --stroke-weight 1.0
+// cargo run --release --example contours9 -- --loops 10
+// cargo run --release --example contours9 -- --grid 200 --n-contours 50 --frequency 1 --lacunarity 4 --persistence 0.5 --octaves 2
+// cargo run --release --example contours9 -- --grid 400 --noise-scale 1000.0 --z-scale 350.0 --seed 49607.74897115164 --octaves 4 --frequency 1.05 --lacunarity 6.0 --persistence 0.85 --n-contours 50 --min-contour 0.01 --max-contour 0.99 --stroke-weight 1.0
+// cargo run --release --example contours9 -- --grid 200 --noise-scale 1000.0 --z-scale 350.0 --octaves 4 --frequency 0.9 --lacunarity 2.0 --persistence 1.01 --n-contours 250 --min-contour 0.01 --max-contour 0.99 --stroke-weight 1.0
 extern crate chrono;
 extern crate delaunator;
 extern crate nannou;
@@ -61,15 +62,15 @@ fn update(_app: &App, model: &mut Model, _update: Update) {
   let args = ArgParser::new();
   model.topo_opts = MultiFractalOptions {
     seed: args.get("seed", random_range(1.0, 100000.0)),
-    noise_scale: args.get("noise-scale", 1000.0),
+    noise_scale: args.get("noise-scale", random_range(200., 1000.)),
     z_scale: args.get("z-scale", 350.0),
-    octaves: args.get("octaves", random_range(1, 6)),
-    frequency: args.get("frequency", random_range(0.9, 1.2)),
-    lacunarity: args.get("lacunarity", random_range(3.0, 6.0)),
-    persistence: args.get("persistence", random_range(1.01, 1.5)),
+    octaves: args.get("octaves", random_range(1, 20)),
+    frequency: args.get("frequency", random_range(0.2, 3.2)),
+    lacunarity: args.get("lacunarity", random_range(1.0, 10.0)),
+    persistence: args.get("persistence", random_range(0.1, 2.0)),
   };
   model.n_contours = args.get("n-contours", random_range(40, 60));
-  model.stroke_weight = args.get("stroke-weight", random_range(0.5, 2.0));
+  model.stroke_weight = args.get("stroke-weight", random_range(0.75, 2.5));
 }
 
 fn view(app: &App, model: &Model, frame: Frame) {
@@ -119,7 +120,7 @@ fn view(app: &App, model: &Model, frame: Frame) {
     let (h, s, l) = get_color(frac).into_components();
     draw_contour_lines(
       &draw,
-      Hsl::new(h, s, l / 5.),
+      Hsla::new(h, s, l / 3., 0.5),
       model.stroke_weight,
       contour_segments,
     );
@@ -149,7 +150,7 @@ fn draw_elevation_map(draw: &Draw, model: &Model, win: &Rect) {
   }
 }
 
-fn draw_contour_lines(draw: &Draw, stroke: Hsl, stroke_weight: f32, contour: Vec<Deque2>) {
+fn draw_contour_lines(draw: &Draw, stroke: Hsla, stroke_weight: f32, contour: Vec<Deque2>) {
   for line in contour {
     draw
       .polyline()
@@ -162,7 +163,7 @@ fn draw_contour_lines(draw: &Draw, stroke: Hsl, stroke_weight: f32, contour: Vec
 fn get_color(frac: f32) -> Hsl {
   // For some reason, `overlay` is only available on LinSrgba struct*
   // *also distinctly possible that I'm wrong about that
-  let start = LinSrgba::from(hsla(219. / 360., 0.90, 0.05, 1.0 - frac));
-  let end = LinSrgba::from(hsla(200. / 360., 0.96, 0.9, frac));
+  let start = LinSrgba::from(hsla(10. / 360., 1.0, 0.8, 1.0 - frac));
+  let end = LinSrgba::from(hsla(30. / 360., 1.0, 0.15, frac));
   Hsl::from(start.overlay(end))
 }

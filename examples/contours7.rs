@@ -34,7 +34,7 @@ fn main() {
 struct Model {
   // how grid points on each the x axis and y axis
   grid: usize,
-  fbm_opts: FbmOptions,
+  fbm_opts: MultiFractalOptions,
   // Number of contour thresholds to draw
   n_contours: usize,
   // the min/max percent of the z_scale at which to draw contours.
@@ -58,7 +58,7 @@ fn model(app: &App) -> Model {
 
   Model {
     grid: args.get("grid", 100),
-    fbm_opts: FbmOptions::default(),
+    fbm_opts: MultiFractalOptions::default(),
     n_contours: args.get("n-contours", 70),
     min_contour: args.get("min-contour", 0.01),
     max_contour: args.get("max-contour", 0.99),
@@ -68,7 +68,7 @@ fn model(app: &App) -> Model {
 
 fn update(_app: &App, model: &mut Model, _update: Update) {
   let args = ArgParser::new();
-  model.fbm_opts = FbmOptions {
+  model.fbm_opts = MultiFractalOptions {
     seed: args.get("seed", random_range(1.0, 100000.0)),
     noise_scale: args.get("noise-scale", 800.0),
     z_scale: args.get("z-scale", 350.0),

@@ -1,9 +1,7 @@
 // Same as contour7 but using RidgedMulti noise function for the elevation map
 //
 // cargo run --release --example contours9 -- --loops 10
-// cargo run --release --example contours9 -- --grid 200 --n-contours 50 --frequency 1 --lacunarity 4 --persistence 0.5 --octaves 2
-// cargo run --release --example contours9 -- --grid 400 --noise-scale 1000.0 --z-scale 350.0 --seed 49607.74897115164 --octaves 4 --frequency 1.05 --lacunarity 6.0 --persistence 0.85 --n-contours 50 --min-contour 0.01 --max-contour 0.99 --stroke-weight 1.0
-// cargo run --release --example contours9 -- --grid 200 --noise-scale 1000.0 --z-scale 350.0 --octaves 4 --frequency 0.9 --lacunarity 2.0 --persistence 1.01 --n-contours 250 --min-contour 0.01 --max-contour 0.99 --stroke-weight 1.0
+// cargo run --release --example contours9 -- --grid 100 --octaves 2 --frequency 1.1 --lacunarity 4.0 --persistence 0.3 --noise-scale 1000 --n-contours 80 --seed 44132.94229140888 --stroke-weight 2
 extern crate chrono;
 extern crate delaunator;
 extern crate nannou;
@@ -16,6 +14,7 @@ mod util;
 use util::args::ArgParser;
 use util::contours::*;
 use util::grid;
+use util::Line2;
 use util::{capture_model, captured_frame_path, point_cloud};
 
 fn main() {
@@ -96,7 +95,7 @@ fn view(app: &App, model: &Model, frame: Frame) {
     win.top() * 1.25,
   );
 
-  let elevation_fn = ridged_elevation_fn(&model.topo_opts);
+  let elevation_fn = billow_elevation_fn(&model.topo_opts);
   let triangles = calc_triangles(elevation_fn, grid);
 
   draw_elevation_map(&draw, model, &win);
@@ -117,12 +116,13 @@ fn view(app: &App, model: &Model, frame: Frame) {
     );
     let contour_segments = calc_contour(threshold, &triangles);
     let frac = n as f32 / (model.n_contours - 1) as f32;
-    let (h, s, l) = get_color(frac).into_components();
+    let (h, s, l) = get_color(frac).saturate(1.0).into_components();
     draw_contour_lines(
       &draw,
-      Hsla::new(h, s, l / 3., 0.5),
+      Hsla::new(h, s, l / 1.25, 1.0),
       model.stroke_weight,
       contour_segments,
+      frac,
     );
   }
 
@@ -136,7 +136,7 @@ fn view(app: &App, model: &Model, frame: Frame) {
 
 fn draw_elevation_map(draw: &Draw, model: &Model, win: &Rect) {
   println!("Painting elevation map ...");
-  let elevation_map = ridged_elevation_fn(&model.topo_opts);
+  let elevation_map = billow_elevation_fn(&model.topo_opts);
 
   for (i, j) in grid(win.w() as usize + 1, win.h() as usize + 1) {
     let x = map_range(i, 0, win.w() as usize, win.left(), win.right());
@@ -145,18 +145,32 @@ fn draw_elevation_map(draw: &Draw, model: &Model, win: &Rect) {
     let frac = elevation / model.topo_opts.z_scale;
     // for some reason the color returned from get_color has really low saturation (even though it should be 100%)
     // so we bump it up a bit manually.
-    let color = get_color(frac).saturate(1.0);
-    draw.rect().color(color).x_y(x, y).w_h(1.0, 1.0);
+    let (h, s, l) = get_color(frac).saturate(1.0).into_components();
+    draw
+      .rect()
+      .color(Hsla::new(h, s, l * 1.5, 1.))
+      .x_y(x, y)
+      .w_h(1.0, 1.0);
   }
 }
 
-fn draw_contour_lines(draw: &Draw, stroke: Hsla, stroke_weight: f32, contour: Vec<Deque2>) {
-  for line in contour {
+fn draw_contour_lines(
+  draw: &Draw,
+  stroke: Hsla,
+  stroke_weight: f32,
+  contour: Vec<Deque2>,
+  frac: f32,
+) {
+  let points: Line2 = contour.iter().flatten().cloned().collect();
+  for (i, point) in points.iter().enumerate() {
+    if i % map_range(frac, 0.0, 1.0, 10, 1) != 0 {
+      continue;
+    }
     draw
-      .polyline()
+      .ellipse()
       .color(stroke)
-      .weight(stroke_weight)
-      .points(line);
+      .w_h(stroke_weight / frac, stroke_weight / frac)
+      .x_y(point.x, point.y);
   }
 }
 

@@ -8,8 +8,8 @@ pub use super::Line2;
 
 #[derive(Debug)]
 pub struct Blob {
-  x: f32,
-  y: f32,
+  pub x: f32,
+  pub y: f32,
   noise_scale: f32,
   width: f32,
   height: f32,

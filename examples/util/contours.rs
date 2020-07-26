@@ -1,11 +1,12 @@
 // The contouring is an implementation of Bruce Hill's "Meandering Triangles" contour algorithm:
 // https://blog.bruce-hill.com/meandering-triangles
+extern crate delaunator;
 use nannou::noise::{Billow, Fbm, MultiFractal, NoiseFn, RidgedMulti};
 use nannou::prelude::*;
 
 use std::collections::VecDeque;
 
-use delaunator::{triangulate, Point};
+use self::delaunator::{triangulate, Point};
 
 use super::PointCloud;
 

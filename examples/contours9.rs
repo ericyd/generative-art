@@ -1,7 +1,7 @@
 // Same as contour7 but using RidgedMulti noise function for the elevation map
 //
 // cargo run --release --example contours9 -- --loops 10
-// cargo run --release --example contours9 -- --grid 100 --octaves 2 --frequency 1.1 --lacunarity 4.0 --persistence 0.3 --noise-scale 1000 --n-contours 80 --seed 44132.94229140888 --stroke-weight 2
+// cargo run --release --example contours9 -- --grid 400 --octaves 2 --frequency 1.1 --lacunarity 4.0 --persistence 0.3 --noise-scale 1000 --n-contours 80 --seed 44132.94229140888 --stroke-weight 2
 extern crate chrono;
 extern crate delaunator;
 extern crate nannou;

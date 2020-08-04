@@ -66,7 +66,8 @@ If you'd like to run via command line, you totally can!
 
 ```bash
 # title argument can end in "Kt" or not, your choice
-./gradlew sketch -Ptitle=MySketch
+# Do not include `sketch` in the title, but do include any other packages
+./gradlew sketch -Ptitle=flow.MySketch
 ```
 
 ### Formatting

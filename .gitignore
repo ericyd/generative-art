@@ -17,9 +17,13 @@ ideas.md
 # for those things I don't want clogging up my `git status` but aren't ready to be merged :D
 wip/
 
+# Kotlin junk, who knows
 application.log
 build
 out
 .idea
 .gradle
 lib
+
+# Generated from OpenRNDR `Screenshots` extension
+screenshots

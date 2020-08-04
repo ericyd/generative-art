@@ -276,7 +276,7 @@ task("sketch", JavaExec::class) {
     if (!Regex("Kt$").containsMatchIn(title)) {
       programMain = title + "Kt"
     }
-    main = programMain
+    main = "sketch." + programMain
   } else {
     println(
       "Please pass title paramter like\n" +

@@ -3,6 +3,8 @@ Built with [Nannou][], [Processing][], and [OpenRNDR][]
 
 ## Broken links? 😱
 
+Did you follow a link from Instagram or elsewhere and get a 404???
+
 **TLDR**: replace `master` or `main` in the URL with `5f072452563a05ea9fa4e895336504654df5f971` and it should work.
 
 **Not too long, did read**: Originally I was planning to only write code using [Nannou][].

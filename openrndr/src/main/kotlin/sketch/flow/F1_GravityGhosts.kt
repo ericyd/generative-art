@@ -61,7 +61,7 @@ fun main() = application {
         // draw nMax lines around each circumference
         List(nMax) { n ->
           val angle = map(0.0, nMax.toDouble(), 0.0, 2.0 * PI, n.toDouble())
-          val c = contour {
+          contour {
             moveTo(Vector2(body.x + cos(angle) * radius, body.y + sin(angle) * radius))
             List(lineLength) {
               // `cursor` points to the end point of the previous command - AMAZING!!
@@ -69,7 +69,6 @@ fun main() = application {
               lineTo(cursor + force)
             }
           }
-          c
         }
       }
     }

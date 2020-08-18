@@ -12,5 +12,5 @@ class AntigravityBody(x: Double, y: Double, mass: Double) : GravityBody(x, y, ma
    * This is NOT separated by x/y component.
    * Antigravity uses positive `g` instead of negative `g`
    */
-  override fun force(g: Double, x2: Double, y2: Double) = super.force(-g, x2, y2)
+  override fun force(g: Double, x2: Double, y2: Double, m2: Double) = super.force(-g, x2, y2, m2)
 }

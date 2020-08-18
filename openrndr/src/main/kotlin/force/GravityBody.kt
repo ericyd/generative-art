@@ -15,26 +15,30 @@ import kotlin.math.sin
  */
 open class GravityBody(val x: Double, val y: Double, val mass: Double) {
   constructor(origin: Vector2, mass: Double) : this(origin.x, origin.y, mass)
+  var origin = Vector2(x, y)
+
+  fun equals(other: GravityBody): Boolean =
+    other?.origin == origin && other?.mass == mass
 
   /**
    * Calculate the distance from this body to another point
    * This corresponds to the "radius" in most Gravitational force equations
    */
   protected fun distance(x2: Double, y2: Double): Double =
-    hypot(x2 - x, y2 - y)
+    hypot(x2 - origin.x, y2 - origin.y)
 
   /**
    * Ccalculate the angle from the GravityBody (origin) to the given point
    */
   private fun angle(x2: Double, y2: Double): Double =
-    atan2(y2 - y, x2 - x)
+    atan2(y2 - origin.y, x2 - origin.x)
 
   /**
    * Calculate the gravitational force on the body.
    * This is NOT separated by x/y component
    */
-  open fun force(g: Double, x2: Double, y2: Double) =
-    -g * mass / distance(x2, y2).pow(2.0)
+  open fun force(g: Double, x2: Double, y2: Double, m2: Double = 1.0) =
+    -g * mass * m2 / distance(x2, y2).pow(2.0)
 
   // Based on
   // https://en.wikipedia.org/wiki/Newton%27s_law_of_universal_gravitation
@@ -52,8 +56,8 @@ open class GravityBody(val x: Double, val y: Double, val mass: Double) {
    * Calculate the x-component of the gravitational force that
    * this body exerts on point mass at (x2,y2)
    */
-  fun forceX(g: Double, x2: Double, y2: Double): Double =
-    force(g, x2, y2) * cos(angle(x2, y2))
+  fun forceX(g: Double, x2: Double, y2: Double, m2: Double = 1.0): Double =
+    force(g, x2, y2, m2) * cos(angle(x2, y2))
 
   // If discontinuities arise in the resulting field, try `cos` instead of `sin`.
   // I used cos in the original Rust implementation, but I believe that was because
@@ -62,6 +66,6 @@ open class GravityBody(val x: Double, val y: Double, val mass: Double) {
    * Calculate the y-component of the gravitational force that
    * this body exerts on point mass at (x2,y2)
    */
-  fun forceY(g: Double, x2: Double, y2: Double): Double =
-    force(g, x2, y2) * sin(angle(x2, y2))
+  fun forceY(g: Double, x2: Double, y2: Double, m2: Double = 1.0): Double =
+    force(g, x2, y2, m2) * sin(angle(x2, y2))
 }

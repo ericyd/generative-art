@@ -11,19 +11,29 @@ import org.openrndr.math.Vector2
  * @param speed the speed with which it moves towards it's target
  * @param target the location in space which the body aims towards
  */
-class PhysicalBody(coords: Vector2, val mass: Double, val speed: Double, val target: Vector2) {
+class PhysicalBody(coords: Vector2, val mass: Double, val speed: Double = 0.0, val target: Vector2 = Vector2.ZERO) {
   var coords = coords
 
-  constructor(x: Int, y: Int, mass: Double, speed: Double, target: Vector2) :
+  constructor(x: Int, y: Int, mass: Double, speed: Double = 0.0, target: Vector2 = Vector2.ZERO) :
     this(Vector2(x.toDouble(), y.toDouble()), mass, speed, target)
 
   fun move(system: GravitySystem): Vector2 {
     val extrinsicForce = system.forceRaw(coords, mass)
-    // mixing speed and force...?
-    // should I multiply velocity by mass to get momentum?
-    // Is momentum ~= force if each calculation is per 1s?
-    val intrinsicVelocity = unitVector(target - coords) * speed
-    val movement = unitVector(extrinsicForce + intrinsicVelocity)
+    // meh, just gonna call this force even though it's not
+    val intrinsicForce = (target - coords).normalized * speed
+    val movement = (extrinsicForce + intrinsicForce).normalized
+
+    coords += movement
+    return coords
+  }
+
+  fun spiral(system: GravitySystem, scale: Double = 1.0): Vector2 {
+    val perpendicular = coords + coords.perpendicular() * scale
+    val extrinsicForce = system.forceRaw(perpendicular, mass)
+
+    // meh, just gonna call this force even though it's not
+    val intrinsicForce = perpendicular.normalized * speed
+    val movement = (extrinsicForce + intrinsicForce).normalized
 
     coords += movement
     return coords

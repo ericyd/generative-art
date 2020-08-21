@@ -20,7 +20,7 @@ class GravitySystem(val g: Double, val bodies: List<GravityBody>) {
     )
 
   fun force(other: Vector2, m2: Double = 1.0, overrideBodies: List<GravityBody>? = null): Vector2 =
-    unitVector(forceRaw(other, m2, overrideBodies))
+    (forceRaw(other, m2, overrideBodies)).normalized
 
   fun force(x2: Double, y2: Double, m2: Double = 1.0, overrideBodies: List<GravityBody>? = null): Vector2 =
     force(Vector2(x2, y2), m2, overrideBodies)

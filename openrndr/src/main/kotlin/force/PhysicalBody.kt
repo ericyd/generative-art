@@ -1,6 +1,7 @@
 package force
 
 import org.openrndr.math.Vector2
+import kotlin.random.Random
 
 /**
  * General purpose physical body in motion.
@@ -33,6 +34,15 @@ class PhysicalBody(coords: Vector2, val mass: Double, val speed: Double = 0.0, v
 
     // meh, just gonna call this force even though it's not
     val intrinsicForce = perpendicular.normalized * speed
+    val movement = (extrinsicForce + intrinsicForce).normalized
+
+    coords += movement
+    return coords
+  }
+
+  fun spiral2(system: GravitySystem, rand: Random, scale: Double): Vector2 {
+    val extrinsicForce = system.spiralRaw(coords, mass, rand = rand, scale = scale)
+    val intrinsicForce = (extrinsicForce - coords).normalized.perpendicular() * speed
     val movement = (extrinsicForce + intrinsicForce).normalized
 
     coords += movement

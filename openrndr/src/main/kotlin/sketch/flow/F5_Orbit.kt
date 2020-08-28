@@ -1,10 +1,8 @@
 /**
- * A gentle gravity field, with some noise.
+ * A gentle gravity field, where particles end up "orbiting" the gravity points
  *
- * This gravity field is slightly different in that instead of acting on
- * the current point in the line, it acts on the point perpendicular to the
- * point. That creates some interesting spirals, and also some challenges with getting things
- * on screen, but nothing a few magic numbers can't solve
+ * Essentially, instead of calculating a force straight from the point,
+ * it calculates a force from the perpendicular of the point
  */
 package sketch.flow
 
@@ -18,6 +16,7 @@ import org.openrndr.draw.LineCap
 import org.openrndr.extensions.Screenshots
 import org.openrndr.extra.noise.random
 import org.openrndr.math.Vector2
+import org.openrndr.math.YPolarity
 import org.openrndr.math.map
 import org.openrndr.shape.contour
 import kotlin.math.PI
@@ -26,9 +25,27 @@ import kotlin.math.hypot
 import kotlin.math.sin
 import kotlin.random.Random
 
-data class Settings(val seed: Long, val scale: Double, val lineLength: Int, var bodyCount: Int? = null) {
+data class Settings(val seed: Long, val scaleOrNull: Double? = null, val lineLength: Int, var bodyCount: Int? = null) {
   val rand = Random(seed)
-  val nBodies = bodyCount ?: random(4.0, 8.0, rand).toInt()
+  val nBodies = bodyCount ?: random(1.0, 6.0, rand).toInt()
+  val scale = scaleOrNull ?: random(1.0, 4.0, rand)
+
+  override fun toString(): String = """
+    Settings:
+      seed: $seed
+      scale: $scale
+      nBodies: $nBodies
+      lineLength: $lineLength
+      scaleOrNull: $scaleOrNull
+      bodyCount: $bodyCount
+      
+    Settings(
+      seed = $seed,
+      lineLength = $lineLength,
+      scaleOrNull = $scale,
+      bodyCount = $nBodies
+    )
+  """.trimIndent()
 }
 
 fun main() = application {
@@ -46,33 +63,81 @@ fun main() = application {
       scale = 2.0
     }
     backgroundColor = ColorRGBa.BLACK
-    val settings = Settings(
-      seed = random(1.0, Long.MAX_VALUE.toDouble()).toLong(), // know your seed 😛
-      lineLength = 1500,
-      scale = 3.0,
-      bodyCount = null
+    val seed = random(1.0, Long.MAX_VALUE.toDouble()).toLong() // know your seed 😛
+    var settings = Settings(
+      seed,
+      lineLength = 2000
     )
 
+    // settings = Settings(
+    //   1180569484161769472,
+    //   lineLength = 1500,
+    //   bodyCount = 3,
+    //   scaleOrNull = 3.0
+    // )
+
     // Some collections of "settings" (probably should make a data class for this in future
-    // val settings = Settings(
-    //   seed = 596848407871,
-    //   scale = 1.0,
+    // settings = Settings(
+    //   seed = 4112586598597632001,
+    //   scaleOrNull = 3.0,
+    //   bodyCount = 8,
+    //   lineLength = 1500
+    // )
+
+    // settings = Settings(
+    //   seed = 8986313017738607615,
+    //   scaleOrNull = 2.379761980399831,
     //   bodyCount = 4,
     //   lineLength = 1500
     // )
 
-    println("seed: ${settings.seed}")
+    // settings = Settings(
+    //   seed = 7376653687330572287,
+    //   lineLength = 1500,
+    //   scaleOrNull = 2.3008692931618744,
+    //   bodyCount = 6
+    // )
+
+    // settings = Settings(
+    //   seed = 5580551685306258433,
+    //   lineLength = 1500,
+    //   scaleOrNull = 2.69,
+    //   bodyCount = 8
+    // )
+
+    // settings = Settings(
+    //   seed = 1517705629092318208,
+    //   lineLength = 2000,
+    //   scaleOrNull = 1.0938661171250148,
+    //   bodyCount = 4
+    // )
+
+    // settings = Settings(
+    //   seed = 5523075166130460672,
+    //   lineLength = 2000,
+    //   scaleOrNull = 1.510784284089783,
+    //   bodyCount = 8
+    // )
+
+    settings = Settings(
+      seed = 5523107165134601478,
+      lineLength = 1000,
+      scaleOrNull = 3.81,
+      bodyCount = 6
+    )
+
+    println("seed: $seed; settings: $settings")
     val center = Vector2(width / 2.0, height / 2.0)
 
     // These are really beautiful but take a while for "prototyping"
-    // val strokeWeight = 0.75
-    // val opacity = 0.15
-    // val nLines = 1700
+    val strokeWeight = 0.75
+    val opacity = 0.15
+    val nLines = 1700
 
     // Good for quick design checks
-    val strokeWeight = 0.75
-    val opacity = 0.85
-    val nLines = 200
+    // val strokeWeight = 0.75
+    // val opacity = 0.85
+    // val nLines = 200
 
     val colors = listOf(
       hsla(261.0, 0.45, 0.43, opacity), // purple
@@ -84,16 +149,13 @@ fun main() = application {
       hsla(29.0, 0.93, 0.83, opacity) // orange/salmon
     )
 
-    // these attract things
-    // val gravityBodies: List<GravityBody> = listOf(
-    //   GravityBody(width * 0.51, height * 0.51, 100000.0)
-    // )
     val gravityBodies: List<GravityBody> = List(settings.nBodies) {
       GravityBody(
         // because of the way the "spiral" movement function works, offsetting the x/y of the gravity body makes it more centered
-        random(width * -0.45, width * 1.45, settings.rand), // + width / 2.0 * settings.scale,
-        random(height * -0.45, height * 1.45, settings.rand), // - height / 2.0 * settings.scale,
-        random(900.0, 1000.0, settings.rand)
+        x = random(width * -0.75, width * 1.75, settings.rand),
+        y = random(height * -0.75, height * 1.75, settings.rand),
+        mass = random(900.0, 1000.0, settings.rand),
+        rand = settings.rand
       )
     }
 
@@ -107,16 +169,16 @@ fun main() = application {
       // create a "swarm" of contours originating from one spot at the given angle
       val contours = (0 until nLines).map {
         val randomizedAngle = random(angle * 0.8, angle * 1.2, settings.rand)
-        val randomizedRadius = random(radius * 0.8, radius * 1.2, settings.rand)
+        val randomizedRadius = random(radius * 0.08, radius * 1.2, settings.rand)
         val body = PhysicalBody(
           center + Vector2(cos(randomizedAngle) * randomizedRadius, sin(randomizedAngle) * randomizedRadius),
           mass = random(205.0, 315.0, settings.rand),
-          speed = 10.0
+          speed = 1.30
         )
         contour {
           moveTo(body.coords)
           List(settings.lineLength) {
-            lineTo(body.spiral2(system, settings.rand, settings.scale))
+            lineTo(body.orbit(system, settings.scale, center))
           }
         }
       }

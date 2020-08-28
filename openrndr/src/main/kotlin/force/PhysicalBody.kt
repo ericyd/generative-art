@@ -40,9 +40,20 @@ class PhysicalBody(coords: Vector2, val mass: Double, val speed: Double = 0.0, v
     return coords
   }
 
-  fun spiral2(system: GravitySystem, rand: Random, scale: Double): Vector2 {
-    val extrinsicForce = system.spiralRaw(coords, mass, rand = rand, scale = scale)
-    val intrinsicForce = (extrinsicForce - coords).normalized.perpendicular() * speed
+  fun spiral2(system: GravitySystem, scale: Double, center: Vector2 = Vector2.ZERO): Vector2 {
+    val pos = coords - center
+    val extrinsicForce = system.spiralRaw(pos, mass, scale = scale)
+    val intrinsicForce = (extrinsicForce - pos).normalized.perpendicular() * speed
+    val movement = (extrinsicForce + intrinsicForce).normalized
+
+    coords += movement
+    return coords
+  }
+
+  fun orbit(system: GravitySystem, scale: Double, center: Vector2 = Vector2.ZERO): Vector2 {
+    val pos = coords - center
+    val extrinsicForce = system.orbitRaw(pos, mass, scale = scale)
+    val intrinsicForce = (extrinsicForce - pos).normalized.perpendicular() * speed
     val movement = (extrinsicForce + intrinsicForce).normalized
 
     coords += movement

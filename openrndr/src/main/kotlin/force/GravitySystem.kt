@@ -22,7 +22,7 @@ class GravitySystem(val g: Double, val bodies: List<GravityBody>) {
       }
     )
 
-  fun spiralX(other: Vector2, m2: Double, effectiveBodies: List<GravityBody>, rand: Random, scale: Double): Double =
+  fun spiralXNoisy(other: Vector2, m2: Double, effectiveBodies: List<GravityBody>, rand: Random, scale: Double): Double =
     effectiveBodies.fold(
       0.0,
       { total: Double, body: GravityBody ->
@@ -31,12 +31,44 @@ class GravitySystem(val g: Double, val bodies: List<GravityBody>) {
       }
     )
 
-  fun spiralY(other: Vector2, m2: Double, effectiveBodies: List<GravityBody>, rand: Random, scale: Double): Double =
+  fun spiralYNoisy(other: Vector2, m2: Double, effectiveBodies: List<GravityBody>, rand: Random, scale: Double): Double =
     effectiveBodies.fold(
       0.0,
       { total: Double, body: GravityBody ->
         val pos = if (random(-1.0, 1.0, random = rand) < 0.0) other.perpendicular(YPolarity.CCW_POSITIVE_Y) else other.perpendicular(YPolarity.CW_NEGATIVE_Y)
         total + body.forceY(g, pos.x, pos.y, m2)
+      }
+    )
+
+  fun spiralX(other: Vector2, m2: Double, effectiveBodies: List<GravityBody>, scale: Double): Double =
+    effectiveBodies.fold(
+      0.0,
+      { total: Double, body: GravityBody ->
+        total + body.spiralX(g, other, m2, scale)
+      }
+    )
+
+  fun spiralY(other: Vector2, m2: Double, effectiveBodies: List<GravityBody>, scale: Double): Double =
+    effectiveBodies.fold(
+      0.0,
+      { total: Double, body: GravityBody ->
+        total + body.spiralY(g, other, m2, scale)
+      }
+    )
+
+  fun orbitX(other: Vector2, m2: Double, effectiveBodies: List<GravityBody>, scale: Double): Double =
+    effectiveBodies.fold(
+      0.0,
+      { total: Double, body: GravityBody ->
+        total + body.orbitX(g, other, m2, scale)
+      }
+    )
+
+  fun orbitY(other: Vector2, m2: Double, effectiveBodies: List<GravityBody>, scale: Double): Double =
+    effectiveBodies.fold(
+      0.0,
+      { total: Double, body: GravityBody ->
+        total + body.orbitY(g, other, m2, scale)
       }
     )
 
@@ -53,10 +85,17 @@ class GravitySystem(val g: Double, val bodies: List<GravityBody>) {
     return Vector2(fX, fY)
   }
 
-  fun spiralRaw(other: Vector2, m2: Double = 1.0, overrideBodies: List<GravityBody>? = null, rand: Random = Random.Default, scale: Double = 1.0): Vector2 {
+  fun spiralRaw(other: Vector2, m2: Double = 1.0, overrideBodies: List<GravityBody>? = null, scale: Double = 1.0): Vector2 {
     val effectiveBodies = overrideBodies ?: bodies
-    val fX = spiralX(other, m2, effectiveBodies, rand, scale)
-    val fY = spiralY(other, m2, effectiveBodies, rand, scale)
+    val fX = spiralX(other, m2, effectiveBodies, scale)
+    val fY = spiralY(other, m2, effectiveBodies, scale)
+    return Vector2(fX, fY)
+  }
+
+  fun orbitRaw(other: Vector2, m2: Double = 1.0, overrideBodies: List<GravityBody>? = null, scale: Double = 1.0): Vector2 {
+    val effectiveBodies = overrideBodies ?: bodies
+    val fX = orbitX(other, m2, effectiveBodies, scale)
+    val fY = orbitY(other, m2, effectiveBodies, scale)
     return Vector2(fX, fY)
   }
 

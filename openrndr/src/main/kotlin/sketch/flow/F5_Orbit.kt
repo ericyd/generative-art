@@ -29,16 +29,23 @@ data class Settings(val seed: Long, val scaleOrNull: Double? = null, val lineLen
   val rand = Random(seed)
   val nBodies = bodyCount ?: random(1.0, 6.0, rand).toInt()
   val scale = scaleOrNull ?: random(1.0, 4.0, rand)
+  // Since we define an instance of Random in this data class,
+  // the results of random(rand) will be different depending on
+  // whether or not it is used to define `nBodies` or `scale`.
+  // Essentially, if it isn't used enough, we "compensate" by calling random(rand)
+  // as many times as we need to. This ensures that the settings that are printed
+  // will generate an identical image, because the Random instance will be used
+  // the same number of times.
+  // This is a **breaking change** and existing sketches will look different with this
+  val throwaway = if (scaleOrNull != null && bodyCount != null) {
+    random(random = rand) + random(random = rand)
+  } else if (scaleOrNull != null || bodyCount != null) {
+    random(random = rand)
+  } else {
+    0.0
+  }
 
   override fun toString(): String = """
-    Settings:
-      seed: $seed
-      scale: $scale
-      nBodies: $nBodies
-      lineLength: $lineLength
-      scaleOrNull: $scaleOrNull
-      bodyCount: $bodyCount
-      
     Settings(
       seed = $seed,
       lineLength = $lineLength,

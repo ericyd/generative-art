@@ -42,8 +42,8 @@ fun main() = application {
     val opacity = 0.185
     val nLines = 600
     var settings = Settings(
-      // random(1.0, Long.MAX_VALUE.toDouble()).toLong() // know your seed 😛
-      8238401536276667392,
+      // random(1.0, Long.MAX_VALUE.toDouble()).toLong(), // know your seed 😛
+      8238401536276667391,
       lineLength = 3000,
       bodyCount = 10,
       scaleOrNull = 1.6
@@ -73,11 +73,9 @@ fun main() = application {
     val maxRadius = hypot(width / 2.0, height / 2.0)
     val nAngles = 7
     val contours: List<ShapeContour> = (0 until nAngles).flatMap { index ->
-      val angle = map(0.0, nAngles.toDouble(), 0.0, 2.0 * PI, index.toDouble())
-
       // create a "swarm" of contours originating from one spot at the given angle
       (0 until nLines).map {
-        val randomizedAngle = random(angle * 0.4, angle * 1.6, settings.rand)
+        val randomizedAngle = random(0.0, 2.0 * PI, settings.rand)
         val randomizedRadius = random(maxRadius * 0.8, maxRadius * 1.2, settings.rand)
         val body = PhysicalBody(
           center + Vector2(cos(randomizedAngle) * randomizedRadius, sin(randomizedAngle) * randomizedRadius),

@@ -1,7 +1,6 @@
 package force
 
 import org.openrndr.math.Vector2
-import kotlin.random.Random
 
 /**
  * General purpose physical body in motion.

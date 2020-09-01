@@ -16,7 +16,6 @@ import org.openrndr.draw.LineCap
 import org.openrndr.extensions.Screenshots
 import org.openrndr.extra.noise.random
 import org.openrndr.math.Vector2
-import org.openrndr.math.YPolarity
 import org.openrndr.math.map
 import org.openrndr.shape.contour
 import kotlin.math.PI
@@ -45,14 +44,15 @@ data class Settings(val seed: Long, val scaleOrNull: Double? = null, val lineLen
     0.0
   }
 
-  override fun toString(): String = """
+  override fun toString(): String =
+    """
     Settings(
       seed = $seed,
       lineLength = $lineLength,
       scaleOrNull = $scale,
       bodyCount = $nBodies
     )
-  """.trimIndent()
+    """.trimIndent()
 }
 
 fun main() = application {

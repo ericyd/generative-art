@@ -73,32 +73,60 @@ fun main() = application {
     // val settings = F8Settings(
     //   seed,
     //   rand,
-    //   nBodies = random(1.0, 3.2, rand).toInt(),
+    //   nBodies = random(1.0, 4.2, rand).toInt(),
     //   scale = random(1.0, 4.0, rand),
     //   strokeWeight = 0.95,
     //   opacity = 0.585,
     //   lineLength = random(200.0, 2000.0, rand).toInt(),
     //   nLines = random(100.0, 800.0, rand).toInt(),
     //   minRadius = random(0.2, 0.5, rand),
-    //   maxRadius = random(0.51, 0.65, rand),
+    //   maxRadius = random(0.51, 1.2, rand),
     //   bodySpeed = if (random(random = rand) < 0.0) 0.0 else 0.5,
     //   needToBurnCycles = false // this is a silly thing... just trying to make my life easier re: saving settings
     // )
 
-    // circle
     val settings = F8Settings(
-      seed = 5949447342224600064,
-      rand = Random(5949447342224600064),
-      scale = 2.7966425950746716,
-      lineLength = 412,
-      bodySpeed = 0.0,
-      nBodies = 1,
-      nLines = 599,
+      seed = 8194798619954445312,
+      rand = Random(8194798619954445312),
+      scale = 2.1528353570436742,
+      lineLength = 1542,
+      nBodies = 2,
+      nLines = 291,
+      bodySpeed = 0.5,
       strokeWeight = 0.95,
-      minRadius = 0.3659914961526285,
-      maxRadius = 0.6460065576698675,
+      minRadius = 0.39534779589478436,
+      maxRadius = 0.7625887368882514,
       opacity = 0.585
     )
+
+    // val settings = F8Settings(
+    //   seed = 6121586236746043392,
+    //   rand = Random(6121586236746043392),
+    //   scale = 2.9188363083383626,
+    //   lineLength = 190,
+    //   nBodies = 4,
+    //   nLines = 960,
+    //   bodySpeed = 0.0,
+    //   strokeWeight = 0.95,
+    //   minRadius = 0.1576940148962754,
+    //   maxRadius = 0.5868613389825957,
+    //   opacity = 0.585
+    // )
+
+    // circle
+    // val settings = F8Settings(
+    //   seed = 5949447342224600064,
+    //   rand = Random(5949447342224600064),
+    //   scale = 2.7966425950746716,
+    //   lineLength = 412,
+    //   bodySpeed = 0.0,
+    //   nBodies = 1,
+    //   nLines = 599,
+    //   strokeWeight = 0.95,
+    //   minRadius = 0.3659914961526285,
+    //   maxRadius = 0.6460065576698675,
+    //   opacity = 0.585
+    // )
 
     // val settings = F8Settings(
     //   seed = 2063554222836573184,

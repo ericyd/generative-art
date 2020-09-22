@@ -13,8 +13,17 @@ import org.openrndr.extensions.Screenshots
 import org.openrndr.extra.noise.random
 import org.openrndr.math.Vector2
 import org.openrndr.math.map
+import shape.DeJongAttractor
+import kotlin.math.PI
+import kotlin.math.acos
+import kotlin.math.asin
+import kotlin.math.atan
+import kotlin.math.atan2
 import kotlin.math.cos
+import kotlin.math.cosh
+import kotlin.math.hypot
 import kotlin.math.sin
+import kotlin.math.sinh
 import kotlin.random.Random
 
 fun main() = application {
@@ -43,6 +52,7 @@ fun main() = application {
     // seed = 1380776900078604288
     // seed = 8258304699529367552
     // seed = 6752889625800710144
+    // seed = 5864043088063033344
     val rand = Random(seed)
     val bounds = 2.0
 
@@ -54,50 +64,43 @@ fun main() = application {
 
     // Allowing these to be a bit larger is also interesting, but I like the smaller range generally
     val paramRange = 2.5
-    val a = random(-paramRange, paramRange, rand)
-    val b = random(-paramRange, paramRange, rand)
-    val c = random(-paramRange, paramRange, rand)
-    val d = random(-paramRange, paramRange, rand)
+    val params = mapOf(
+      "a" to random(-paramRange, paramRange, rand),
+      "b" to random(-paramRange, paramRange, rand),
+      "c" to random(-paramRange, paramRange, rand),
+      "d" to random(-paramRange, paramRange, rand)
+    )
 
     println("""
       seed: $seed
-      a: $a
-      b: $b
-      c: $c
-      d: $d
+      a: ${params["a"]}
+      b: ${params["b"]}
+      c: ${params["c"]}
+      d: ${params["d"]}
     """.trimIndent())
-
-    // De Jong
-    fun nextPoint(point: Vector2): Vector2 =
-      Vector2(
-        sin(a * point.y) - cos(b * point.x),
-        sin(c * point.x) - cos(d * point.y)
-      )
 
     var points = List(nLines) {
       Vector2(random(-bounds, bounds, rand), random(-bounds, bounds, rand))
     }
 
-    // Start lines at the "next point" to avoid artifacts from the random placement of the first points
-    var lines: List<MutableList<Vector2>> = points.map {
-      mutableListOf(nextPoint(it))
-    }
+    val deJong = DeJongAttractor(points, params)
 
     extend {
-      lines.forEach { l ->
-        l.add(nextPoint(l.last()))
-      }
-      points = lines.flatten().map {
+      deJong.addNext()
+      drawer.fill = ColorRGBa.BLACK.opacify(0.35)
+      deJong.points.map {
         // DeJong always returns between -2 and 2 since it is the difference of two basic trig funcs
         Vector2(
           map(-bounds, bounds, 0.0, width.toDouble(), it.x),
           map(-bounds, bounds, 0.0, height.toDouble(), it.y)
         )
-      }
 
-      drawer.fill = ColorRGBa.BLACK.opacify(0.35)
-      // drawer.fill = ColorRGBa(0.70, 0.60, 0.20, 0.05)
-      points.chunked(500) { drawer.points(it) }
+        //polar-ish??
+        // Vector2(
+        //   map(-PI, PI, 0.0, width.toDouble(), atan2(it.x, it.y)),
+        //   map(0.0, hypot(bounds, bounds), 0.0, height.toDouble(), hypot(it.x, it.y))
+        // )
+      }.chunked(500) { drawer.points(it) }
     }
   }
 }

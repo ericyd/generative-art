@@ -12,7 +12,7 @@
 package sketch.flow
 
 import noise.mapToRadians
-import noise.memoizedGradientRandom
+import noise.memoize
 import noise.yanceyNoiseV1
 import org.openrndr.application
 import org.openrndr.color.ColorHSLa
@@ -66,7 +66,7 @@ fun main() = application {
     // Memoizing our random function ensures that we get smooth gradients.
     // The idea is, for each unique point in our "grid", we should always return the same value.
     // There are other ways of achieving this, but memoizing a random function is a pretty easy way.
-    val memRandom = memoizedGradientRandom(rand, Vector2.ZERO)
+    val memo = memoize<Vector2, Vector2> { v -> Vector2(random(-1.0, 1.0, rand), random(-1.0, 1.0, rand)).normalized }
 
     val results = mutableListOf<Double>()
 
@@ -80,11 +80,11 @@ fun main() = application {
 
           List(lineLength) {
             // 2D value noise
-            // Note: must use memoizedValueRandom, e.g. val memRandom = memoizedValueRandom(rand, Vector2.ZERO)
-            // val angle = mapToRadians(0.0, 1.0, valueNoise2D(cursor / noiseScale, memRandom))
+            // Note: must use memoizedValueRandom, e.g. val memo = memoizedValueRandom(rand, Vector2.ZERO)
+            // val angle = mapToRadians(0.0, 1.0, valueNoise2D(cursor / noiseScale, memo))
 
             // 2D ... gradient noise? Maybe
-            val res = yanceyNoiseV1(cursor / noiseScale, memRandom, true)
+            val res = yanceyNoiseV1(cursor / noiseScale, memo, true)
             results.add(res)
             val angle = mapToRadians(-1.0, 1.0, res)
 
@@ -135,15 +135,15 @@ fun main() = application {
 
       // "dreamscape"
       contours.forEach {
-        drawer.stroke = mapColor(yanceyNoiseV1(it.bounds.center / noiseScale, memRandom))
+        drawer.stroke = mapColor(yanceyNoiseV1(it.bounds.center / noiseScale, memo))
         drawer.contour(it)
       }
 
       // bubbles.forEach {
-      //   val bubbleNoise = yanceyNoiseV1(it.first() / noiseScale, memRandom, true)
+      //   val bubbleNoise = yanceyNoiseV1(it.first() / noiseScale, memo, true)
       //   drawer.fill = mapColor(bubbleNoise)
       //   for (bubble in it) {
-      //     drawer.circle(bubble, map(-1.0, 1.0, 3.0, 22.0, yanceyNoiseV1( bubble / noiseScale, memRandom, true)))
+      //     drawer.circle(bubble, map(-1.0, 1.0, 3.0, 22.0, yanceyNoiseV1( bubble / noiseScale, memo, true)))
       //   }
       //   // drawer.circles(it, map(-1.0, 1.0, 5.0, 12.0, bubbleNoise))
       // }

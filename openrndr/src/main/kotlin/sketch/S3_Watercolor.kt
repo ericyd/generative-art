@@ -10,10 +10,8 @@ import org.openrndr.draw.colorBuffer
 import org.openrndr.draw.isolatedWithTarget
 import org.openrndr.draw.renderTarget
 import org.openrndr.extensions.Screenshots
-import org.openrndr.extra.fx.blur.ApproximateGaussianBlur
 import org.openrndr.extra.fx.blur.Bloom
 import org.openrndr.extra.noise.random
-import org.openrndr.extra.shadestyles.radialGradient
 import org.openrndr.math.Vector2
 import org.openrndr.math.map
 import org.openrndr.shape.ShapeContour
@@ -67,7 +65,7 @@ fun main() = application {
       ColorRGBa.fromHex("72DDF7").opacify(opacity),
       ColorRGBa.fromHex("AAF683").opacify(opacity),
       ColorRGBa.fromHex("E2ADF2").opacify(opacity),
-    //  a couple dupes
+      //  a couple dupes
       ColorRGBa.fromHex("E5B769").opacify(opacity),
       ColorRGBa.fromHex("AAF683").opacify(opacity),
       ColorRGBa.fromHex("E2ADF2").opacify(opacity)
@@ -105,11 +103,6 @@ fun main() = application {
       PaintSplotch(color, splotches)
     }
 
-
-
-
-
-
     val paramRange = 2.5
     val bounds = 2.0
     val nLines = 100
@@ -137,7 +130,6 @@ fun main() = application {
 
     // -- create colorbuffer to hold bloom results
     val bloomed = colorBuffer(width, height)
-
 
     val useFilterForShapes = true
 

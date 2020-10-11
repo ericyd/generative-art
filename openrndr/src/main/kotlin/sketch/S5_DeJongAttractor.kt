@@ -14,16 +14,6 @@ import org.openrndr.extra.noise.random
 import org.openrndr.math.Vector2
 import org.openrndr.math.map
 import shape.DeJongAttractor
-import kotlin.math.PI
-import kotlin.math.acos
-import kotlin.math.asin
-import kotlin.math.atan
-import kotlin.math.atan2
-import kotlin.math.cos
-import kotlin.math.cosh
-import kotlin.math.hypot
-import kotlin.math.sin
-import kotlin.math.sinh
 import kotlin.random.Random
 
 fun main() = application {
@@ -71,13 +61,15 @@ fun main() = application {
       "d" to random(-paramRange, paramRange, rand)
     )
 
-    println("""
+    println(
+      """
       seed: $seed
       a: ${params["a"]}
       b: ${params["b"]}
       c: ${params["c"]}
       d: ${params["d"]}
-    """.trimIndent())
+      """.trimIndent()
+    )
 
     var points = List(nLines) {
       Vector2(random(-bounds, bounds, rand), random(-bounds, bounds, rand))
@@ -95,7 +87,7 @@ fun main() = application {
           map(-bounds, bounds, 0.0, height.toDouble(), it.y)
         )
 
-        //polar-ish??
+        // polar-ish??
         // Vector2(
         //   map(-PI, PI, 0.0, width.toDouble(), atan2(it.x, it.y)),
         //   map(0.0, hypot(bounds, bounds), 0.0, height.toDouble(), hypot(it.x, it.y))

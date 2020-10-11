@@ -93,7 +93,6 @@ fun main() = application {
           // alternative offset calculation
           // val offset = exp(simplex(seed, cursor.x / noiseScale, cursor.y / noiseScale).absoluteValue * 5.0)
 
-
           // move the "cursor"
           // For one angle, we want to move our lines down, and the other angle we move across
           // I think this could use some refinement 😳

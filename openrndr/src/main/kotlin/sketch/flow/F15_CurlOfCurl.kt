@@ -1,31 +1,24 @@
 /**
- * Layered curl noise
+ * Layered curl noise,
+ * with second-derivative curl
  *
- * One of the things that generative art will teach you,
- * is that there is no "best one".
- *
- * Sometimes you just have to go with your heart,
- * and choose what is best for you.
+ * This uses the custom screenshots extension which automatically takes pictures every frame.
+ * Well, kinda...
+ * I actually need to look into why it doesn't.
+ * Personally I'd rather have it block the render loop than miss frames, but maybe that's just me
  */
 package sketch.flow
 
 import extensions.CustomScreenshots
-import noise.perlinCurl
-import noise.simplexCurl
-import noise.yanceyNoiseGenerator
-import org.openrndr.Program
+import noise.perlinCurlOfCurl
 import org.openrndr.application
-import org.openrndr.color.ColorHSLa
 import org.openrndr.color.ColorRGBa
 import org.openrndr.draw.LineCap
-import org.openrndr.extensions.Screenshots
-import org.openrndr.extra.noise.fastFloor
 import org.openrndr.extra.noise.perlin
 import org.openrndr.extra.noise.random
 import org.openrndr.extra.noise.simplex
 import org.openrndr.math.Vector2
 import org.openrndr.math.map
-import org.openrndr.math.mix
 import org.openrndr.shape.ShapeContour
 import org.openrndr.shape.contour
 import java.lang.Math.pow
@@ -52,12 +45,16 @@ fun main() = application {
 
     extend {
       var seed = random(1.0, Int.MAX_VALUE.toDouble()).toLong() // know your seed 😛
+      // these three seeds are the ones posted on the gram
+      // seed = 189526243
+      // seed = 56708742
+      // seed = 987928529
       val rand = Random(seed)
       println("seed = $seed")
 
       val stepSize = 5
       val jitter = stepSize * 0.7
-      val lineLength = 250
+      val lineLength = 300
       val opacity = 0.12
       val center = Vector2(width / 2.0, height / 2.0)
       val diagonal = hypot(width.toDouble(), height.toDouble())
@@ -75,7 +72,7 @@ fun main() = application {
       val noiseInfluences = listOf(
         Pair(random(0.1, 0.4, rand), random(0.4, 0.95, rand)),
         Pair(random(0.01, 0.4, rand), random(0.4, 0.90, rand)),
-        Pair(random(0.001, 0.01, rand), random(0.01, 0.2, rand))
+        Pair(random(0.01, 0.1, rand), random(0.1, 0.4, rand))
       )
 
       // each noise "octave" varies spatially according to a noise function - define the scale of that noise map
@@ -114,9 +111,9 @@ fun main() = application {
         ) * yScalePct
 
         // layer scaleTwo curl noises together, creating a sort of "scaleOne" and "scaleTwo" flow pattern
-        val res = perlinCurl(seed.toInt(), cursor / scaleOne) * ratioOne +
-          perlinCurl(seed.toInt(), cursor / scaleTwo) * ratioTwo +
-          simplexCurl(seed.toInt(), cursor / scaleThree) * ratioThree
+        val res = perlinCurlOfCurl(seed.toInt(), cursor / scaleOne) * ratioOne +
+          perlinCurlOfCurl(seed.toInt(), cursor / scaleTwo) * ratioTwo +
+          perlinCurlOfCurl(seed.toInt(), cursor / scaleThree) * ratioThree
 
         return res.normalized
       }

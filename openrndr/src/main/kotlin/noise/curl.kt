@@ -56,6 +56,47 @@ fun curl(field: (Vector2) -> Double, x: Double, y: Double): Vector2 {
 }
 
 /**
+ * curl is based on the first derivative of a vector field.
+ * What about the second derivative?
+ * Enter: curlOfCurl
+ * Note: Not really sure if this implementation is correct
+ */
+fun curlOfCurl(field: (Int, Double, Double) -> Double, seed: Int, x: Double, y: Double): Vector2 {
+  // epsilon is the length of the differential (might be using wrong terminology there)
+  // I think there is some room for experimentation here... I'm not sure what the "right" epsilon is
+  val eps = 01.0
+
+  val n0 = field(seed, x, y)
+
+  // a is the partial second derivative of our field at point (x, y) in y direction
+  // ∂^2 / ∂y^2
+  //
+  // More readably, this is
+  //    val n1 = field(seed, x, y + eps)
+  //    val n2 = field(seed, x, y - eps)
+  //    val a1 = (n1 - n0) / (2.0 * eps)
+  //    val a2 = (n0 - n2) / (2.0 * eps)
+  //    val a = (a1 - a2) / (2.0 * eps)
+  // but this is simplified for MAXIMUM SPEED 😂
+  val a = ((field(seed, x, y + eps) - n0) / (2.0 * eps) - (n0 - field(seed, x, y - eps)) / (2.0 * eps)) / (2.0 * eps)
+
+  // b is the partial derivative of our field at point (x, y) in x direction
+  // ∂ / ∂x
+  // The slides describe this as "∂y1/∂x" but personally I understand it better as ∂/∂x
+  //
+  // Expanded:
+  //    val n1 = field(seed, x + eps, y)
+  //    val n2 = field(seed, x - eps, y)
+  //    val b1 = (n1 - n0) / (2.0 * eps)
+  //    val b2 = (n0 - n2) / (2.0 * eps)
+  //    val b = (b1 - b2) / (2.0 * eps)
+  val b = ((field(seed, x + eps, y) - n0) / (2.0 * eps) - (n0 - field(seed, x - eps, y)) / (2.0 * eps)) / (2.0 * eps)
+
+  // I don't understand why b is negative in the original implementation, going to skip it
+  return Vector2(a, b)
+}
+
+/**
  * curl of perlin
  */
 fun perlinCurl(seed: Int, x: Double, y: Double): Vector2 =
@@ -69,3 +110,6 @@ fun simplexCurl(seed: Int, vec: Vector2): Vector2 =
 
 fun yanceyCurl(vec: Vector2, memoized: (Vector2) -> Double): Vector2 =
   curl(yanceyNoiseGenerator(memoized), vec.x, vec.y)
+
+fun perlinCurlOfCurl(seed: Int, vec: Vector2): Vector2 =
+  curlOfCurl(::perlin, seed, vec.x, vec.y)

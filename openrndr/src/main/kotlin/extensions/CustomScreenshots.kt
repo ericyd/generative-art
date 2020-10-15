@@ -221,6 +221,11 @@ open class CustomScreenshots : Extension {
 
       target?.destroy()
       resolved?.destroy()
+
+      // TODO: I suspect that a race condition in setting this.createScreenshot might be contributing
+      // to the fact that screenshots don't always complete.
+      // Perhaps follow the original intention of a "captureEveryFrame" boolean option
+      // which customizes some of the behavior a bit per frame.
       this.createScreenshot = None
 
       if (quitAfterScreenshot) {

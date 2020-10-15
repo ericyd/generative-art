@@ -79,6 +79,8 @@ fun main() = application {
         random(noiseScales[1], noiseScales[0], rand)
       )
 
+      val chance = random(0.0, 1.0, rand) < 0.5
+
       fun mixNoise(cursor: Vector2): Vector2 {
         val (scaleOne, scaleTwo, scaleThree) = noiseScales
         val (influenceOne, influenceTwo, influenceThree) = noiseInfluences
@@ -100,7 +102,7 @@ fun main() = application {
 
         // scaleThree ratio varies by a different simplex noise map
         // and possibly y position
-        val yScalePct = if (random(0.0, 1.0, rand) < 0.5) 1.0 else cursor.y / height.toDouble()
+        val yScalePct = if (chance) 1.0 else cursor.y / height.toDouble()
         val ratioThree = map(
           -1.0, 1.0,
           influenceThree.first, influenceThree.second,

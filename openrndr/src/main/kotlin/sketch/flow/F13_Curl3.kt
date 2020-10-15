@@ -16,7 +16,6 @@ import org.openrndr.color.ColorHSLa
 import org.openrndr.color.ColorRGBa
 import org.openrndr.draw.LineCap
 import org.openrndr.extensions.Screenshots
-import org.openrndr.extra.noise.perlin
 import org.openrndr.extra.noise.random
 import org.openrndr.extra.noise.simplex
 import org.openrndr.math.Vector2

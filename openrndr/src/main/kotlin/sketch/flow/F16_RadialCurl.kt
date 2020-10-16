@@ -10,6 +10,7 @@
 package sketch.flow
 
 import extensions.CustomScreenshots
+import noise.perlinCurl
 import noise.perlinCurlOfCurl
 import org.openrndr.application
 import org.openrndr.color.ColorRGBa
@@ -19,10 +20,15 @@ import org.openrndr.extra.noise.random
 import org.openrndr.extra.noise.simplex
 import org.openrndr.math.Vector2
 import org.openrndr.math.map
+import org.openrndr.math.mix
 import org.openrndr.shape.ShapeContour
 import org.openrndr.shape.contour
 import java.lang.Math.pow
+import java.lang.Math.toRadians
+import kotlin.math.cos
 import kotlin.math.hypot
+import kotlin.math.sin
+import kotlin.math.sqrt
 import kotlin.random.Random
 
 fun main() = application {
@@ -45,17 +51,14 @@ fun main() = application {
 
     extend {
       var seed = random(1.0, Int.MAX_VALUE.toDouble()).toLong() // know your seed 😛
-      // these three seeds are the ones posted on the gram
-      // seed = 189526243
-      // seed = 56708742
-      // seed = 987928529
+      // seed = 1750124224
       val rand = Random(seed)
       println("seed = $seed")
 
-      val stepSize = 5
+      val stepSize = 120
       val jitter = stepSize * 0.7
-      val lineLength = 300
-      val opacity = 0.12
+      val lineLength = 500
+      val opacity = 0.08
       val center = Vector2(width / 2.0, height / 2.0)
       val diagonal = hypot(width.toDouble(), height.toDouble())
       val halfDiagonal = diagonal / 2.0
@@ -82,56 +85,62 @@ fun main() = application {
         random(noiseScales[1], noiseScales[0], rand)
       )
 
-      val chance = random(0.0, 1.0, rand) < 0.5
       val epsilon = random(0.25, 2.0, rand)
 
-      fun mixNoise(cursor: Vector2): Vector2 {
+      val circleRadius = random(25.0, 150.0, rand)
+
+      fun mixNoise(cursor: Vector2, angle: Double): Vector2 {
         val (scaleOne, scaleTwo, scaleThree) = noiseScales
         val (influenceOne, influenceTwo, influenceThree) = noiseInfluences
         val (mapScaleOne, mapScaleTwo, mapScaleThree) = noiseMapScales
 
         // scaleOne ratio varies by a simplex noise map
-        val ratioOne = map(
-          -1.0, 1.0,
-          influenceOne.first, influenceOne.second,
-          simplex(seed.toInt(), cursor / mapScaleOne)
-        )
+        // val ratioOne = map(
+        //   -1.0, 1.0,
+        //   influenceOne.first, influenceOne.second,
+        //   simplex(seed.toInt(), cursor / mapScaleOne)
+        // )
+        val ratioOne = mix(influenceOne.second, influenceOne.first, cursor.distanceTo(center) / halfDiagonal)
 
-        // scaleTwo ratio varies by distance from center
-        val ratioTwo = map(
-          0.0, pow(halfDiagonal, 2.0),
-          influenceTwo.first, influenceTwo.second,
-          cursor.squaredDistanceTo(center)
-        )
+        // scaleTwo ratio varies by a different simplex noise map
+        // val ratioTwo = map(
+        //   -1.0, 1.0,
+        //   influenceTwo.first, influenceTwo.second,
+        //   pow(perlin(seed.toInt(), cursor / mapScaleTwo), 2.0)
+        // )
+        val ratioTwo = mix(influenceTwo.first, influenceTwo.second, cursor.distanceTo(center) / halfDiagonal)
 
-        // scaleThree ratio varies by a different simplex noise map
-        // and possibly y position
-        val yScalePct = if (chance) 1.0 else cursor.y / height.toDouble()
-        val ratioThree = map(
-          -1.0, 1.0,
-          influenceThree.first, influenceThree.second,
-          pow(perlin(seed.toInt(), cursor / mapScaleThree), 2.0)
-        ) * yScalePct
+        // scaleThree ratio varies by distance from center
+        // val ratioThree = map(
+        //   0.0, sqrt(halfDiagonal),
+        //   influenceThree.first, influenceThree.second,
+        //   sqrt(cursor.distanceTo(center))
+        // )
+        val ratioThree = influenceThree.second
 
-        // layer scaleTwo curl noises together, creating a sort of "scaleOne" and "scaleTwo" flow pattern
-        val res = perlinCurlOfCurl(seed.toInt(), cursor / scaleOne, epsilon) * ratioOne +
-          perlinCurlOfCurl(seed.toInt(), cursor / scaleTwo, epsilon) * ratioTwo +
-          perlinCurlOfCurl(seed.toInt(), cursor / scaleThree, epsilon) * ratioThree
+        // layer curl noise together, with primary angle influence diminishing with length
+        // val ratioAngle = map(0.0, 1.0, 0.4, 0.005, i / lineLength.toDouble())
+        // TODO: make custom lambda that mixes the result of perlin (mapped to radian) with the angle and performs curl on that
+        val ratioAngle = map(0.0, halfDiagonal, 0.4, 0.005, cursor.distanceTo(center))
+        val res = Vector2(cos(angle), sin(angle)) * ratioAngle +
+          perlinCurl(seed.toInt(), cursor / scaleOne, epsilon) * ratioOne +
+          perlinCurl(seed.toInt(), cursor / scaleTwo, epsilon) * ratioTwo +
+          perlinCurl(seed.toInt(), cursor / scaleThree, epsilon) * ratioThree
 
         return res.normalized
       }
 
-      val contours: List<ShapeContour> = ((0 - bounds) until (width + bounds) step stepSize).flatMap { x ->
-        ((0 - bounds) until (height + bounds) step stepSize).map { y ->
-          contour {
-            moveTo(
-              x + random(-jitter, jitter, rand),
-              y + random(-jitter, jitter, rand)
-            )
+      val contours: List<ShapeContour> = (0 until (360 * stepSize)).map { degree ->
+        val angle = toRadians(degree.toDouble() / stepSize.toDouble() + random(-jitter, jitter, rand))
+        val radius = map(-1.0, 1.0, circleRadius, halfDiagonal, random(-1.0, 1.0, rand))
+        contour {
+          moveTo(
+            cos(angle) * radius + center.x,
+            sin(angle) * radius + center.y
+          )
 
-            List(lineLength) {
-              lineTo(cursor + mixNoise(cursor))
-            }
+          List(lineLength) {
+            lineTo(cursor + mixNoise(cursor, angle))
           }
         }
       }
@@ -145,6 +154,10 @@ fun main() = application {
       // simple B&W
       drawer.stroke = ColorRGBa.BLACK.opacify(opacity)
       contours.chunked(500).forEach { drawer.contours(it) }
+
+      drawer.fill = ColorRGBa.WHITE
+      drawer.stroke = ColorRGBa.BLACK
+      drawer.circle(center, circleRadius * 1.1)
 
       // trigger screenshot on every frame with seed appended to file name
       screenshots.trigger("seed-$seed")

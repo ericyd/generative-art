@@ -153,7 +153,7 @@ open class CustomScreenshots : Extension {
   fun trigger(appended: String = "") {
     append = appended
     createScreenshot = AutoNamed
-    programRef?.window?.requestDraw()
+    // programRef?.window?.requestDraw()
   }
 
   private var filename: String? = null

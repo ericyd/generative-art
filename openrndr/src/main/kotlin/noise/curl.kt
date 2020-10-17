@@ -90,6 +90,9 @@ fun curlOfCurl(field: (Int, Double, Double) -> Double, seed: Int, x: Double, y: 
   return Vector2(a, b)
 }
 
+fun curlOfCurl(field: (Int, Double, Double) -> Double, seed: Int, vec: Vector2, epsilon: Double = 1.0): Vector2 =
+  curlOfCurl(field, seed, vec.x, vec.y, epsilon)
+
 /**
  * curl of perlin
  */

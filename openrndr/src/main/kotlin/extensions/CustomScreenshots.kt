@@ -129,6 +129,12 @@ open class CustomScreenshots : Extension {
    */
   var append: String = ""
 
+  /**
+   * when true, capture every frame.
+   * when false, only capture on keypress.
+   */
+  var captureEveryFrame: Boolean = false
+
   internal var createScreenshot: CreateScreenshot = None
 
   private var target: RenderTarget? = null
@@ -150,14 +156,20 @@ open class CustomScreenshots : Extension {
   /**
    * Trigger screenshot creation
    */
-  fun trigger(appended: String = "") {
-    append = appended
+  fun trigger(appended: String? = null) {
+    if (!appended.isNullOrBlank()) {
+      append = appended
+    }
     createScreenshot = AutoNamed
     // programRef?.window?.requestDraw()
   }
 
   private var filename: String? = null
   override fun beforeDraw(drawer: Drawer, program: Program) {
+    // this is very inelegant...
+    if (captureEveryFrame) {
+      createScreenshot = AutoNamed
+    }
     if (createScreenshot != None && delayFrames-- <= 0) {
       val targetWidth = (program.width * scale).toInt()
       val targetHeight = (program.height * scale).toInt()

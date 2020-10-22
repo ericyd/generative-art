@@ -43,6 +43,9 @@ fun curl(field: (Int, Double, Double) -> Double, seed: Int, x: Double, y: Double
   return Vector2(a, -b)
 }
 
+fun curl(field: (Int, Double, Double) -> Double, seed: Int, vec: Vector2, epsilon: Double = 1.0): Vector2 =
+  curl(field, seed, vec.x, vec.y, epsilon)
+
 /**
  * a curl overload for value noise functions that don't require a seed
  * See above for more "annotated" function

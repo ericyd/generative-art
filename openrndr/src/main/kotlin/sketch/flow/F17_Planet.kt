@@ -11,7 +11,6 @@ package sketch.flow
 
 import extensions.CustomScreenshots
 import noise.curl
-import noise.curlOfCurl
 import noise.mapToRadians
 import org.openrndr.application
 import org.openrndr.color.ColorRGBa
@@ -189,12 +188,14 @@ fun main() = application {
         }
       }
 
-      println("""aww yeah, about to render...
+      println(
+        """aww yeah, about to render...
         | scaleOne = $scaleOne
         | scaleTwo = $scaleTwo
         | influenceOne = ${influenceOne.first}, ${influenceOne.second}
         | influenceTwo = ${influenceTwo.first}, ${influenceTwo.second}
-      """.trimMargin())
+      """.trimMargin()
+      )
 
       /******************************
        *

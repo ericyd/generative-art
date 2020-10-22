@@ -192,14 +192,16 @@ fun main() = application {
         }
       }
 
-      println("""aww yeah, about to render...
+      println(
+        """aww yeah, about to render...
         | scaleOne = $scaleOne
         | scaleTwo = $scaleTwo
         | scaleThree = $scaleThree
         | influenceOne = ${influenceOne.first}, ${influenceOne.second}
         | influenceTwo = ${influenceTwo.first}, ${influenceTwo.second}
         | influenceThree = ${influenceThree.first}, ${influenceThree.second}
-      """.trimMargin())
+      """.trimMargin()
+      )
 
       /******************************
        *

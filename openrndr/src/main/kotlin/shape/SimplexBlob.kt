@@ -8,7 +8,6 @@ import java.lang.Math.pow
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
-import kotlin.random.Random
 
 /**
  * A disformed blobby thing
@@ -46,8 +45,8 @@ class SimplexBlob(
   fun points(): List<Vector2> =
     (0 until resolution).map { i ->
       val angle = map(0.0, resolution.toDouble(), 0.0, 2.0 * PI, i.toDouble())
-        // remove this `+ rotation` if using the `rotate` method below
-        + rotation
+      // remove this `+ rotation` if using the `rotate` method below
+      + rotation
       val cos = cos(angle)
       val sin = sin(angle)
 

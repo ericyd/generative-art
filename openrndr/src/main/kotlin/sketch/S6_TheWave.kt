@@ -40,9 +40,11 @@ fun main() = application {
 
     var seed = random(1.0, Int.MAX_VALUE.toDouble()).toInt()
     // seed = 1587814064
-    println("""
+    println(
+      """
         seed = $seed
-      """.trimIndent())
+      """.trimIndent()
+    )
 
     val fg = ColorRGBa.BLACK.opacify(0.25)
     val bg = ColorRGBa.WHITE

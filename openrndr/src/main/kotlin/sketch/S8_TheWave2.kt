@@ -58,7 +58,6 @@ fun main() = application {
     //   0.8 to ColorRGBa.fromHex("839791"),
     //   1.0 to ColorRGBa.fromHex("F98C77")
     // )
-    // bg = ColorRGBa.WHITE
 
     // my fav spectrum from my "orbit" series
     // Note: opacity is very important for these colors, they look horrible at full opacity
@@ -79,7 +78,6 @@ fun main() = application {
       1.0 to
         hsla(173.0, 0.66, 0.975, opacity) // smokey white
     )
-    // bg = ColorRGBa.BLACK
 
     // From my "dreamscape" curl piece
     // val spectrum = colorSequence(
@@ -87,7 +85,26 @@ fun main() = application {
     //   0.5 to hsla(25.0, 0.50, 0.63, 0.8), // orange-ish
     //   1.0 to hsla(215.0, 0.52, 0.58, 0.8) // blue-ish
     // )
-    // bg = ColorRGBa.WHITE
+
+    // blue spectrum
+    // val spectrum = colorSequence(
+    //   0.0 to ColorRGBa.fromHex("a4c0fc"), // light pale blue
+    //   0.5 to ColorRGBa.fromHex("2c4f99"), // dark blue
+    //   1.0 to ColorRGBa.fromHex("653c85") // dark purple
+    // )
+
+    // reddish spectrum
+    // val spectrum = colorSequence(
+    //   0.0 to ColorRGBa.fromHex("fcc097"), // light orange red
+    //   0.5 to ColorRGBa.fromHex("a63d2b"), // dark clay red
+    //   1.0 to ColorRGBa.fromHex("ffb459") // light orange
+    // )
+
+    // simple purple spectrum
+    // val spectrum = colorSequence(
+    //   0.0 to ColorRGBa.fromHex("593566"), // dark purple
+    //   1.0 to ColorRGBa.fromHex("f7d7fc") // light purple
+    // )
 
     extend {
       // get that rng

@@ -18,7 +18,7 @@ import kotlin.random.Random
  *
  * Open questions:
  * 1. Consider other data structures for points?
- * 2. Do we really need radius or center since we aren't used either in the offsetMid function anymore?
+ * 2. Do we really need radius or center since we aren't used either in the gaussianOffset function anymore?
  */
 
 class FractalizedPolygon(points: List<Vector2>, val radius: Double = 1.0, val center: Vector2 = Vector2.ZERO, val rand: Random = Random.Default) {
@@ -58,15 +58,20 @@ class FractalizedPolygon(points: List<Vector2>, val radius: Double = 1.0, val ce
     for (i in 0 until subdivisions) {
       var newPoints = mutableListOf<Vector2>()
 
+      // Iterate through all points.
+      // Skip the last index because we are accessing j+1 to get the "next" point anyway.
+      // The last point (with midpoint to the first) will be added after the loop
       for (j in 0 until points.size - 1) {
         val current = points.get(j)
         val next = points.get(j + 1)
-        val mid = offsetMid(current, next, offsetPct)
+        val mid = gaussianOffset(current, next, offsetPct)
         newPoints.add(current)
         newPoints.add(mid)
       }
+
+      // Add midpoint between last point and first point
       newPoints.add(points.last())
-      val mid = offsetMid(points.first(), points.last(), offsetPct)
+      val mid = gaussianOffset(points.first(), points.last(), offsetPct)
       newPoints.add(mid)
 
       points = newPoints
@@ -74,7 +79,7 @@ class FractalizedPolygon(points: List<Vector2>, val radius: Double = 1.0, val ce
     return this
   }
 
-  private fun offsetMid(start: Vector2, end: Vector2, offsetPct: Double): Vector2 =
+  private fun gaussianOffset(start: Vector2, end: Vector2, offsetPct: Double): Vector2 =
     Vector2.gaussian(
       // midpoint
       mean = (start + end) / 2.0,

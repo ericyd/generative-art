@@ -134,6 +134,15 @@ open class CustomScreenshots : Extension {
    * when false, only capture on keypress.
    */
   var captureEveryFrame: Boolean = false
+    set(value) {
+      field = value
+      if (value) createScreenshot = AutoNamed
+    }
+
+  /**
+   * override automatic naming for screenshot
+   */
+  var name: String? = null
 
   internal var createScreenshot: CreateScreenshot = None
 
@@ -160,16 +169,12 @@ open class CustomScreenshots : Extension {
     if (!appended.isNullOrBlank()) {
       append = appended
     }
-    createScreenshot = AutoNamed
-    // programRef?.window?.requestDraw()
+    createScreenshot = if (name.isNullOrBlank()) AutoNamed else Named(name!!)
+    programRef?.window?.requestDraw()
   }
 
   private var filename: String? = null
   override fun beforeDraw(drawer: Drawer, program: Program) {
-    // this is very inelegant...
-    if (captureEveryFrame) {
-      createScreenshot = AutoNamed
-    }
     if (createScreenshot != None && delayFrames-- <= 0) {
       val targetWidth = (program.width * scale).toInt()
       val targetHeight = (program.height * scale).toInt()
@@ -186,7 +191,7 @@ open class CustomScreenshots : Extension {
 
       filename = when (val cs = createScreenshot) {
         None -> throw IllegalStateException("")
-        AutoNamed -> program.namedTimestamp("png", folder, append)
+        AutoNamed -> if (name.isNullOrBlank()) program.namedTimestamp("png", folder, append) else name
         is Named -> cs.name
       }
 
@@ -234,11 +239,9 @@ open class CustomScreenshots : Extension {
       target?.destroy()
       resolved?.destroy()
 
-      // TODO: I suspect that a race condition in setting this.createScreenshot might be contributing
-      // to the fact that screenshots don't always complete.
-      // Perhaps follow the original intention of a "captureEveryFrame" boolean option
-      // which customizes some of the behavior a bit per frame.
-      this.createScreenshot = None
+      if (!this.captureEveryFrame) {
+        this.createScreenshot = None
+      }
 
       if (quitAfterScreenshot) {
         program.application.exit()

@@ -20,15 +20,18 @@ fun main() = application {
   }
 
   program {
-    val progName = this.name.ifBlank { this.window.title.ifBlank { "my-amazing-drawing" } }
+    val progRef = this
+    var seed = random(0.0, Int.MAX_VALUE.toDouble()).toInt()
+    // seed = 1088846048
+    seed = 690157030
     val screenshots = extend(CustomScreenshots()) {
       quitAfterScreenshot = false
       scale = 3.0
-      folder = "screenshots/$progName/"
-      captureEveryFrame = false
+      folder = "screenshots/${progRef.name.ifBlank { progRef.window.title.ifBlank { "my-amazing-drawing" } }}/"
+      captureEveryFrame = true
+      // name = "screenshots/S9_trial/S9_DisintegratingColumn-${progRef.namedTimestamp("png", "screenshots")}-seed-$seed.png"
     }
 
-    var seed = random(0.0, Int.MAX_VALUE.toDouble()).toInt()
     println(
       """
         seed = $seed
@@ -82,8 +85,8 @@ fun main() = application {
       }
 
       // set seed for next iteration
-      // seed = random(0.0, Int.MAX_VALUE.toDouble()).toInt()
-      // screenshots.append = "seed-$seed"
+      seed = random(0.0, Int.MAX_VALUE.toDouble()).toInt()
+      // screenshots.name = "screenshots/S9_trial/S9_DisintegratingColumn-${progRef.namedTimestamp("png", "screenshots")}-seed-$seed.png"
     }
   }
 }

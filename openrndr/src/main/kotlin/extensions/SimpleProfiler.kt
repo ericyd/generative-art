@@ -111,7 +111,6 @@ class SimpleProfiler(
   }
 }
 
-
 data class ProfiledSectionStats(
   val sectionName: String,
   var startTimeNano: Long = 0,
@@ -140,8 +139,10 @@ data class ProfiledSectionStats(
 }
 
 fun Number.format(
-  charsAboveZero: Int = 1, charsBelowZero: Int = 0,
-  isSigned: Boolean = false, leadingZeros: Boolean = false
+  charsAboveZero: Int = 1,
+  charsBelowZero: Int = 0,
+  isSigned: Boolean = false,
+  leadingZeros: Boolean = false
 ): String {
   val isInteger = this is Long || this is Int || this is Short
 
@@ -156,4 +157,3 @@ fun Number.format(
   val template = "%$sign$leadingZero,$length$fraction$type"
   return template.format(this)
 }
-

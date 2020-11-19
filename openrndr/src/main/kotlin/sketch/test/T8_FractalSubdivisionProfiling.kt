@@ -55,9 +55,9 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.random.Random
 
-private class Node<T: Any>(val value: T, var next: Node<T>? = null)
+private class Node<T : Any>(val value: T, var next: Node<T>? = null)
 
-private class CustomLinkedList<T: Any>(initialItems: List<T>?) {
+private class CustomLinkedList<T : Any>(initialItems: List<T>?) {
   var head: Node<T>? = null
   init {
     if (!initialItems.isNullOrEmpty()) {
@@ -162,7 +162,6 @@ private class FractalizedLinkedList(var points: CustomLinkedList<Vector2>, priva
     )
 }
 
-
 fun main() = application {
   configure {
     width = 750
@@ -200,8 +199,8 @@ fun main() = application {
         .gaussianSubdivide(subdivisions)
       profiler.endSection()
 
-      //ok.... something about this linkedList implementation is THE SLOWEST THING EVER...
-      //need to investigate because I thought quick inserts was literally the point of a LL
+      // ok.... something about this linkedList implementation is THE SLOWEST THING EVER...
+      // need to investigate because I thought quick inserts was literally the point of a LL
       val ll1 = CustomLinkedList<Vector2>(listOf(Vector2(20.0, height * 0.6), Vector2(width - 20.0, height * 0.6)))
       profiler.startSection("perp (linkedlist)")
       line3 = FractalizedLinkedList(ll1, rng)

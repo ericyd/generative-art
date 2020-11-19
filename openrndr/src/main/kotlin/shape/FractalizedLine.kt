@@ -5,7 +5,6 @@ import org.openrndr.extra.noise.random
 import org.openrndr.math.Vector2
 import org.openrndr.shape.Segment
 import org.openrndr.shape.ShapeContour
-import java.util.*
 import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.cos
@@ -26,7 +25,7 @@ class FractalizedLine(var points: List<Vector2>, private val rng: Random = Rando
     get() {
       val segments = mutableListOf<Segment>()
       for (i in 0 until points.size - 1) {
-        segments.add(Segment(points[i], points[i+ 1]))
+        segments.add(Segment(points[i], points[i + 1]))
       }
       // This is only needed if the path is closed, which this will never be.
       // Could be a possible enhancement in future: combine FractalizedPolygon and FractalizedLine with a `closed` boolean prop

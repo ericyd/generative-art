@@ -77,7 +77,8 @@ fun main() = application {
         }
       }.flatten().sortedByDescending { it.clockwise.segments.first().start.y }
 
-      // All the cross hatching logic has been moved into this class
+      // Apply cross hatching to each leaf shape.
+      // Spacing and angle of cross hatch varies with spatial origin of leaf
       val leavesSize = leaves.size
       val hatchedLeaves = leaves.mapIndexed { index, leaf ->
         val angle = map(0.0, leavesSize.toDouble(), -PI * 0.25, -PI * 0.75, index.toDouble())
@@ -94,9 +95,10 @@ fun main() = application {
 
       hatchedLeaves.forEach { (leaf, hatches) ->
         // once we get past half way up, draw the circle
-        // this gives a nice overlapping effect, making it look like the leaves
-        // are coming out of the circle.
-        // The circularFrame is just a cheap way of cutting off the leaves that are outside the circle
+        // this gives a nice overlapping effect,
+        // making it look like the leaves are coming out of the circle.
+        // The circularFrame is just a cheap way of cutting off the leaves
+        // that are outside the circle that have already been drawn.
         if (leaf.segments.first().start.y > circle.center.y) {
           circularFrame((circle.radius * 2.0).toInt(), (circle.radius * 2.0).toInt(), drawer, centerOverride = circle.center)
           drawer.isolated {
@@ -129,6 +131,7 @@ fun main() = application {
         fill = null
         strokeWeight = 0.5
 
+        // Iteratively build a line as a composition of segments
         for (x in 0 until width step 3) {
           val totalLength = random(height * 0.1, height * 0.5, rng)
           val nSegments = random(8.0, 14.0, rng).toInt()
@@ -139,7 +142,7 @@ fun main() = application {
             }
             val end = Vector2(x.toDouble(), start.y - random(0.1, totalLength / 2.0, rng))
 
-            // This is such a verbose way to declare a line segment and get the difference with the circle,
+            // This is a verbose way to declare a line segment and get the difference with the circle,
             // but ultimately it's still a lot less work than writing an intersection algorithm myself, so...
             val line = contour {
               moveTo(start)
@@ -150,10 +153,13 @@ fun main() = application {
               .findShapes()
               .flatMap { s -> s.shape.contours.map { c -> c.segments.first() } }
 
+            // Stroke gets lighter as we move "up" in the drawing (`height` is at bottom)
             stroke = ColorRGBa.BLACK.opacify(
               map(height.toDouble(), height - totalLength, 0.99, 0.15, end.y)
             )
             drawer.segments(comp)
+
+            // set values for next iteration
             val gap = random(2.0, 10.0, rng)
             start = Vector2(end.x, end.y - gap)
           }

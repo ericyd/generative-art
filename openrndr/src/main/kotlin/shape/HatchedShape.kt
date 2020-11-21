@@ -1,21 +1,6 @@
-package shape
-
-import org.openrndr.extra.noise.random
-import org.openrndr.math.Vector2
-import org.openrndr.shape.Segment
-import org.openrndr.shape.ShapeContour
-import org.openrndr.shape.contour
-import org.openrndr.shape.drawComposition
-import org.openrndr.shape.intersection
-import kotlin.math.PI
-import kotlin.math.cos
-import kotlin.math.hypot
-import kotlin.math.sin
-import kotlin.random.Random
-
-// This works!
+// This class works!
 //
-// But we always gotta be interating, so...
+// But we always gotta be iterating, so...
 //
 // Ideas for V2:
 // Use circle packing to determine cross hatch center
@@ -35,10 +20,25 @@ import kotlin.random.Random
 //     If no:
 //       Cut in half again and repeat algorithm
 
+package shape
+
+import org.openrndr.extra.noise.random
+import org.openrndr.math.Vector2
+import org.openrndr.shape.Segment
+import org.openrndr.shape.ShapeContour
+import org.openrndr.shape.contour
+import org.openrndr.shape.drawComposition
+import org.openrndr.shape.intersection
+import kotlin.math.PI
+import kotlin.math.cos
+import kotlin.math.hypot
+import kotlin.math.sin
+import kotlin.random.Random
+
 /**
- * Class to create a list of cross hatch segments for a given ShapeContour
+ * Class to create a list of (cross) hatch segments for a given ShapeContour
  */
-class CrossHatch(val shapes: List<ShapeContour>, private val spacing: Int? = null, private val primaryAngle: Double? = null, val rng: Random = Random.Default) {
+class HatchedShape(val shape: ShapeContour, private val spacing: Int? = null, private val primaryAngle: Double? = null, private val secondaryAngle: Double? = null, private val includeCrossHatch: Boolean = true, val rng: Random = Random.Default) {
   val QUARTER_PI = PI * 0.25
   val THREE_QUARTER_PI = PI * 0.75
   val FIVE_QUARTER_PI = PI * 1.25
@@ -48,9 +48,9 @@ class CrossHatch(val shapes: List<ShapeContour>, private val spacing: Int? = nul
   // Comments are in line but the essence is that we need to
   // draw a bunch of hash marks at two different angles,
   // then find the intersection of the marks and the leaf shape.
-  val hatches: List<Pair<ShapeContour, List<Segment>>>
+  val hatchedShape: Pair<ShapeContour, List<Segment>>
     get() {
-      return shapes.map(::generateHatchesForShape)
+      return generateHatchesForShape(shape)
     }
 
   private fun generateHatchesForShape(shape: ShapeContour): Pair<ShapeContour, List<Segment>> {
@@ -60,7 +60,8 @@ class CrossHatch(val shapes: List<ShapeContour>, private val spacing: Int? = nul
     // Generate hatch mark angles.
     // IMO strictly perpendicular hatching angles don't look as nice
     val angle1 = normalizeAngle(primaryAngle) ?: random(0.0, PI, rng)
-    val angle2 = angle1 + random(PI * 0.25, PI * 0.5, rng)
+    val angle2 = normalizeAngle(secondaryAngle) ?: angle1 + random(PI * 0.25, PI * 0.5, rng)
+    val angles = if (includeCrossHatch) listOf(angle1, angle2) else listOf(angle1)
 
     // determine a max length for the hatch marks
     // (they will be trimmed to size with the CompoundBuilder)
@@ -71,7 +72,7 @@ class CrossHatch(val shapes: List<ShapeContour>, private val spacing: Int? = nul
     // we can just start all of the marks along the border of the bounding rectangle of the shape
     val sideStarts = generateLeftRightStarts(shape, space)
     val topStarts = generateTopBottomStarts(shape, space)
-    val startPositionAnglePairs = combineStartsWithAngles(angle1, angle2, sideStarts, topStarts)
+    val startPositionAnglePairs = combineStartsWithAngles(angles, sideStarts, topStarts)
 
     // create hash marks for both angles
     // I suspect there is an easier way to combine these in the Compound Builder
@@ -86,25 +87,17 @@ class CrossHatch(val shapes: List<ShapeContour>, private val spacing: Int? = nul
   // That is, angles between [PI/4, -PI/4] or [3*PI/4, 5*PI/4] should be drawn from the sides, and
   // angles between [PI/4, 3*PI/4] or [5*PI/4, 7*PI/4] should be drawn from the top/bottom
   //
-  // This function is pretty bad but it works so :shrug:
-  private fun combineStartsWithAngles(angle1: Double, angle2: Double, sideStarts: List<Vector2>, topStarts: List<Vector2>): List<Pair<Double, Vector2>> {
-    val angle1Pairs = if (angle1 < QUARTER_PI || angle1 >= SEVEN_QUARTER_PI || (angle1 > THREE_QUARTER_PI && angle1 <= FIVE_QUARTER_PI)) {
-      //  assign to side starts
-      sideStarts.map { Pair(angle1, it) }
-    } else {
-      //  assign to top starts
-      topStarts.map { Pair(angle1, it) }
+  // This function is not great but it works so :shrug:
+  private fun combineStartsWithAngles(angles: List<Double>, sideStarts: List<Vector2>, topStarts: List<Vector2>): List<Pair<Double, Vector2>> {
+    return angles.flatMap { angle ->
+      if (angle < QUARTER_PI || angle >= SEVEN_QUARTER_PI || (angle > THREE_QUARTER_PI && angle <= FIVE_QUARTER_PI)) {
+        //  assign to side starts
+        sideStarts.map { Pair(angle, it) }
+      } else {
+        //  assign to top starts
+        topStarts.map { Pair(angle, it) }
+      }
     }
-
-    val angle2Pairs = if (angle2 < QUARTER_PI || angle2 >= SEVEN_QUARTER_PI || (angle2 > THREE_QUARTER_PI && angle2 <= FIVE_QUARTER_PI)) {
-      //  assign to side starts
-      sideStarts.map { Pair(angle2, it) }
-    } else {
-      //  assign to top starts
-      topStarts.map { Pair(angle2, it) }
-    }
-
-    return angle1Pairs + angle2Pairs
   }
 
   private fun generateHatches(start: Vector2, angle: Double, length: Double, shapeContour: ShapeContour): List<Segment> {

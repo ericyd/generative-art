@@ -15,10 +15,9 @@ import org.openrndr.color.ColorRGBa
 import org.openrndr.draw.isolated
 import org.openrndr.extra.noise.random
 import org.openrndr.math.Vector2
-import org.openrndr.shape.ShapeContour
-import org.openrndr.shape.contour
-import shape.CrossHatch
 import shape.FractalizedLine
+import shape.HatchedShape
+import shape.Leaf
 import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.cos
@@ -51,31 +50,6 @@ fun main() = application {
     val bg = ColorRGBa.WHITE
     backgroundColor = bg
 
-    class Leaf(val start: Vector2, val angle: Double, val size: Double, val rng: Random) {
-      val contour: ShapeContour
-        get() {
-          val end = Vector2(cos(angle), sin(angle)) * size + start
-          val ctrl1 =
-            // midpoint between start and end
-            (end + start) * 0.5 +
-              // perpendicular of the leaf angle
-              Vector2(cos(angle + PI * 0.5), sin(angle + PI * 0.5)) *
-              // some random "width" for the leaf
-              size * random(0.175, 0.45, rng)
-          // same as ctrl1 but going the other direction
-          val ctrl2 = (end + start) * 0.5 +
-            Vector2(cos(angle - PI * 0.5), sin(angle - PI * 0.5)) *
-            size * random(0.175, 0.45, rng)
-
-          return contour {
-            moveTo(start)
-            curveTo(ctrl1, end)
-            curveTo(ctrl2, start)
-            close()
-          }
-        }
-    }
-
     extend {
       // get that rng
       val rng = Random(seed.toLong())
@@ -102,12 +76,12 @@ fun main() = application {
           val start = segment.start +
             Vector2(cos(leafAngle * PI), sin(leafAngle * PI)) * offset
           val leafSize = random(meanLeafSize * 0.8, meanLeafSize * 1.2, rng)
-          Leaf(start, leafAngle, leafSize, rng).contour
+          Leaf(start, leafAngle, leafSize, rng).convex
         }
       }
 
       // All the cross hatching logic has been moved into this class
-      val hatchedLeaves = CrossHatch(leaves, rng = rng).hatches
+      val hatchedLeaves = leaves.map { HatchedShape(it, includeCrossHatch = true, rng = rng).hatchedShape }
 
       hatchedLeaves.forEach { (leaf, hatches) ->
         drawer.isolated {

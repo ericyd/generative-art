@@ -54,11 +54,11 @@ fun main() = application {
 
       // Base leaf params
       val nLeavesPerSegment = random(10.0, 20.0, rng).toInt()
-      val leafRingAngularDeviation = PI * random(0.0, 0.1, rng)
+      val leafAngularDeviation = PI * random(0.0, 0.1, rng)
       val meanLeafSize = width * random(0.1, 0.15, rng)
       val maxLeafOffset = random(250.0, 350.0, rng)
 
-      // create fractal subdivided path along which to place leaves
+      // create path along which to place leaves
       val path = (0 until (height * 0.9).toInt() step 25).map { y ->
         Vector2(width * 0.5, y.toDouble())
       }.reversed()
@@ -69,7 +69,7 @@ fun main() = application {
         val leafOffset = map(0.0, path.size - 1.0, maxLeafOffset * 0.35, maxLeafOffset, index.toDouble())
 
         List(nLeavesPerSegment) {
-          val leafAngle = baseAngle + random(-leafRingAngularDeviation, leafRingAngularDeviation, rng)
+          val leafAngle = baseAngle + random(-leafAngularDeviation, leafAngularDeviation, rng)
           val offset = random(-leafOffset, leafOffset, rng)
           val start = Vector2(position.x + offset, position.y)
           val leafSize = random(meanLeafSize * 0.6, meanLeafSize * 1.4, rng)

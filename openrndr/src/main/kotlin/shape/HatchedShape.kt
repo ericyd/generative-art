@@ -65,7 +65,7 @@ class HatchedShape(val shape: ShapeContour, private val spacing: Int? = null, pr
 
     // determine a max length for the hatch marks
     // (they will be trimmed to size with the CompoundBuilder)
-    val length = hypot(shape.bounds.width, shape.bounds.height) * 1.5
+    val length = hypot(shape.bounds.width, shape.bounds.height) * 6.5
 
     // Get a list of the start points for the hatch marks.
     // Since we are creating them oversized and trimming them with CompoundBuilder,
@@ -134,14 +134,9 @@ class HatchedShape(val shape: ShapeContour, private val spacing: Int? = null, pr
   }
 
   // Generate start points along left and right borders of the ShapeContour's bounding box
+  // We extend the boundaries of the bounding box significantly to ensure that any angles produced intersect the shape
   private fun generateLeftRightStarts(shape: ShapeContour, spacing: Int): List<Vector2> =
-    // ((shape.bounds.y - shape.bounds.height * 1.5).toInt() until (shape.bounds.y + shape.bounds.height * 2.5).toInt() step spacing).map { startY ->
-    //   Vector2(shape.bounds.x, startY.toDouble())
-    // }
-    // (shape.bounds.y.toInt() until (shape.bounds.y + shape.bounds.height).toInt() step spacing).flatMap { startY ->
-    //
-    // This is the best one, though still not 100% perfect
-    ((shape.bounds.y - shape.bounds.height * 1.5).toInt() until (shape.bounds.y + shape.bounds.height * 2.5).toInt() step spacing).flatMap { startY ->
+    ((shape.bounds.y - shape.bounds.height * 4.0).toInt() until (shape.bounds.y + shape.bounds.height * 5.0).toInt() step spacing).flatMap { startY ->
       listOf(
         Vector2(shape.bounds.x, startY.toDouble()),
         Vector2(shape.bounds.x + shape.bounds.width, startY.toDouble())
@@ -149,14 +144,9 @@ class HatchedShape(val shape: ShapeContour, private val spacing: Int? = null, pr
     }
 
   // Generate start points along top and bottom of the ShapeContour's bounding box
+  // We extend the boundaries of the bounding box significantly to ensure that any angles produced intersect the shape
   private fun generateTopBottomStarts(shape: ShapeContour, spacing: Int): List<Vector2> =
-    // ((shape.bounds.x - shape.bounds.width * 1.5).toInt() until (shape.bounds.x + shape.bounds.width * 2.5).toInt() step spacing).map { startX ->
-    //   Vector2(startX.toDouble(), shape.bounds.y)
-    // }
-    // (shape.bounds.x.toInt() until (shape.bounds.x + shape.bounds.width).toInt() step spacing).flatMap { startY ->
-    //
-    // This is the best one, though still not 100% perfect
-    ((shape.bounds.x - shape.bounds.width * 1.5).toInt() until (shape.bounds.x + shape.bounds.width * 2.5).toInt() step spacing).flatMap { startX ->
+    ((shape.bounds.x - shape.bounds.width * 4.0).toInt() until (shape.bounds.x + shape.bounds.width * 5.0).toInt() step spacing).flatMap { startX ->
       listOf(
         Vector2(startX.toDouble(), shape.bounds.y),
         Vector2(startX.toDouble(), shape.bounds.y + shape.bounds.height)

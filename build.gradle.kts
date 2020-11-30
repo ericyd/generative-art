@@ -100,7 +100,7 @@ val kotlinVersion = "1.4.10"
 
 plugins {
   java
-  kotlin("jvm") version("1.3.72")
+  kotlin("jvm") version("1.4.10")
   id("com.github.johnrengelman.shadow") version ("6.0.0")
   id("org.beryx.runtime") version ("1.9.1")
   /* Linting and auto-formatting! 🙌 */
@@ -281,8 +281,12 @@ task("sketch", JavaExec::class) {
     main = "sketch." + programMain
   } else {
     println(
-      "Please pass title paramter like\n" +
+      "Please pass title parameter like\n" +
         "./gradlew sketch -Ptitle=MySketch"
     )
   }
+}
+val compileKotlin: KotlinCompile by tasks
+compileKotlin.kotlinOptions {
+  languageVersion = "1.4"
 }

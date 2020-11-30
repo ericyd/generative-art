@@ -14,27 +14,16 @@
 package sketch.flow
 
 import noise.curl
-import noise.curlOfCurl
-import noise.perlinCurl
-import noise.yanceyNoiseGenerator
 import org.openrndr.application
-import org.openrndr.color.ColorHSLa
 import org.openrndr.color.ColorRGBa
 import org.openrndr.draw.LineCap
 import org.openrndr.extensions.Screenshots
 import org.openrndr.extra.noise.random
 import org.openrndr.extra.noise.simplex
 import org.openrndr.math.Vector2
-import org.openrndr.math.map
-import org.openrndr.math.mix
 import org.openrndr.shape.ShapeContour
 import org.openrndr.shape.contour
 import shape.grid
-import java.lang.Math.pow
-import kotlin.math.PI
-import kotlin.math.cos
-import kotlin.math.hypot
-import kotlin.math.sin
 import kotlin.random.Random
 
 fun main() = application {

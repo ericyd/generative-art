@@ -76,7 +76,7 @@ fun main() = application {
           val start = segment.start +
             Vector2(cos(leafAngle * PI), sin(leafAngle * PI)) * offset
           val leafSize = random(meanLeafSize * 0.8, meanLeafSize * 1.2, rng)
-          Leaf(start, leafAngle, leafSize, rng).convex
+          Leaf(start, leafAngle, leafSize, rng = rng).convex
         }
       }
 

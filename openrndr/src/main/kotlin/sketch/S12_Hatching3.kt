@@ -73,7 +73,7 @@ fun main() = application {
           val offset = random(-leafOffset, leafOffset, rng)
           val start = Vector2(position.x + offset, position.y)
           val leafSize = random(meanLeafSize * 0.6, meanLeafSize * 1.4, rng)
-          Leaf(start, leafAngle, leafSize, rng).convex
+          Leaf(start, leafAngle, leafSize, rng = rng).convex
         }
       }.flatten().sortedByDescending { it.clockwise.segments.first().start.y }
 

@@ -82,7 +82,8 @@ I ❤️ auto-formatting
 
 ## Where can I see the finished products without running the code?
 
-[Gallery](./Gallery.md)
+Please see [my personal site](https://ericyd.com/generative-art) or [my instagram](https://www.instagram.com/ericydauenhauer/)
+
 
 ----
 

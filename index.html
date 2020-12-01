@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Generative Art by Eric</title>
+
+  <style>
+    body {
+      --bg-color: #fcf0d1;
+      --border-color: #999;
+      --shadow-color: #999999aa;
+      --font-color: #333;
+      --link-color: #5391c1;
+
+      background: var(--bg-color);
+      font-size: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: monospace;
+      font-weight: 900;
+      text-align: center;
+      color: var(--font-color);
+    }
+
+    .cards {
+      display: flex;
+      align-items: flex-start;
+      justify-items: center;
+      justify-content: space-between;
+      padding: 1em;
+    }
+
+    .card {
+      max-width: 30em;
+      text-decoration: none;
+      color: var(--font-color);
+    }
+
+    .card .description {
+      text-decoration: none;
+      color: var(--font-color);
+    }
+
+    a,
+    a:active,
+    a:visited,
+    a:hover,
+    a:link {
+      text-decoration: underline;
+      color: var(--link-color);
+    }
+
+    .card img {
+      width: 100%;
+      border: 1px solid var(--border-color);
+      transition: 0.3s all;
+    }
+
+    .card:hover img {
+      transform: translateY(-0.25em);
+      box-shadow: 0em 0.25em 0.9em var(--shadow-color);
+    }
+
+    .source {
+      font-family: monospace;
+      font-weight: 900;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- well guess we gotta call it something 🙄 -->
+  <h1>Generative art</h1>
+  <h2>by eric</h2>
+  <h3>made with <a href="https://openrndr.org/" target="_blank">OPENRNDR</a></h3>
+
+  <!-- Put all the junk here 🗑️ -->
+  <div class="cards">
+
+
+    <!-- Each card should be a new piece -->
+    <div class="card">
+
+      <a
+        href="https://github.com/ericyd/generative-art/blob/58597acf254a1ae5111a087948174b72c5e47cc2/openrndr/src/main/kotlin/sketch/S13_Hatching4.kt">
+        <img
+          src="https://res.cloudinary.com/ericyd/image/upload/v1606794213/2020-11-30T16.25.44-seed-1651409604_streen.png"
+          alt="Generative hatching v4" />
+      </a>
+      <div class="description">
+        Generative hatching/cross-hatching. Heavily inspired by
+        <a href="https://www.instagram.com/kirbyufo/">@kirbyufo (instagram)</a> and <a href="https://www.instagram.com/piterpasma/">@piterpasma (instagram)</a>.
+        First, shapes are generated from some parameters.
+        Next, hashes are added inside the shape's bounding box using 
+        <a href="https://generativeartistry.com/tutorials/circle-packing/">circle</a>
+        <a href="https://sighack.com/post/simple-stippling-via-circle-packing">packing</a>.
+        Next, 
+        <a href="https://github.com/openrndr/openrndr/blob/409f2d26e62cec27aeb227c5d5a6b1e01cd32ee8/openrndr-core/src/main/kotlin/org/openrndr/shape/CompositionDrawer.kt#L577-L582">an OPENRNDR API</a>
+        clips the paths against the shape itself so that only the hashes that are inside the shape are shown. (There are muliple "clipping points" in this image.)
+        <br>
+        <a class="source" href="https://github.com/ericyd/generative-art/blob/58597acf254a1ae5111a087948174b72c5e47cc2/openrndr/src/main/kotlin/sketch/S13_Hatching4.kt">source code</a>
+      </div>
+    </div>
+
+  </div>
+</body>
+
+</html>

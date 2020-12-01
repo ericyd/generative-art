@@ -1,6 +1,10 @@
 # Generative Art
 Built with [Nannou][], [Processing][], and [OpenRNDR][]
 
+## Where can I see the finished products without running the code?
+
+Please see [my personal site](https://ericyd.com/generative-art) or [my instagram](https://www.instagram.com/ericydauenhauer/)
+
 ## Broken links? 😱
 
 Did you follow a link from Instagram or elsewhere and get a 404???
@@ -79,11 +83,6 @@ I ❤️ auto-formatting
 ```bash
 ./gradlew ktlintFormat
 ```
-
-## Where can I see the finished products without running the code?
-
-Please see [my personal site](https://ericyd.com/generative-art) or [my instagram](https://www.instagram.com/ericydauenhauer/)
-
 
 ----
 

@@ -6,6 +6,12 @@
   <title>Generative Art by Eric</title>
 
   <style>
+    html, body {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
       --bg-color: #fcf0d1;
       --border-color: #999;
@@ -21,10 +27,34 @@
     h1,
     h2,
     h3 {
-      font-family: monospace;
-      font-weight: 900;
       text-align: center;
       color: var(--font-color);
+    }
+
+    .source {
+      font-family: monospace;
+      font-weight: 900;
+    }
+
+    .github-logo {
+      width: 1em;
+      transition: 0.3s all;
+    }
+
+    .github-logo:hover {
+      transform: translateY(-0.05em);
+      box-shadow: 0em 0.05em 0.1em var(--shadow-color);
+    }
+
+    .vert-container {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      justify-content: space-between;
+    }
+
+    .vert-spacer {
+      flex: 1 1 auto;
     }
 
     .cards {
@@ -51,7 +81,6 @@
     a:visited,
     a:hover,
     a:link {
-      text-decoration: underline;
       color: var(--link-color);
     }
 
@@ -61,14 +90,15 @@
       transition: 0.3s all;
     }
 
-    .card:hover img {
+    .card img:hover {
       transform: translateY(-0.25em);
       box-shadow: 0em 0.25em 0.9em var(--shadow-color);
     }
 
-    .source {
-      font-family: monospace;
-      font-weight: 900;
+    footer {
+      text-align: center;
+      width: 100%;
+      padding-bottom: 1em;
     }
   </style>
 </head>
@@ -76,38 +106,60 @@
 <body>
 
   <!-- well guess we gotta call it something 🙄 -->
-  <h1>Generative art</h1>
-  <h2>by eric</h2>
-  <h3>made with <a href="https://openrndr.org/" target="_blank">OPENRNDR</a></h3>
-
+  
   <!-- Put all the junk here 🗑️ -->
-  <div class="cards">
-
-
-    <!-- Each card should be a new piece -->
-    <div class="card">
-
-      <a
-        href="https://github.com/ericyd/generative-art/blob/58597acf254a1ae5111a087948174b72c5e47cc2/openrndr/src/main/kotlin/sketch/S13_Hatching4.kt">
-        <img
-          src="https://res.cloudinary.com/ericyd/image/upload/v1606794213/2020-11-30T16.25.44-seed-1651409604_streen.png"
-          alt="Generative hatching v4" />
-      </a>
-      <div class="description">
-        Generative hatching/cross-hatching. Heavily inspired by
-        <a href="https://www.instagram.com/kirbyufo/">@kirbyufo (instagram)</a> and <a href="https://www.instagram.com/piterpasma/">@piterpasma (instagram)</a>.
-        First, shapes are generated from some parameters.
-        Next, hashes are added inside the shape's bounding box using 
-        <a href="https://generativeartistry.com/tutorials/circle-packing/">circle</a>
-        <a href="https://sighack.com/post/simple-stippling-via-circle-packing">packing</a>.
-        Next, 
-        <a href="https://github.com/openrndr/openrndr/blob/409f2d26e62cec27aeb227c5d5a6b1e01cd32ee8/openrndr-core/src/main/kotlin/org/openrndr/shape/CompositionDrawer.kt#L577-L582">an OPENRNDR API</a>
-        clips the paths against the shape itself so that only the hashes that are inside the shape are shown. (There are muliple "clipping points" in this image.)
-        <br>
-        <a class="source" href="https://github.com/ericyd/generative-art/blob/58597acf254a1ae5111a087948174b72c5e47cc2/openrndr/src/main/kotlin/sketch/S13_Hatching4.kt">source code</a>
+  <div class="vert-container">
+    
+    <!-- Thanks to https://github.com/edent/SuperTinyIcons/blob/fef4b0e576726f4f78c5707327281e689b5b5801/images/svg/github.svg for the icon -->
+    <h1 class="source">Generative art 
+      <a href="https://github.com/ericyd/generative-art">
+      <svg xmlns="http://www.w3.org/2000/svg"
+      class="github-logo"
+        aria-label="GitHub" role="img"
+        viewBox="0 0 512 512"><rect
+        width="512" height="512"
+        rx="15%"
+        fill="#1B1817"/>
+        <path fill="#fff" d="M335 499c14 0 12 17 12 17H165s-2-17 12-17c13 0 16-6 16-12l-1-50c-71 16-86-28-86-28-12-30-28-37-28-37-24-16 1-16 1-16 26 2 40 26 40 26 22 39 59 28 74 22 2-17 9-28 16-35-57-6-116-28-116-126 0-28 10-51 26-69-3-6-11-32 3-67 0 0 21-7 70 26 42-12 86-12 128 0 49-33 70-26 70-26 14 35 6 61 3 67 16 18 26 41 26 69 0 98-60 120-117 126 10 8 18 24 18 48l-1 70c0 6 3 12 16 12z"/>
+      </svg>
+    </a></h1>
+    <h2 class="source">by eric</h2>
+    <h3 class="source">made with <a href="https://openrndr.org/" target="_blank">OPENRNDR</a></h3>
+    <div class="cards">
+  
+  
+      <!-- Each card should be a new piece -->
+      <div class="card">
+  
+        <a
+          href="https://github.com/ericyd/generative-art/blob/58597acf254a1ae5111a087948174b72c5e47cc2/openrndr/src/main/kotlin/sketch/S13_Hatching4.kt">
+          <img
+            src="https://res.cloudinary.com/ericyd/image/upload/v1606794213/2020-11-30T16.25.44-seed-1651409604_streen.png"
+            alt="Generative hatching v4" />
+        </a>
+        <div class="description">
+          Generative hatching/cross-hatching. Heavily inspired by
+          <a href="https://www.instagram.com/kirbyufo/">@kirbyufo (instagram)</a> and <a href="https://www.instagram.com/piterpasma/">@piterpasma (instagram)</a>.
+          First, shapes are generated from some parameters.
+          Next, hashes are added inside the shape's bounding box using 
+          <a href="https://generativeartistry.com/tutorials/circle-packing/">circle</a>
+          <a href="https://sighack.com/post/simple-stippling-via-circle-packing">packing</a>.
+          Next, 
+          <a href="https://github.com/openrndr/openrndr/blob/409f2d26e62cec27aeb227c5d5a6b1e01cd32ee8/openrndr-core/src/main/kotlin/org/openrndr/shape/CompositionDrawer.kt#L577-L582">an OPENRNDR API</a>
+          clips the paths against the shape itself so that only the hashes that are inside the shape are shown. (There are muliple "clipping points" in this image.)
+          <br>
+          <a class="source" href="https://github.com/ericyd/generative-art/blob/58597acf254a1ae5111a087948174b72c5e47cc2/openrndr/src/main/kotlin/sketch/S13_Hatching4.kt">source code</a>
+        </div>
       </div>
+  
     </div>
 
+    <div class="vert-spacer"></div>
+    <footer>
+      Thanks to <a href="https://cloudinary.com/">Cloudinary</a> for the free image hosting tier, and <a href="https://github.com/edent/SuperTinyIcons/blob/fef4b0e576726f4f78c5707327281e689b5b5801/images/svg/github.svg">SuperTinyIcons</a> for the Github logo!
+      <br>
+      Thanks to the generative art community for unending inspiration.
+    </footer>
   </div>
 </body>
 

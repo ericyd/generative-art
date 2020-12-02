@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Generative Art by Eric</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <style>
     html, body {
@@ -98,7 +99,7 @@
     footer {
       text-align: center;
       width: 100%;
-      padding-bottom: 1em;
+      padding: 2em 0;
     }
   </style>
 </head>
@@ -106,12 +107,12 @@
 <body>
 
   <!-- well guess we gotta call it something 🙄 -->
-  
+
   <!-- Put all the junk here 🗑️ -->
   <div class="vert-container">
-    
+
     <!-- Thanks to https://github.com/edent/SuperTinyIcons/blob/fef4b0e576726f4f78c5707327281e689b5b5801/images/svg/github.svg for the icon -->
-    <h1 class="source">Generative art 
+    <h1 class="source">Generative art
       <a href="https://github.com/ericyd/generative-art">
       <svg xmlns="http://www.w3.org/2000/svg"
       class="github-logo"
@@ -126,11 +127,11 @@
     <h2 class="source">by eric</h2>
     <h3 class="source">made with <a href="https://openrndr.org/" target="_blank">OPENRNDR</a></h3>
     <div class="cards">
-  
-  
+
+
       <!-- Each card should be a new piece -->
       <div class="card">
-  
+
         <a
           href="https://res.cloudinary.com/ericyd/image/upload/v1606794213/2020-11-30T16.25.44-seed-1651409604_streen.png" target="_blank">
           <!-- /c_scale,w_500/ param is Cloudinary transform to make it 500px wide -->
@@ -142,17 +143,17 @@
           Generative hatching/cross-hatching. Heavily inspired by
           <a href="https://www.instagram.com/kirbyufo/">@kirbyufo (instagram)</a> and <a href="https://www.instagram.com/piterpasma/">@piterpasma (instagram)</a>.
           First, shapes are generated from some parameters.
-          Next, hashes are added inside the shape's bounding box using 
+          Next, hashes are added inside the shape's bounding box using
           <a href="https://generativeartistry.com/tutorials/circle-packing/">circle</a>
           <a href="https://sighack.com/post/simple-stippling-via-circle-packing">packing</a>.
-          Next, 
+          Next,
           <a href="https://github.com/openrndr/openrndr/blob/409f2d26e62cec27aeb227c5d5a6b1e01cd32ee8/openrndr-core/src/main/kotlin/org/openrndr/shape/CompositionDrawer.kt#L577-L582">an OPENRNDR API</a>
           clips the paths against the shape itself so that only the hashes that are inside the shape are shown. (There are muliple "clipping points" in this image.)
           <br>
           <a class="source" href="https://github.com/ericyd/generative-art/blob/58597acf254a1ae5111a087948174b72c5e47cc2/openrndr/src/main/kotlin/sketch/S13_Hatching4.kt">source code</a>
         </div>
       </div>
-  
+
     </div>
 
     <div class="vert-spacer"></div>

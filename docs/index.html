@@ -67,7 +67,7 @@
     }
     
     function fetchImages(_event) {
-      fetch('/images.json')
+      fetch('/generative-art/images.json')
         .then(response => response.json())
         .then(data => populateImages(data.images))
         .catch(console.error.bind(console));

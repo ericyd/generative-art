@@ -7,6 +7,7 @@ import org.openrndr.math.Vector2
 import org.openrndr.math.map
 import org.openrndr.shape.Circle
 import org.openrndr.shape.Composition
+import org.openrndr.shape.Rectangle
 import org.openrndr.shape.ShapeContour
 import org.openrndr.shape.contour
 import org.openrndr.shape.difference
@@ -35,6 +36,7 @@ class HatchedShapePacked(
   private val maxFailedAttempts: Int = Short.MAX_VALUE.toInt(),
   val rng: Random = Random.Default
 ) {
+  // lol I should probably have fewer params... BUT I LIKE THEM ALL SO MUCH!
   fun hatchedShape(
     radiusRange: ClosedFloatingPointRange<Double> = 0.5..5.0,
     hatchLength: Double = 10.0,
@@ -44,8 +46,9 @@ class HatchedShapePacked(
     secondaryAngle: Double? = null,
     intersectionContours: List<ShapeContour>? = null,
     differenceContours: List<ShapeContour>? = null,
+    gradient: ConcentrationGradient = BilinearConcentrationGradient.fadeUp
   ): Pair<ShapeContour, Composition> {
-    val circles = packCircles(radiusRange)
+    val circles = packCircles(radiusRange, shape.bounds, gradient)
     val composition = drawComposition {
       this.strokeWeight = strokeWeight
       fill = null
@@ -80,7 +83,7 @@ class HatchedShapePacked(
    *    Yes -> increment failed attempts counter and continue
    *    No -> draw circle
    */
-  private fun packCircles(radiusRange: ClosedFloatingPointRange<Double>): List<Circle> {
+  private fun packCircles(radiusRange: ClosedFloatingPointRange<Double>, boundingRect: Rectangle, gradient: ConcentrationGradient): List<Circle> {
     val circles = mutableListOf<Circle>()
     var failedAttempts = 0
     while (failedAttempts < maxFailedAttempts) {
@@ -88,10 +91,13 @@ class HatchedShapePacked(
         random(shape.bounds.x, shape.bounds.x + shape.bounds.width, rng),
         random(shape.bounds.y, shape.bounds.y + shape.bounds.height, rng)
       )
+      // endInclusive and start are "reversed" here, because a gradient's lowest concentration maps to 0.0,
+      // and that actually correlates to where we want the circles to be **most** spaced out.
+      // That means we need low concentration to map to high radius, hence the reverse.
       val radius = map(
-        shape.bounds.y + shape.bounds.height, shape.bounds.y,
-        radiusRange.start, radiusRange.endInclusive,
-        position.y
+        0.0, 1.0,
+        radiusRange.endInclusive, radiusRange.start,
+        gradient.assess(boundingRect, position)
       )
       val circle = Circle(position, radius)
 

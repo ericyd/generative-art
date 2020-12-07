@@ -37,7 +37,7 @@ fun main() = application {
       drawer.fill = ColorRGBa.BLACK.opacify(0.1)
       drawer.stroke = ColorRGBa.BLACK
 
-      drawer.contour(blob.shape())
+      drawer.contour(blob.contour())
     }
   }
 }

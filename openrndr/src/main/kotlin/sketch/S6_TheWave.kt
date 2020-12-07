@@ -103,7 +103,7 @@ fun main() = application {
         // blob.fuzziness = map(-1.0, 1.0, fuzzinessRange.first, fuzzinessRange.second, perlinPhase2)
         blob.ridgediness = map(-1.0, 1.0, fuzzinessRange.first, fuzzinessRange.second, perlinPhase3)
         blob.aspectRatio = map(-1.0, 1.0, aspecRatioRange.first, aspecRatioRange.second, perlinPhase4)
-        blob.shape()
+        blob.contour()
       }
 
       val usePerpendiculars = random(-1.0, 1.0, rng) < 0.0

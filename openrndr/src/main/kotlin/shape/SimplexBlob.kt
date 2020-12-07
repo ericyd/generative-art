@@ -85,7 +85,7 @@ class SimplexBlob(
       pt
     }
 
-  fun shape(): ShapeContour = ShapeContour.fromPoints(points(), closed = true)
+  fun contour(): ShapeContour = ShapeContour.fromPoints(points(), closed = true)
 
   // SO FTW https://stackoverflow.com/a/2259502
   private fun rotate(x: Double, y: Double): Vector2 {

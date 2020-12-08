@@ -4,8 +4,6 @@ package shape
 import org.openrndr.color.ColorRGBa
 import org.openrndr.extra.noise.random
 import org.openrndr.math.Vector2
-import org.openrndr.math.map
-import org.openrndr.shape.Circle
 import org.openrndr.shape.Composition
 import org.openrndr.shape.Rectangle
 import org.openrndr.shape.ShapeContour
@@ -14,20 +12,13 @@ import org.openrndr.shape.difference
 import org.openrndr.shape.drawComposition
 import org.openrndr.shape.intersection
 import util.BilinearConcentrationGradient
+import util.CirclePack
 import util.ConcentrationGradient
+import util.packCirclesOnGradient
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.random.Random
-
-typealias CirclePack = List<Circle>
-
-/**
- * Check for intersection of two circles
- * Similar to native "contains" method, but checks against other circles instead of other point
- */
-fun Circle.intersects(other: Circle): Boolean =
-  this.center.distanceTo(other.center) < (this.radius + other.radius)
 
 /**
  * Class to create a list of (cross) hatch segments for a given ShapeContour using circle packing
@@ -83,40 +74,9 @@ class HatchedShapePacked(
 
   /**
    * Generate list of circles via circle packing algorithm.
-   * 1. Choose random position within bounds of shape
-   * 2. Check if any other circle contains this circle
-   *    Yes -> increment failed attempts counter and continue
-   *    No -> draw circle
    */
-  private fun packCircles(radiusRange: ClosedFloatingPointRange<Double>, boundingRect: Rectangle, gradient: ConcentrationGradient): CirclePack {
-    val circles = mutableListOf<Circle>()
-    var failedAttempts = 0
-    while (failedAttempts < maxFailedAttempts) {
-      val position = Vector2(
-        random(shape.bounds.x, shape.bounds.x + shape.bounds.width, rng),
-        random(shape.bounds.y, shape.bounds.y + shape.bounds.height, rng)
-      )
-      // endInclusive and start are "reversed" here, because a gradient's lowest concentration maps to 0.0,
-      // and that actually correlates to where we want the circles to be **most** spaced out.
-      // That means we need low concentration to map to high radius, hence the reverse.
-      val radius = map(
-        0.0, 1.0,
-        radiusRange.endInclusive, radiusRange.start,
-        gradient.assess(boundingRect, position)
-      )
-      val circle = Circle(position, radius)
-
-      if (circles.any { it.intersects(circle) }) {
-        failedAttempts++
-        continue
-      }
-
-      // this is better for some circle packing but it makes this take **forever** and I'm impatient
-      // failedAttempts = 0
-      circles.add(circle)
-    }
-    return circles
-  }
+  private fun packCircles(radiusRange: ClosedFloatingPointRange<Double>, boundingRect: Rectangle, gradient: ConcentrationGradient): CirclePack =
+    packCirclesOnGradient(radiusRange, boundingRect, gradient, maxFailedAttempts, rng)
 
   private fun normalizeAngle(angle: Double?): Double? {
     if (angle == null) return angle

@@ -26,8 +26,8 @@ import org.openrndr.shape.ShapeContour
 import org.openrndr.shape.drawComposition
 import shape.HatchedShapePacked
 import shape.SimplexBlob
-import shape.intersects
 import util.RadialConcentrationGradient
+import util.intersects
 import util.rotatePoint
 import util.timestamp
 import kotlin.math.PI

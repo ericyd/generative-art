@@ -15,8 +15,8 @@ import org.openrndr.math.Vector2
 import org.openrndr.math.map
 import org.openrndr.shape.Circle
 import shape.HatchedShapePacked
-import shape.intersects
 import util.RadialConcentrationGradient
+import util.intersects
 import util.timestamp
 import kotlin.math.PI
 import kotlin.math.cos

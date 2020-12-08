@@ -88,19 +88,6 @@ class SimplexBlob(
   fun contour(): ShapeContour = ShapeContour.fromPoints(points(), closed = true)
 
   // SO FTW https://stackoverflow.com/a/2259502
-  private fun rotate(x: Double, y: Double): Vector2 {
-    val sin = sin(rotation)
-    val cos = cos(rotation)
-
-    // translate point back to origin
-    val x1 = x - origin.x
-    val y1 = y - origin.y
-
-    // rotate point
-    val x2 = x1 * cos - y1 * sin
-    val y2 = x1 * sin + y1 * cos
-
-    // translate point back
-    return Vector2(x2 + origin.x, y2 + origin.y)
-  }
+  private fun rotate(x: Double, y: Double): Vector2 =
+    rotatePoint(x, y, rotation, origin)
 }

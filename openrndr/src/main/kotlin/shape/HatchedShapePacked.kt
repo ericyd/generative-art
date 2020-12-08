@@ -18,6 +18,8 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.random.Random
 
+typealias CirclePack = List<Circle>
+
 /**
  * Check for intersection of two circles
  * Similar to native "contains" method, but checks against other circles instead of other point
@@ -46,9 +48,10 @@ class HatchedShapePacked(
     secondaryAngle: Double? = null,
     intersectionContours: List<ShapeContour>? = null,
     differenceContours: List<ShapeContour>? = null,
-    gradient: ConcentrationGradient = BilinearConcentrationGradient.fadeUp
+    gradient: ConcentrationGradient = BilinearConcentrationGradient.fadeUp,
+    circlePack: CirclePack? = null
   ): Pair<ShapeContour, Composition> {
-    val circles = packCircles(radiusRange, shape.bounds, gradient)
+    val circles = circlePack ?: packCircles(radiusRange, shape.bounds, gradient)
     val composition = drawComposition {
       this.strokeWeight = strokeWeight
       fill = null
@@ -83,7 +86,7 @@ class HatchedShapePacked(
    *    Yes -> increment failed attempts counter and continue
    *    No -> draw circle
    */
-  private fun packCircles(radiusRange: ClosedFloatingPointRange<Double>, boundingRect: Rectangle, gradient: ConcentrationGradient): List<Circle> {
+  private fun packCircles(radiusRange: ClosedFloatingPointRange<Double>, boundingRect: Rectangle, gradient: ConcentrationGradient): CirclePack {
     val circles = mutableListOf<Circle>()
     var failedAttempts = 0
     while (failedAttempts < maxFailedAttempts) {

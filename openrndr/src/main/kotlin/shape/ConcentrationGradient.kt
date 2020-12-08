@@ -35,21 +35,35 @@ interface ConcentrationGradient {
 /**
  * Creates a 2D gradient f(x,y) where values are interpolated over a circle defined in relation to a unit square.
  * Unit square: (corner at (0,0), width = 1, height = 1)
- * @param center the point at which the gradient f(x,y) = 0.0
- * @param radius the distance from the center at which the gradient f(x,y) = 1.0
+ * @param center center of the radial gradient
+ * @param minRadius the distance from the center at which the gradient f(x,y) = 0.0
+ * @param maxRadius the distance from the center at which the gradient f(x,y) = 1.0
  * @param reverse reverses the gradient so center has concentration 1.0 and radius has concentration 0.0
  */
 class RadialConcentrationGradient(
   private val center: Vector2 = Vector2.ZERO,
-  private val radius: Double = sqrt(2.0),
+  private val minRadius: Double = 0.0,
+  private val maxRadius: Double = sqrt(2.0),
   private val reverse: Boolean = false
 ) : ConcentrationGradient {
   override fun assess(boundingRect: Rectangle, point: Vector2): PercentageDouble {
     val normalizedPoint = normalizePoint(boundingRect, point)
+    // still figuring out if this is the right math, so keeping the original which doesn't use minRadius
+
+    // debugging...
+    // println("===============================================")
+    // println("point: $point")
+    // println("boundingRect: $boundingRect")
+    // println("normalizedPoint: $normalizedPoint")
+    // println("center: $center")
+    // println("normalizedPoint.distanceTo(center): ${normalizedPoint.distanceTo(center)}")
+    // println(normalizedPoint.distanceTo(center) - minRadius)
     return if (reverse) {
-      1.0 - normalizedPoint.distanceTo(center) / radius
+      // 1.0 - normalizedPoint.distanceTo(center) / maxRadius
+      1.0 - (normalizedPoint.distanceTo(center) - minRadius) / (maxRadius - minRadius)
     } else {
-      normalizedPoint.distanceTo(center) / radius
+      // normalizedPoint.distanceTo(center) / maxRadius
+      (normalizedPoint.distanceTo(center) - minRadius) / (maxRadius - minRadius)
     }
   }
 

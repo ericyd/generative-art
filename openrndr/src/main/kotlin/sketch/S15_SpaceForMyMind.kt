@@ -62,7 +62,7 @@ fun main() = application {
     // this is kind of a "base dimension" for shape sizing
     val base = 1000
     val includeCrossHatch = true
-    val primaryAngleRange = (PI * 1.1)..(PI * 1.15)
+    val primaryAngleRange = (PI * 1.1)..(PI * 1.85)
 
     extend {
       // get that rng
@@ -81,7 +81,7 @@ fun main() = application {
         .hatchedShape(
           radiusRange = 0.1..10.0,
           gradient = planetGradient,
-          hatchLength = 20.0,
+          hatchLength = 15.0,
           strokeWeight = 0.1,
           strokeColor = fg
         ).second
@@ -91,14 +91,14 @@ fun main() = application {
 
       // generate list of hatches that fill in random "craters" on the planet
       println("starting crater hatching")
-      val craters = List(random(3.0, 7.0, rng).toInt()) {
+      val craters = List(random(3.0, 5.0, rng).toInt()) {
         // place craters in upper left quadrant of planet (where they will be visible
         val origin = Vector2(
           random(planetCircle.center.x - planetCircle.radius, planetCircle.center.x, rng),
           random(planetCircle.center.y - planetCircle.radius, planetCircle.center.y, rng)
         )
 
-        val radius = random(base * 0.2, base * 0.4)
+        val radius = random(base * 0.1, base * 0.35)
 
         val crater = SimplexBlob(
           origin, radius,
@@ -107,11 +107,14 @@ fun main() = application {
 
         val gradient = RadialConcentrationGradient(Vector2(0.5, 0.5), reverse = true)
 
-        HatchedShapePacked(crater.contour(), rng = rng, includeCrossHatch = includeCrossHatch, primaryAngleRange = primaryAngleRange)
+        HatchedShapePacked(
+          crater.contour(), rng = rng, maxFailedAttempts = Short.MAX_VALUE.toInt(),
+          includeCrossHatch = includeCrossHatch, primaryAngleRange = primaryAngleRange
+        )
           .hatchedShape(
-            radiusRange = 0.4..20.0,
+            radiusRange = 0.5..20.0,
             gradient = gradient,
-            hatchLength = 20.0,
+            hatchLength = 15.0,
             strokeWeight = 0.1,
             strokeColor = fg,
             intersectionContours = listOf(planetCircle.contour),
@@ -135,7 +138,7 @@ fun main() = application {
       )
       val atmosphereCirclePack = mutableListOf<Circle>()
       val maxFailedAttempts = Short.MAX_VALUE.toInt() * 4
-      val radiusRange = 2.70..20.0
+      val radiusRange = 1.38..20.0
       var failedAttempts = 0
       println("starting the atmosphere circle pack")
       while (failedAttempts < maxFailedAttempts) {
@@ -162,10 +165,11 @@ fun main() = application {
         atmosphereCirclePack.add(circle)
       }
       val atmosphere = HatchedShapePacked(
-        planetCircle.scaled(1.2).contour, rng = rng, includeCrossHatch = includeCrossHatch, primaryAngleRange = primaryAngleRange
+        planetCircle.scaled(1.2).contour, rng = rng, includeCrossHatch = false
       )
         .hatchedShape(
-          hatchLength = 20.0,
+          hatchLength = 5.0,
+          primaryAngle = PI * 1.15,
           strokeWeight = 0.1,
           strokeColor = fg,
           differenceContours = listOf(planetCircle.contour),
@@ -177,12 +181,12 @@ fun main() = application {
 
       fun generateStar(): ShapeContour {
         val y = abs(gaussian(0.0, height / 2.0, rng))
-        val xDeviationFactor = map(0.0, height.toDouble(), 3.0, 16.0, y)
+        val xDeviationFactor = map(0.0, height.toDouble(), 3.0, 12.0, y)
         val x = abs(gaussian(0.0, width / xDeviationFactor, rng))
 
         // Blob needs a few values randomized. Seed, radius, and noiseScale should all be slightly randomized
         val blobSeed = random(0.0, Int.MAX_VALUE.toDouble(), rng).toInt()
-        val blobRadius = random(0.5, 4.0, rng)
+        val blobRadius = random(0.1, 2.0, rng)
         val noiseScale = random(0.5, 0.9, rng)
 
         return SimplexBlob(origin = Vector2(x, y), seed = blobSeed, radius = blobRadius, noiseScale = noiseScale, moreConvexPlz = true)

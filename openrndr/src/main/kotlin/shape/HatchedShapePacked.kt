@@ -13,6 +13,8 @@ import org.openrndr.shape.contour
 import org.openrndr.shape.difference
 import org.openrndr.shape.drawComposition
 import org.openrndr.shape.intersection
+import util.BilinearConcentrationGradient
+import util.ConcentrationGradient
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin

@@ -1,4 +1,4 @@
-package shape
+package util
 
 import org.openrndr.math.Vector2
 import org.openrndr.shape.Segment

@@ -18,7 +18,7 @@ import org.openrndr.math.Vector2
 import org.openrndr.math.map
 import org.openrndr.shape.ShapeContour
 import shape.SimplexBlob
-import shape.vectorListToSegments
+import util.vectorListToSegments
 import kotlin.math.PI
 import kotlin.math.sin
 import kotlin.random.Random

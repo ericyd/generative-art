@@ -4,7 +4,6 @@
 package sketch
 
 import extensions.CustomScreenshots
-import extensions.timestamp
 import org.openrndr.application
 import org.openrndr.color.ColorRGBa
 import org.openrndr.draw.isolated
@@ -14,9 +13,10 @@ import org.openrndr.math.map
 import org.openrndr.shape.Ellipse
 import org.openrndr.shape.Rectangle
 import org.openrndr.shape.contour
-import shape.BilinearConcentrationGradient
 import shape.HatchedShapePacked
-import shape.RadialConcentrationGradient
+import util.BilinearConcentrationGradient
+import util.RadialConcentrationGradient
+import util.timestamp
 import kotlin.random.Random
 
 fun main() = application {

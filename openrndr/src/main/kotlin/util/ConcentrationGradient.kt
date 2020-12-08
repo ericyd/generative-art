@@ -1,6 +1,5 @@
-package shape
+package util
 
-import noise.bilinearInterp
 import org.openrndr.math.Vector2
 import org.openrndr.shape.Rectangle
 import kotlin.math.sqrt

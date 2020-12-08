@@ -5,7 +5,6 @@
 package sketch
 
 import extensions.CustomScreenshots
-import extensions.timestamp
 import frames.circularFrame
 import org.openrndr.application
 import org.openrndr.color.ColorRGBa
@@ -19,6 +18,7 @@ import org.openrndr.shape.difference
 import org.openrndr.shape.drawComposition
 import shape.HatchedShape
 import shape.Leaf
+import util.timestamp
 import kotlin.math.PI
 import kotlin.random.Random
 

@@ -1,4 +1,4 @@
-package noise
+package util
 
 import org.openrndr.math.Vector2
 

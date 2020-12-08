@@ -96,6 +96,35 @@ fun curlOfCurl(field: (Int, Double, Double) -> Double, seed: Int, x: Double, y: 
 fun curlOfCurl(field: (Int, Double, Double) -> Double, seed: Int, vec: Vector2, epsilon: Double = 1.0): Vector2 =
   curlOfCurl(field, seed, vec.x, vec.y, epsilon)
 
+fun curlOfCurl2(field: (Int, Double, Double) -> Double, seed: Int, x: Double, y: Double, epsilon: Double = 1.0): Vector2 {
+  // a is the partial derivative of our field at point (x, y) in y direction
+  // ∂ / ∂y
+  // The slides describe this as "∂x1/∂y" but personally I understand it better as ∂/∂y
+  //
+  // More readably, this is
+  //    val a1 = field(seed, x, y + epsilon)
+  //    val a2 = field(seed, x, y - epsilon)
+  //    val a = (a1 - a2) / (2.0 * epsilon)
+  // but this is simplified for MAXIMUM SPEED 😂
+  val a = (curl(field, seed, x, y + epsilon) - curl(field, seed, x, y - epsilon)) / (2.0 * epsilon)
+
+  // b is the partial derivative of our field at point (x, y) in x direction
+  // ∂ / ∂x
+  // The slides describe this as "∂y1/∂x" but personally I understand it better as ∂/∂x
+  //
+  // Expanded:
+  //    val b1 = field(seed, x + epsilon, y)
+  //    val b2 = field(seed, x - epsilon, y)
+  //    val b = (b1 - b2) / (2.0 * epsilon)
+  val b = (curl(field, seed, x + epsilon, y) - curl(field, seed, x - epsilon, y)) / (2.0 * epsilon)
+
+  // return Vector2(a, -b)
+  return (a - b) / (2.0 * epsilon)
+}
+
+fun curlOfCurl2(field: (Int, Double, Double) -> Double, seed: Int, vec: Vector2, epsilon: Double = 1.0): Vector2 =
+  curlOfCurl2(field, seed, vec.x, vec.y, epsilon)
+
 /**
  * curl of perlin
  */

@@ -9,7 +9,6 @@
 package sketch
 
 import extensions.CustomScreenshots
-import extensions.timestamp
 import org.openrndr.application
 import org.openrndr.color.ColorRGBa
 import org.openrndr.draw.isolated
@@ -18,6 +17,7 @@ import org.openrndr.math.Vector2
 import shape.FractalizedLine
 import shape.HatchedShape
 import shape.Leaf
+import util.timestamp
 import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.cos

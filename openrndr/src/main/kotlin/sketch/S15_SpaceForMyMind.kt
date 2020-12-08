@@ -11,7 +11,6 @@
 package sketch
 
 import extensions.CustomScreenshots
-import extensions.timestamp
 import org.openrndr.application
 import org.openrndr.color.ColorRGBa
 import org.openrndr.draw.LineCap
@@ -26,10 +25,11 @@ import org.openrndr.shape.Ellipse
 import org.openrndr.shape.ShapeContour
 import org.openrndr.shape.drawComposition
 import shape.HatchedShapePacked
-import shape.RadialConcentrationGradient
 import shape.SimplexBlob
 import shape.intersects
-import shape.rotatePoint
+import util.RadialConcentrationGradient
+import util.rotatePoint
+import util.timestamp
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.cos

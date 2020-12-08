@@ -5,7 +5,6 @@
 package sketch.test
 
 import extensions.CustomScreenshots
-import extensions.timestamp
 import org.openrndr.application
 import org.openrndr.color.ColorRGBa
 import org.openrndr.extra.noise.random
@@ -17,6 +16,7 @@ import org.openrndr.shape.SegmentPoint
 import org.openrndr.shape.ShapeContour
 import org.openrndr.shape.compound
 import org.openrndr.shape.contour
+import util.timestamp
 import java.util.Collections.rotate
 import java.util.Optional
 import kotlin.math.PI

@@ -23,7 +23,7 @@ import org.openrndr.extra.noise.simplex
 import org.openrndr.math.Vector2
 import org.openrndr.shape.ShapeContour
 import org.openrndr.shape.contour
-import shape.grid
+import util.grid
 import kotlin.random.Random
 
 fun main() = application {

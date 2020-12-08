@@ -7,7 +7,6 @@
 package sketch.test
 
 import extensions.CustomScreenshots
-import extensions.timestamp
 import org.openrndr.application
 import org.openrndr.color.ColorRGBa
 import org.openrndr.draw.isolated
@@ -16,8 +15,9 @@ import org.openrndr.math.Vector2
 import org.openrndr.math.map
 import org.openrndr.shape.Circle
 import shape.HatchedShapePacked
-import shape.RadialConcentrationGradient
 import shape.intersects
+import util.RadialConcentrationGradient
+import util.timestamp
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.hypot

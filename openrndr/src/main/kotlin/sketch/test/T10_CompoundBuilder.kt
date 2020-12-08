@@ -4,7 +4,6 @@
 package sketch.test
 
 import extensions.CustomScreenshots
-import extensions.timestamp
 import org.openrndr.application
 import org.openrndr.color.ColorRGBa
 import org.openrndr.shape.Circle
@@ -12,6 +11,7 @@ import org.openrndr.shape.Rectangle
 import org.openrndr.shape.contour
 import org.openrndr.shape.drawComposition
 import org.openrndr.shape.intersection
+import util.timestamp
 
 fun main() = application {
   configure {

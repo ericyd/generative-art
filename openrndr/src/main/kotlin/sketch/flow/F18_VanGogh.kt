@@ -25,7 +25,7 @@ import org.openrndr.math.map
 import org.openrndr.math.mix
 import org.openrndr.shape.ShapeContour
 import org.openrndr.shape.contour
-import shape.grid
+import util.grid
 import kotlin.math.floor
 import kotlin.math.hypot
 import kotlin.random.Random

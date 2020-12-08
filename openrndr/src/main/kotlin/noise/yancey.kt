@@ -3,6 +3,7 @@ package noise
 import org.openrndr.math.Vector2
 import org.openrndr.math.Vector3
 import org.openrndr.math.mix
+import util.bilinearInterp
 import java.lang.Math.pow
 import java.lang.Math.sin
 import kotlin.math.PI

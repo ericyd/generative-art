@@ -4,6 +4,7 @@ import org.openrndr.extra.noise.simplex
 import org.openrndr.math.Vector2
 import org.openrndr.math.map
 import org.openrndr.shape.ShapeContour
+import util.rotatePoint
 import java.lang.Math.pow
 import kotlin.math.PI
 import kotlin.math.cos

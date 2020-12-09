@@ -2,14 +2,13 @@
 package util
 
 import force.MovingBody
+import org.openrndr.extra.noise.gaussian
 import org.openrndr.extra.noise.random
 import org.openrndr.math.Vector2
 import org.openrndr.math.map
 import org.openrndr.shape.Circle
 import org.openrndr.shape.Rectangle
-import javax.swing.Spring.height
 import kotlin.random.Random
-
 
 typealias CirclePack = List<Circle>
 
@@ -63,39 +62,69 @@ fun packCirclesOnGradient(
   return circles
 }
 
-
-// Based on
-// http://www.codeplastic.com/2017/09/09/controlled-circle-packing-with-processing/
-// algorithm
-// [1] do while any circles have velocity:
-//   [2] for all circles, apply separation forces
-//   [3] for all circles, zero the circle's velocity if it isn't intersecting any others
-// [4] return circles
+/**
+ * Based on
+ * http://www.codeplastic.com/2017/09/09/controlled-circle-packing-with-processing/
+ * algorithm
+ * [1] do while any bodies have velocity:
+ *   [2] for all bodies, apply separation forces
+ *   [3] for all bodies, zero the circle's velocity if it isn't intersecting any others
+ * [4] return bodies
+ *
+ * @param nBodies number of bodies to generate (if `bodies` is null)
+ * @param center where to place the generated bodies (if `bodies` is null)
+ * @param initialRadius how large to generate the bodies (if `bodies` is null)
+ * @param bodies provide a list of MovingBodies to pack, instead of generating
+ * @param incremental if true, returns only a single iteration of the "separating" process
+ * @param rng randomizer for when bodies are on top of each other and need a nudge
+ */
 fun packCirclesControlled(
-  nCircles: Int = 0,
+  nBodies: Int = 0,
   center: Vector2 = Vector2.ZERO,
   initialRadius: Double = 1.0,
-  circles: List<MovingBody>? = null
+  bodies: List<MovingBody>? = null,
+  incremental: Boolean = false,
+  rng: Random = Random.Default
 ): List<MovingBody> {
-  val circles = circles ?: List(nCircles) { MovingBody(center, radius = initialRadius) }
+  val bodies = bodies ?: List(nBodies) { MovingBody(center, radius = initialRadius) }
 
   // [1]
   do {
     // [2]
-    circles.forEach { primary ->
-    //  TODO: calculate separation forces
+    bodies.forEach { primary ->
+
+      // only apply separation forces to circles that intersect
+      val intersectingCircles = bodies.filter { it != primary && it.intersects(primary) }
+      for (other in intersectingCircles) {
+        val dist = other.position.distanceTo(primary.position)
+        // If the distance is 0, then they are on top of each other and just need a random nudge
+        val force = if (dist > 0.0) {
+          (primary.position - other.position).normalized / dist
+        } else {
+          Vector2.gaussian(random = rng)
+        }
+
+        // do not update the `primary` until we've assessed all other circles
+        primary.applyForce(force)
+
+        // applying force immediately to secondary seems to speed up the "settling time" quite a bit
+        other.applyForce(force * -1.0).update()
+      }
+
+      // scaling by number of intersecting circles prevents wacky values
+      primary.scaleAcceleration(intersectingCircles.size.toDouble()).update()
     }
 
     // [3]
-    circles.forEach { primary ->
-      if (circles.any { other -> other != primary && other.intersects(primary) }) {
+    bodies.forEach { primary ->
+      if (bodies.none { other -> other != primary && other.intersects(primary) }) {
         primary.velocity = Vector2.ZERO
       }
     }
-  } while (circles.any { it.velocity != Vector2.ZERO })
+  } while (!incremental && bodies.any { it.velocity != Vector2.ZERO })
 
   // [4]
-  return circles
+  return bodies
 }
 
 // Enhancement: check if circle is outside window bounds and bounce it back

@@ -1,6 +1,7 @@
 package force
 
 import org.openrndr.math.Vector2
+import kotlin.math.sqrt
 
 /**
  * An even-more-general-purpose moving body.
@@ -20,6 +21,11 @@ class MovingBody(
     return this
   }
 
+  // I ended up not using this "clamp" param, but I could see it being useful in the future
+  // fun update(maxAcceleration: Double? = null): MovingBody {
+  //   if (maxAcceleration != null && acceleration.length > maxAcceleration) {
+  //     acceleration = acceleration.normalized * maxAcceleration
+  //   }
   fun update(): MovingBody {
     velocity += acceleration
     position += velocity
@@ -30,6 +36,14 @@ class MovingBody(
   fun stop(): MovingBody {
     velocity = Vector2.ZERO
     acceleration = Vector2.ZERO
+    return this
+  }
+
+  fun scaleAcceleration(factor: Double): MovingBody {
+    if (factor > 0.0) {
+      acceleration /= sqrt(factor)
+    }
+    acceleration -= velocity
     return this
   }
 

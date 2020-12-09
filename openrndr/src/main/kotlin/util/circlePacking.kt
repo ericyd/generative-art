@@ -63,31 +63,35 @@ fun packCirclesOnGradient(
 }
 
 /**
+ * Creates list of <MovingBody>s that can be fed into `packCirclesControlled`
+ * @param nBodies number of bodies to generate
+ * @param center where to place the generated bodies
+ * @param initialRadius how large to generate the bodies
+ */
+fun generateMovingBodies(nBodies: Int, center: Vector2 = Vector2.ZERO, initialRadius: Double = 1.0): List<MovingBody> =
+  List(nBodies) { MovingBody(center, radius = initialRadius) }
+
+/**
  * Based on
  * http://www.codeplastic.com/2017/09/09/controlled-circle-packing-with-processing/
  * algorithm
  * [1] do while any bodies have velocity:
  *   [2] for all bodies, apply separation forces
  *   [3] for all bodies, zero the circle's velocity if it isn't intersecting any others
- * [4] return bodies
+ *   [4] adjust size of bodies based on the `sizeFn` definition
+ * [5] return bodies
  *
- * @param nBodies number of bodies to generate (if `bodies` is null)
- * @param center where to place the generated bodies (if `bodies` is null)
- * @param initialRadius how large to generate the bodies (if `bodies` is null)
- * @param bodies provide a list of MovingBodies to pack, instead of generating
+ * @param bodies provide a list of MovingBodies to pack
  * @param incremental if true, returns only a single iteration of the "separating" process
  * @param rng randomizer for when bodies are on top of each other and need a nudge
+ * @param sizeFn function that is called each iteration to dynamically adjust the size of the bodies
  */
 fun packCirclesControlled(
-  nBodies: Int = 0,
-  center: Vector2 = Vector2.ZERO,
-  initialRadius: Double = 1.0,
-  bodies: List<MovingBody>? = null,
+  bodies: List<MovingBody>,
   incremental: Boolean = false,
-  rng: Random = Random.Default
+  rng: Random = Random.Default,
+  sizeFn: ((MovingBody) -> Unit) = { _: MovingBody -> }
 ): List<MovingBody> {
-  val bodies = bodies ?: List(nBodies) { MovingBody(center, radius = initialRadius) }
-
   // [1]
   do {
     // [2]
@@ -120,10 +124,12 @@ fun packCirclesControlled(
       if (bodies.none { other -> other != primary && other.intersects(primary) }) {
         primary.velocity = Vector2.ZERO
       }
+      // [4]
+      sizeFn(primary)
     }
   } while (!incremental && bodies.any { it.velocity != Vector2.ZERO })
 
-  // [4]
+  // [5]
   return bodies
 }
 

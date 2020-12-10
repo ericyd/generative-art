@@ -40,13 +40,13 @@ class MovingBody(
   }
 
   /**
-   * I think this is analogous to 'drag' or friction.
+   * This is kind of analogous to 'drag' or friction.... kinda sorta
    * Basically it slows down the body so it doesn't just explode immediately when it's touching lots of stuff.
    * @param factor is the factor by which to "drag" it down
    * @param accuracy is an interesting parameter. It should probably be in about [0.1, 1.0].
    *        Lower accuracy makes the result a bit less closely packed but it reaches stable state **much** faster
    */
-  fun scaleAcceleration(factor: Double, accuracy: Double = 0.3): MovingBody {
+  fun applyFriction(factor: Double, accuracy: Double = 1.0): MovingBody {
     if (factor > 0.0) {
       acceleration /= sqrt(factor)
     }

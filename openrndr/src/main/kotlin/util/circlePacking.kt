@@ -8,6 +8,7 @@ import org.openrndr.math.Vector2
 import org.openrndr.math.map
 import org.openrndr.shape.Circle
 import org.openrndr.shape.Rectangle
+import kotlin.math.sqrt
 import kotlin.random.Random
 
 typealias CirclePack = List<Circle>
@@ -72,6 +73,12 @@ fun generateMovingBodies(nBodies: Int, center: Vector2 = Vector2.ZERO, initialRa
   List(nBodies) { MovingBody(center, radius = initialRadius) }
 
 /**
+ * Includes a list of packed MovingBodies, and a Boolean to indicate if they are done packing.
+ * When the second parameter is true, the bodies will not move any more
+ */
+data class PackCompleteResult(val bodies: List<MovingBody>, val isComplete: Boolean = false)
+
+/**
  * Based on
  * http://www.codeplastic.com/2017/09/09/controlled-circle-packing-with-processing/
  * algorithm
@@ -91,7 +98,8 @@ fun packCirclesControlled(
   incremental: Boolean = false,
   rng: Random = Random.Default,
   sizeFn: ((MovingBody) -> Unit) = { _: MovingBody -> }
-): List<MovingBody> {
+): PackCompleteResult {
+  var packComplete = false
   // [1]
   do {
     // [2]
@@ -103,7 +111,12 @@ fun packCirclesControlled(
         val dist = other.position.distanceTo(primary.position)
         // If the distance is 0, then they are on top of each other and just need a random nudge
         val force = if (dist > 0.0) {
-          (primary.position - other.position).normalized / dist
+          // wow. This is BY FAR the biggest slowdown in this algorithm.
+          // dividing by the distance makes it really nice and smooth but goddamn it slows it down like a m****f****
+          //  Original: (primary.position - other.position).normalized / dist
+          //  Also tried: (primary.position - other.position).normalized
+          //  Final version was chosen for a mix of speed and accuracy
+          (primary.position - other.position).normalized / sqrt(dist)
         } else {
           Vector2.gaussian(random = rng)
         }
@@ -116,7 +129,7 @@ fun packCirclesControlled(
       }
 
       // scaling by number of intersecting circles prevents wacky values
-      primary.scaleAcceleration(intersectingCircles.size.toDouble()).update()
+      primary.applyFriction(intersectingCircles.size.toDouble()).update()
     }
 
     // [3]
@@ -127,10 +140,11 @@ fun packCirclesControlled(
       // [4]
       sizeFn(primary)
     }
-  } while (!incremental && bodies.any { it.velocity != Vector2.ZERO })
+    packComplete = bodies.all { it.velocity == Vector2.ZERO }
+  } while (!incremental && !packComplete)
 
   // [5]
-  return bodies
+  return PackCompleteResult(bodies, packComplete)
 }
 
 // Enhancement: check if circle is outside window bounds and bounce it back

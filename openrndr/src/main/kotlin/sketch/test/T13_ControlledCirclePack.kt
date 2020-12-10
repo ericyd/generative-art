@@ -8,6 +8,7 @@ import org.openrndr.application
 import org.openrndr.color.ColorRGBa
 import org.openrndr.math.Vector2
 import org.openrndr.shape.Circle
+import util.PackCompleteResult
 import util.generateMovingBodies
 import util.packCirclesControlled
 
@@ -18,14 +19,14 @@ fun main() = application {
   }
 
   program {
-    var bodies = generateMovingBodies(200, Vector2(width * 0.5, height * 0.5), 10.0)
+    var packed = PackCompleteResult(generateMovingBodies(200, Vector2(width * 0.5, height * 0.5), 10.0))
     extend {
       drawer.fill = null
       drawer.stroke = ColorRGBa.PINK
 
-      bodies = packCirclesControlled(bodies = bodies, incremental = true)
+      packed = packCirclesControlled(bodies = packed.bodies, incremental = true)
 
-      drawer.circles(bodies.map { Circle(it.position, it.radius) })
+      drawer.circles(packed.bodies.map { Circle(it.position, it.radius) })
     }
   }
 }

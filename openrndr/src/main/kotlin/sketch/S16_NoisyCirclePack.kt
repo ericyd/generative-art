@@ -14,6 +14,7 @@ import org.openrndr.extras.color.palettes.colorSequence
 import org.openrndr.math.Vector2
 import org.openrndr.math.map
 import org.openrndr.shape.Circle
+import util.PackCompleteResult
 import util.generateMovingBodies
 import util.packCirclesControlled
 import util.timestamp
@@ -38,34 +39,41 @@ fun main() = application {
       captureEveryFrame = false
     }
 
-    val radiusRange = 1.0..100.0
+    val radiusRange = 0.10 to 40.0
+    // Some very interesting things can happen if you don't honor the actual simplex range of [-1.0, 1.0]
+    val noiseRange = -0.5 to 0.5
     val noiseScale = 200.0
+
     val spectrum = colorSequence(
       0.0 to
-        ColorRGBa.fromHex("C8BAC9"), // light purple
+        ColorRGBa.fromHex("9AC0C1"), // greenish blue
       0.25 to
         ColorRGBa.fromHex("E7CD7E"), // light yellow
       0.5 to
-        ColorRGBa.fromHex("9AC0C1"), // greenish blue
-      0.75 to
-        ColorRGBa.fromHex("5E5978"), // dark purple
-      1.0 to
         ColorRGBa.fromHex("5A7687"), // dark gray-blue
+      0.75 to
+        ColorRGBa.fromHex("C8BAC9"), // light purple
+      1.0 to
+        ColorRGBa.fromHex("5E5978"), // dark purple
     )
 
-    var bodies = generateMovingBodies(600, Vector2(width * 0.5, height * 0.5), 10.0)
+    var packed = PackCompleteResult(generateMovingBodies(800, Vector2(width * 0.5, height * 0.5), 10.0))
     extend {
       // get that rng
       val rng = Random(seed.toLong())
 
       val sizeFn = { body: MovingBody ->
-        val targetRadius = map(-1.0, 1.0, radiusRange.start, radiusRange.endInclusive, simplex(seed, body.position / noiseScale))
+        val targetRadius = map(
+          noiseRange.first, noiseRange.second,
+          radiusRange.first, radiusRange.second,
+          simplex(seed, body.position / noiseScale)
+        )
         // technically the value will never "arrive" but it gets very close very fast so, y'know ... good enough for me!
-        body.radius = abs(body.radius - targetRadius) / 2.0
+        body.radius = abs(body.radius + targetRadius) / 2.0
       }
 
-      bodies = packCirclesControlled(bodies = bodies, incremental = true, rng = rng, sizeFn = sizeFn)
-      bodies.forEachIndexed { index, body ->
+      packed = packCirclesControlled(bodies = packed.bodies, incremental = true, rng = rng, sizeFn = sizeFn)
+      packed.bodies.forEachIndexed { index, body ->
         val shade = simplex(seed, body.position.yx / noiseScale) * 0.5 + 0.5
         drawer.stroke = spectrum.index(shade)
         drawer.fill = spectrum.index(shade).opacify(simplex(seed, body.position.xy0 / noiseScale) * 0.25 + 0.75)

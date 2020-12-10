@@ -227,7 +227,7 @@ open class CustomScreenshots : Extension {
           drawer.image(it.colorBuffer(0), it.colorBuffer(0).bounds, drawer.bounds)
         } else {
           target?.let { rt ->
-            rt.colorBuffer(0).resolveTo(resolved)
+            rt.colorBuffer(0).copyTo(resolved)
             resolved.saveToFile(targetFile, async = async)
             drawer.image(resolved, resolved.bounds, drawer.bounds)
           }

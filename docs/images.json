@@ -4,6 +4,15 @@
   ],
   "images": [
     {
+      "title": "Noisy circle packing",
+      "imageSrc": "https://res.cloudinary.com/ericyd/image/upload/v1607558352/2020-12-09T17.33.57-seed-205225107_wi8dac.png",
+      "imageSrcSmall": "https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1607558352/2020-12-09T17.33.57-seed-205225107_wi8dac.png",
+      "description": "Based on <a href='http://www.codeplastic.com/2017/09/09/controlled-circle-packing-with-processing/'>this post</a>. I posted a video of the animation <a href='https://www.reddit.com/r/generative/comments/ka3vaq/satisfying_conclusion_trypophobics_beware/'>on Reddit</a> if you want to see it animate - I thought it was pretty cool!",
+      "sourceCodeLink": "https://github.com/ericyd/generative-art/blob/db315601967cfb13e8bc4b9fd5d60eba77641338/openrndr/src/main/kotlin/sketch/S16_NoisyCirclePack.kt",
+      "comments": "",
+      "createdAt": "2020-12-09"
+    },
+    {
       "title": "Space for my mind",
       "imageSrc": "https://res.cloudinary.com/ericyd/image/upload/v1607397402/uploader---2020-12-07T21.12.33-seed-2081555229_ko6caj.png",
       "imageSrcSmall": "https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1607397402/uploader---2020-12-07T21.12.33-seed-2081555229_ko6caj.png",

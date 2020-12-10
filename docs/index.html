@@ -134,12 +134,22 @@
       justify-items: center;
       justify-content: space-between;
       padding: 1em;
+      flex-direction: row;
+      flex-wrap: wrap;
     }
 
     .card {
       max-width: 30em;
+      min-width: 15em;
       text-decoration: none;
       color: var(--font-color);
+      margin-bottom: 2em;
+    }
+
+    @media screen and (max-width: 500px) {
+      .card {
+        min-width: 7.5em;
+      }
     }
 
     .card .description {

@@ -33,7 +33,8 @@
       const a = document.createElement("a")
       a.classList.add("source")
       a.setAttribute("href", sourceCodeLink)
-      a.appendChild(document.createTextNode("source code"))
+      a.setAttribute("target", "_blank")
+      a.appendChild(document.createTextNode("source code ⬈"))
       return a
     }
 
@@ -77,6 +78,10 @@
   </script>
 
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     html, body {
       box-sizing: border-box;
       margin: 0;
@@ -132,29 +137,30 @@
       display: flex;
       align-items: flex-start;
       justify-items: center;
-      justify-content: space-between;
       padding: 1em;
-      flex-direction: row;
-      flex-wrap: wrap;
+      flex-direction: column;
+      margin: auto;
     }
 
     .card {
-      max-width: 30em;
-      min-width: 15em;
+      width: 100%;
       text-decoration: none;
       color: var(--font-color);
       margin-bottom: 2em;
+      display: flex;
+      flex-flow: row wrap;
+      align-items: flex-start;
     }
 
-    @media screen and (max-width: 500px) {
-      .card {
-        min-width: 7.5em;
-      }
+    .card > a {
+      display: block;
+      width: 100%;
     }
 
     .card .description {
       text-decoration: none;
       color: var(--font-color);
+      width: 100%;
     }
 
     a,
@@ -169,6 +175,21 @@
       width: 100%;
       border: 1px solid var(--border-color);
       transition: 0.3s all;
+    }
+
+    @media screen and (min-width: 800px) {
+      .card {
+        max-width: 50em;
+      }
+
+      .card > a {
+        width: 60%;
+      }
+
+      .card .description {
+        width: 40%;
+        padding: 0 1em;
+      }
     }
 
     .card img:hover {

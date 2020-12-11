@@ -22,10 +22,10 @@
       "createdAt": "2020-12-09"
     },
     {
-      "title": "Space for my mind",
+      "title": "Space in my mind",
       "imageSrc": "https://res.cloudinary.com/ericyd/image/upload/v1607397402/uploader---2020-12-07T21.12.33-seed-2081555229_ko6caj.png",
       "imageSrcSmall": "https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1607397402/uploader---2020-12-07T21.12.33-seed-2081555229_ko6caj.png",
-      "description": "'If I have space, space for my body; then I can have space, space for my mind' - Scott Pemberton Trio",
+      "description": "'If I have space, space for my body; then I can have space, space in my mind' - Scott Pemberton Trio",
       "sourceCodeLink": "https://github.com/ericyd/generative-art/blob/230bebf16661034e59b6ab29edb304322bd62ade/openrndr/src/main/kotlin/sketch/S15_SpaceForMyMind.kt",
       "comments": "",
       "createdAt": "2020-12-07"

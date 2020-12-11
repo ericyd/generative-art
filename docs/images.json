@@ -4,6 +4,15 @@
   ],
   "images": [
     {
+      "title": "Glowing graph",
+      "imageSrc": "https://res.cloudinary.com/ericyd/image/upload/v1607654447/nice-2020-12-10T15.36.16-seed-1933540311_kossmk.png",
+      "imageSrcSmall": "https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1607654447/nice-2020-12-10T15.36.16-seed-1933540311_kossmk.png",
+      "description": "Using the same algorithm as before to do the circle packing, now the nodes are connected as a graph. An <em>electrified</em> graph!",
+      "sourceCodeLink": "https://github.com/ericyd/generative-art/blob/5150aa37d0ef1be4168d58a5f607a98c3a190ed5/openrndr/src/main/kotlin/sketch/S18_GlowingGraph.kt",
+      "comments": "",
+      "createdAt": "2020-12-10"
+    },
+    {
       "title": "Noisy circle packing",
       "imageSrc": "https://res.cloudinary.com/ericyd/image/upload/v1607558352/2020-12-09T17.33.57-seed-205225107_wi8dac.png",
       "imageSrcSmall": "https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1607558352/2020-12-09T17.33.57-seed-205225107_wi8dac.png",

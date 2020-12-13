@@ -21,7 +21,6 @@ import org.openrndr.shape.Circle
 import util.timestamp
 import java.io.File
 
-
 fun main() = application {
   configure {
     width = 500

@@ -7,11 +7,6 @@ package sketch.test
 import org.openrndr.application
 import org.openrndr.color.ColorRGBa
 import org.openrndr.draw.BufferMultisample
-import org.openrndr.draw.ColorFormat
-import org.openrndr.draw.ColorType
-import org.openrndr.draw.TransformTarget
-import org.openrndr.draw.isolatedWithTarget
-import org.openrndr.draw.renderTarget
 import org.openrndr.extensions.Screenshots
 import org.openrndr.extra.compositor.blend
 import org.openrndr.extra.compositor.compose
@@ -21,8 +16,6 @@ import org.openrndr.extra.compositor.post
 import org.openrndr.extra.fx.blend.Add
 import org.openrndr.extra.fx.blur.ApproximateGaussianBlur
 import org.openrndr.shape.Circle
-import util.timestamp
-import java.io.File
 
 fun main() = application {
   configure {

@@ -1,12 +1,11 @@
 /**
- * This is the same sketch as S18_GlowingGraph,
- * but using an oversized render target to try to render a hi-res version with blur.
- * It's kind of a lot of extra work, but I guess maybe worth it? Big question mark on that one.
+ * Algorithm in a nutshell:
  *
- * It's kind of annoying that some factors need to be scaled with the render target, and others don't.
- * As mentioned in the OPENRNDR slack, some properties are scale-invariant and others are scale-variant.
- * It's kind of difficult to know which ones are which, though, so it's a bit of a guessing game to get
- * equivalent "styling".
+ * 1. Create a circle
+ * 2. Subdivide the circle into two sets of points - one with larger offset than the other
+ * 3. For each set of points, use a fractal subdivision algorithm to create a noisy line based on the circle
+ * 4. Draw the noisy lines on top of the normal circle, with additive blending and blur effects to give it a nice "electrified" look
+ * 5. Draw stars by placing Simplex blobs on a circle with gaussian offset facing inwards.
  */
 package sketch
 

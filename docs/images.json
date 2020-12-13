@@ -4,6 +4,15 @@
   ],
   "images": [
     {
+      "title": "Electric Eye",
+      "imageSrc": "https://res.cloudinary.com/ericyd/image/upload/v1607818933/good-2020-12-12T18.08.19-seed-1617241088_yvcnk6.png",
+      "imageSrcSmall": "https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1607818933/good-2020-12-12T18.08.19-seed-1617241088_yvcnk6.png",
+      "description": "Using a fractal-subdivision algorithm inspired by <a href='http://rectangleworld.com/blog/archives/462'>Rectangle World</a>, and additive blending + blur post effects, we make... The Electric Eye! (More in-depth description of algorithm in source code.)",
+      "sourceCodeLink": "https://github.com/ericyd/generative-art/blob/04c3b1b04232bce8f99ab5fd18a097e41b7b235a/openrndr/src/main/kotlin/sketch/S20_ElectricEye.kt",
+      "comments": "",
+      "createdAt": "2020-12-12"
+    },
+    {
       "title": "Glowing graph",
       "imageSrc": "https://res.cloudinary.com/ericyd/image/upload/v1607654447/nice-2020-12-10T15.36.16-seed-1933540311_kossmk.png",
       "imageSrcSmall": "https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1607654447/nice-2020-12-10T15.36.16-seed-1933540311_kossmk.png",

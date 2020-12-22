@@ -1,6 +1,7 @@
 package util
 
 import org.openrndr.math.Vector2
+import org.openrndr.math.clamp
 import org.openrndr.shape.Rectangle
 import kotlin.math.sqrt
 
@@ -19,7 +20,7 @@ interface ConcentrationGradient {
    * @param point the point to assess
    * @return a percentage between 0.0 and 1.0 (inclusive) representing the concentration of the gradient at the given point.
    */
-  fun assess(boundingRect: Rectangle, point: Vector2): PercentageDouble
+  fun assess(boundingRect: Rectangle, point: Vector2, clamp: Boolean = false): PercentageDouble
 
   /**
    * Convert the point to a "unit point", where both x and y are in range [0.0, 1.0]
@@ -45,10 +46,14 @@ class RadialConcentrationGradient(
   private val maxRadius: Double = sqrt(2.0),
   private val reverse: Boolean = false
 ) : ConcentrationGradient {
-  override fun assess(boundingRect: Rectangle, point: Vector2): PercentageDouble {
+  override fun assess(boundingRect: Rectangle, point: Vector2, clamp: Boolean): PercentageDouble {
     val normalizedPoint = normalizePoint(boundingRect, point)
     // still figuring out if this is the right math, so keeping the original which doesn't use minRadius
 
+    var assessed = (normalizedPoint.distanceTo(center) - minRadius) / (maxRadius - minRadius)
+    if (clamp) {
+      assessed = clamp(assessed, 0.0, 1.0)
+    }
     // debugging...
     // println("===============================================")
     // println("point: $point")
@@ -59,10 +64,10 @@ class RadialConcentrationGradient(
     // println(normalizedPoint.distanceTo(center) - minRadius)
     return if (reverse) {
       // 1.0 - normalizedPoint.distanceTo(center) / maxRadius
-      1.0 - (normalizedPoint.distanceTo(center) - minRadius) / (maxRadius - minRadius)
+      1.0 - assessed
     } else {
       // normalizedPoint.distanceTo(center) / maxRadius
-      (normalizedPoint.distanceTo(center) - minRadius) / (maxRadius - minRadius)
+      assessed
     }
   }
 
@@ -85,7 +90,7 @@ class BilinearConcentrationGradient(
   private val lowerLeft: Double = 0.0,
   private val lowerRight: Double = 0.0
 ) : ConcentrationGradient {
-  override fun assess(boundingRect: Rectangle, point: Vector2): PercentageDouble {
+  override fun assess(boundingRect: Rectangle, point: Vector2, clamp: Boolean): PercentageDouble {
     val normalizedPoint = normalizePoint(boundingRect, point)
     return bilinearInterp(upperLeft, upperRight, lowerLeft, lowerRight, normalizedPoint)
   }

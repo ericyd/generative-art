@@ -5,6 +5,7 @@ import force.MovingBody
 import org.openrndr.extra.noise.gaussian
 import org.openrndr.extra.noise.random
 import org.openrndr.math.Vector2
+import org.openrndr.math.clamp
 import org.openrndr.math.map
 import org.openrndr.shape.Circle
 import org.openrndr.shape.Rectangle
@@ -33,6 +34,7 @@ fun packCirclesOnGradient(
   gradient: ConcentrationGradient,
   maxFailedAttempts: Int = Short.MAX_VALUE.toInt(),
   rng: Random = Random.Default,
+  clamp: Boolean = false
 ): CirclePack {
   val circles = mutableListOf<Circle>()
   var failedAttempts = 0
@@ -47,7 +49,7 @@ fun packCirclesOnGradient(
     val radius = map(
       0.0, 1.0,
       radiusRange.endInclusive, radiusRange.start,
-      gradient.assess(boundingRect, position)
+      gradient.assess(boundingRect, position, clamp)
     )
     val circle = Circle(position, radius)
 

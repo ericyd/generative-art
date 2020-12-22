@@ -142,9 +142,9 @@ fun main() = application {
       val stars = List(20000) {
         val spread = hypot(w, h) / 1.75
         var pos = Vector2.gaussian(center, Vector2(spread / 6.0), rng)
-        val angle = atan2(pos.y - center.y, pos.x - center.x)
         // This puts the star positions on a circle with high concentration on the outside and low concentration towards center.
-        // To reverse the concentration, simply change (angle) to (angle + PI) in both `cos` and `sin` calls
+        // To reverse the concentration, simply ` + PI` to the angle
+        val angle = atan2(pos.y - center.y, pos.x - center.x)
         pos -= Vector2(cos(angle), sin(angle)) * spread
 
         SimplexBlob(

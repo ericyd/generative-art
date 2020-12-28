@@ -33,23 +33,23 @@ fun main() = application {
   }
 
   program {
+    var seed = random(1.0, Int.MAX_VALUE.toDouble()).toLong() // know your seed 😛
+    // these three seeds are the ones posted on the gram
+    seed = 189526243
+    // seed = 404922628
+    // seed = 56708742
+    // seed = 987928529
     // wow, sometimes you just gotta read the code! `extend` returns a reference to the extension,
     // which means we can manually trigger it as desired in the event loop!
     val progName = this.name.ifBlank { this.window.title.ifBlank { "my-amazing-drawing" } }
     val screenshots = extend(CustomScreenshots()) {
       quitAfterScreenshot = false
-      scale = 4.0
-      folder = "screenshots/$progName/"
+      scale = 3.0
+      name = "screenshots/$progName/${timestamp()}-seed-$seed.png"
       captureEveryFrame = true
     }
 
     backgroundColor = ColorRGBa.WHITE
-
-    var seed = random(1.0, Int.MAX_VALUE.toDouble()).toLong() // know your seed 😛
-    // these three seeds are the ones posted on the gram
-    seed = 189526243
-    // seed = 56708742
-    // seed = 987928529
 
     extend {
       val rand = Random(seed)
@@ -150,8 +150,8 @@ fun main() = application {
       }
 
       // trigger screenshot on every frame with seed appended to file name
-      screenshots.name = "screenshots/$progName/${timestamp()}-seed-$seed.png"
       seed = random(1.0, Int.MAX_VALUE.toDouble()).toLong()
+      screenshots.name = "screenshots/$progName/${timestamp()}-seed-$seed.png"
     }
   }
 }

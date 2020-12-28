@@ -18,6 +18,7 @@ import org.openrndr.math.map
 import org.openrndr.math.mix
 import org.openrndr.shape.ShapeContour
 import org.openrndr.shape.contour
+import util.timestamp
 import java.lang.Math.pow
 import kotlin.math.hypot
 import kotlin.random.Random
@@ -29,14 +30,6 @@ fun main() = application {
   }
 
   program {
-    val progName = this.name.ifBlank { this.window.title.ifBlank { "my-amazing-drawing" } }
-    val screenshots = extend(CustomScreenshots()) {
-      quitAfterScreenshot = false
-      scale = 4.0
-      folder = "screenshots/$progName/"
-      // captureEveryFrame = true
-    }
-
     var seed = random(1.0, Long.MAX_VALUE.toDouble()).toLong() // know your seed 😛
     // seed = 55217631486688256
     // seed = 8896268477267021824
@@ -50,6 +43,14 @@ fun main() = application {
     // seed = 6065253853972814848
     seed = 843898394290568192
     println("seed = $seed")
+
+    val progName = this.name.ifBlank { this.window.title.ifBlank { "my-amazing-drawing" } }
+    val screenshots = extend(CustomScreenshots()) {
+      quitAfterScreenshot = false
+      scale = 3.0
+      name = "screenshots/$progName/${timestamp()}-seed-$seed.png"
+      captureEveryFrame = true
+    }
 
     backgroundColor = ColorRGBa.WHITE
 

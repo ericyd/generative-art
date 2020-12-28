@@ -4,6 +4,27 @@
   ],
   "images": [
     {
+      "title": "Glacial etchings",
+      "imageSeries": [
+        {
+          "src": "https://res.cloudinary.com/ericyd/image/upload/v1609116962/sketch.flow.F12_Curl2-2020-12-27-18.54.12_tf8onv.png",
+          "srcSmall": "https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1609116962/sketch.flow.F12_Curl2-2020-12-27-18.54.12_tf8onv.png"
+        },
+        {
+          "src": "https://res.cloudinary.com/ericyd/image/upload/v1609116845/2020-12-27T18.47.42-seed-189526243_izu0cv.png",
+          "srcSmall": "https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1609116845/2020-12-27T18.47.42-seed-189526243_izu0cv.png"
+        },
+        {
+          "src": "https://res.cloudinary.com/ericyd/image/upload/v1609116849/2020-12-27T18.50.11-seed-1292204817_jyftcu.png",
+          "srcSmall": "https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1609116849/2020-12-27T18.50.11-seed-1292204817_jyftcu.png"
+        }
+      ],
+      "description": "This is one of my favorite series I've done (at the of writing). It feels so stark and powerful, yet it uses really simple principles that I've used in many other drawings. The only real difference is the noise algorithm that is used to calculate the flow field. The images in this series are actually from a few different sketch files I created. However, they all use essentially the same process and very similar algorithms so I bundled it into a single series. See <a href='https://github.com/ericyd/generative-art/blob/09756ca485aa4da0579026be3a637f9fd98541ed/openrndr/src/main/kotlin/sketch/flow/F15_CurlOfCurl.kt'>this code</a> for additional source material. I completed these in the past (Oct 13, 2020) but hadn't gotten around to re-rendering them for this personal site so here they are!",
+      "sourceCodeLink": "https://github.com/ericyd/generative-art/blob/09756ca485aa4da0579026be3a637f9fd98541ed/openrndr/src/main/kotlin/sketch/flow/F12_Curl2.kt",
+      "comments": "",
+      "createdAt": "2020-10-13"
+    },
+    {
       "title": "Electric Eye",
       "imageSeries": [
         {
@@ -12,8 +33,8 @@
         }
       ],
       "description": "Using a fractal-subdivision algorithm inspired by <a href='http://rectangleworld.com/blog/archives/462'>Rectangle World</a>, and additive blending + blur post effects, we make... The Electric Eye! (More in-depth description of algorithm in source code.)",
-      "sourceCodeLink": "https://github.com/ericyd/generative-art/blob/04c3b1b04232bce8f99ab5fd18a097e41b7b235a/openrndr/src/main/kotlin/sketch/S20_ElectricEye.kt",
-      "comments": "change the source code link next time I push something so it points to the version with the 'algorithm explanation'",
+      "sourceCodeLink": "https://github.com/ericyd/generative-art/blob/7c152cc5a2d4e29d6713d9d1f2c151046b27a478/openrndr/src/main/kotlin/sketch/S20_ElectricEye.kt",
+      "comments": "",
       "createdAt": "2020-12-12"
     },
     {

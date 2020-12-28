@@ -3,6 +3,7 @@
  */
 package sketch.flow
 
+import extensions.CustomScreenshots
 import noise.perlinCurl
 import noise.yanceyNoiseGenerator
 import org.openrndr.application
@@ -28,12 +29,12 @@ fun main() = application {
   }
 
   program {
-    // In future, consider implementing own screenshot mechanism that could run after each draw loop
-    // screenshot: https://github.com/openrndr/openrndr/blob/9f17eb3c24813454cbad1a99d697cd279fa80d96/openrndr-extensions/src/main/kotlin/org/openrndr/extensions/Screenshots.kt
-    // timestamp: https://github.com/openrndr/openrndr/blob/9f17eb3c24813454cbad1a99d697cd279fa80d96/openrndr-core/src/main/kotlin/org/openrndr/utils/NamedTimestamp.kt
-    extend(Screenshots()) {
+    val progName = this.name.ifBlank { this.window.title.ifBlank { "my-amazing-drawing" } }
+    val screenshots = extend(CustomScreenshots()) {
       quitAfterScreenshot = false
-      scale = 2.0
+      scale = 4.0
+      folder = "screenshots/$progName/"
+      // captureEveryFrame = true
     }
 
     var seed = random(1.0, Long.MAX_VALUE.toDouble()).toLong() // know your seed 😛
@@ -47,24 +48,21 @@ fun main() = application {
     // seed = 9106824235015506944
     // seed = 4837378247439633408
     // seed = 6065253853972814848
-    // seed = 843898394290568192
-    val rand = Random(seed)
+    seed = 843898394290568192
     println("seed = $seed")
 
     backgroundColor = ColorRGBa.WHITE
 
-    val stepSize = 10
+    val stepSize = 5
     val jitter = stepSize * 0.7
     val lineLength = 500
-    val opacity = 0.2
+    val opacity = 0.05
     val center = Vector2(width / 2.0, height / 2.0)
     val halfDiagonal = hypot(width / 2.0, height / 2.0)
     val noiseScales = listOf(1000.0, 100.0, 35.0)
     val bounds = width / 2
 
-    val yanceyNoise = yanceyNoiseGenerator { v -> random(-1.0, 1.0, rand) }
-
-    fun mixNoise(cursor: Vector2): Vector2 {
+    fun mixNoise(cursor: Vector2, yanceyNoise: (Vector2) -> Double): Vector2 {
       val (major, minor, micro) = noiseScales
 
       // major ratio varies by a simplex noise map
@@ -96,21 +94,6 @@ fun main() = application {
       return res.normalized
     }
 
-    val contours: List<ShapeContour> = ((0 - bounds) until (width + bounds) step stepSize).flatMap { x ->
-      ((0 - bounds) until (height + bounds) step stepSize).map { y ->
-        contour {
-          moveTo(
-            x + random(-jitter, jitter, rand),
-            y + random(-jitter, jitter, rand)
-          )
-
-          List(lineLength) {
-            lineTo(cursor + mixNoise(cursor))
-          }
-        }
-      }
-    }
-
     /**
      * val should be in [-1.0, 1.0] range
      */
@@ -128,8 +111,10 @@ fun main() = application {
       }
     }
 
-    println("aww yeah, about to render...")
     extend {
+      val rand = Random(seed)
+      val yanceyNoise = yanceyNoiseGenerator { v -> random(-1.0, 1.0, rand) }
+
       drawer.fill = null
       drawer.stroke = null // overwritten below
       drawer.strokeWeight = 1.0
@@ -137,7 +122,22 @@ fun main() = application {
 
       // simple B&W
       drawer.stroke = ColorRGBa.BLACK.opacify(opacity)
-      contours.chunked(500).forEach { drawer.contours(it) }
+
+      for (x in (0 - bounds) until (width + bounds) step stepSize) {
+        for (y in (0 - bounds) until (height + bounds) step stepSize) {
+          val c = contour {
+            moveTo(
+              x + random(-jitter, jitter, rand),
+              y + random(-jitter, jitter, rand)
+            )
+
+            List(lineLength) {
+              lineTo(cursor + mixNoise(cursor, yanceyNoise))
+            }
+          }
+          drawer.contour(c)
+        }
+      }
 
       // // "dreamscape"
       // contours.forEach {

@@ -21,6 +21,7 @@ import org.openrndr.math.Vector2
 import org.openrndr.math.map
 import org.openrndr.shape.ShapeContour
 import org.openrndr.shape.contour
+import util.timestamp
 import java.lang.Math.pow
 import kotlin.math.hypot
 import kotlin.random.Random
@@ -37,25 +38,27 @@ fun main() = application {
     val progName = this.name.ifBlank { this.window.title.ifBlank { "my-amazing-drawing" } }
     val screenshots = extend(CustomScreenshots()) {
       quitAfterScreenshot = false
-      scale = 2.0
+      scale = 4.0
       folder = "screenshots/$progName/"
+      captureEveryFrame = true
     }
 
     backgroundColor = ColorRGBa.WHITE
 
+    var seed = random(1.0, Int.MAX_VALUE.toDouble()).toLong() // know your seed 😛
+    // these three seeds are the ones posted on the gram
+    seed = 189526243
+    // seed = 56708742
+    // seed = 987928529
+
     extend {
-      var seed = random(1.0, Int.MAX_VALUE.toDouble()).toLong() // know your seed 😛
-      // these three seeds are the ones posted on the gram
-      // seed = 189526243
-      // seed = 56708742
-      // seed = 987928529
       val rand = Random(seed)
       println("seed = $seed")
 
       val stepSize = 5
       val jitter = stepSize * 0.7
       val lineLength = 300
-      val opacity = 0.12
+      val opacity = 0.08
       val center = Vector2(width / 2.0, height / 2.0)
       val diagonal = hypot(width.toDouble(), height.toDouble())
       val halfDiagonal = diagonal / 2.0
@@ -121,9 +124,18 @@ fun main() = application {
         return res.normalized
       }
 
-      val contours: List<ShapeContour> = ((0 - bounds) until (width + bounds) step stepSize).flatMap { x ->
-        ((0 - bounds) until (height + bounds) step stepSize).map { y ->
-          contour {
+      println("aww yeah, about to render...")
+      drawer.fill = null
+      drawer.stroke = null // overwritten below
+      drawer.strokeWeight = 1.0
+      drawer.lineCap = LineCap.ROUND
+
+      // simple B&W
+      drawer.stroke = ColorRGBa.BLACK.opacify(opacity)
+
+      for (x in (0 - bounds) until (width + bounds) step stepSize) {
+        for (y in (0 - bounds) until (height + bounds) step stepSize) {
+          val c = contour {
             moveTo(
               x + random(-jitter, jitter, rand),
               y + random(-jitter, jitter, rand)
@@ -133,21 +145,13 @@ fun main() = application {
               lineTo(cursor + mixNoise(cursor))
             }
           }
+          drawer.contour(c)
         }
       }
 
-      println("aww yeah, about to render...")
-      drawer.fill = null
-      drawer.stroke = null // overwritten below
-      drawer.strokeWeight = 1.0
-      drawer.lineCap = LineCap.ROUND
-
-      // simple B&W
-      drawer.stroke = ColorRGBa.BLACK.opacify(opacity)
-      contours.chunked(500).forEach { drawer.contours(it) }
-
       // trigger screenshot on every frame with seed appended to file name
-      screenshots.trigger("seed-$seed")
+      screenshots.name = "screenshots/$progName/${timestamp()}-seed-$seed.png"
+      seed = random(1.0, Int.MAX_VALUE.toDouble()).toLong()
     }
   }
 }

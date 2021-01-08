@@ -66,6 +66,44 @@ fun packCirclesOnGradient(
 }
 
 /**
+ * Generate list of circles via circle packing algorithm.
+ * 1. Choose random position within bounds of shape
+ * 2. Check if any other circle contains this circle
+ *    Yes -> increment failed attempts counter and continue
+ *    No -> draw circle
+ */
+fun packCirclesInRectangle(
+  radiusRange: ClosedFloatingPointRange<Double>,
+  boundingRect: Rectangle,
+  maxFailedAttempts: Int = Short.MAX_VALUE.toInt(),
+  rng: Random = Random.Default
+): CirclePack {
+  val circles = mutableListOf<Circle>()
+  var failedAttempts = 0
+  while (failedAttempts < maxFailedAttempts) {
+    val position = Vector2(
+      random(boundingRect.x, boundingRect.x + boundingRect.width, rng),
+      random(boundingRect.y, boundingRect.y + boundingRect.height, rng)
+    )
+    // endInclusive and start are "reversed" here, because a gradient's lowest concentration maps to 0.0,
+    // and that actually correlates to where we want the circles to be **most** spaced out.
+    // That means we need low concentration to map to high radius, hence the reverse.
+    val radius = random(radiusRange.endInclusive, radiusRange.start, rng)
+    val circle = Circle(position, radius)
+
+    if (circles.any { it.intersects(circle) }) {
+      failedAttempts++
+      continue
+    }
+
+    // this is better for some circle packing but it makes this take **forever** and I'm impatient
+    // failedAttempts = 0
+    circles.add(circle)
+  }
+  return circles
+}
+
+/**
  * Creates list of <MovingBody>s that can be fed into `packCirclesControlled`
  * @param nBodies number of bodies to generate
  * @param center where to place the generated bodies

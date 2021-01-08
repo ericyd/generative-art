@@ -1,6 +1,10 @@
 package util
 
+import org.openrndr.math.Matrix44
 import org.openrndr.math.Vector2
+import org.openrndr.math.transforms.rotateZ
+import org.openrndr.math.transforms.translate
+import org.openrndr.shape.ShapeContour
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -23,3 +27,9 @@ fun rotatePoint(x: Double, y: Double, rotationRadians: Double, about: Vector2): 
 
 fun rotatePoint(point: Vector2, rotationRadians: Double, about: Vector2): Vector2 =
   rotatePoint(point.x, point.y, rotationRadians, about)
+
+fun rotateShapeContour(shapeContour: ShapeContour, rotationRadians: Double, about: Vector2): ShapeContour =
+  shapeContour
+    .transform(Matrix44.translate(-about.x, -about.y, 0.0))
+    .transform(Matrix44.rotateZ(Math.toDegrees(rotationRadians)))
+    .transform(Matrix44.translate(about.x, about.y, 0.0))

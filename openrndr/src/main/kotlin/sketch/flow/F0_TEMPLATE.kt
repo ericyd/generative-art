@@ -13,6 +13,7 @@
  */
 package sketch.flow
 
+import extensions.CustomScreenshots
 import noise.curl
 import org.openrndr.application
 import org.openrndr.color.ColorRGBa
@@ -24,6 +25,7 @@ import org.openrndr.math.Vector2
 import org.openrndr.shape.ShapeContour
 import org.openrndr.shape.contour
 import util.grid
+import util.timestamp
 import kotlin.random.Random
 
 fun main() = application {
@@ -33,17 +35,20 @@ fun main() = application {
   }
 
   program {
-    extend(Screenshots()) {
+    // Seed is the basis for all our randomization, because it is used to create a seeded RNG (Random(seed))
+    var seed = random(0.0, Int.MAX_VALUE.toDouble()).toInt()
+    println("seed = $seed")
+    val progName = this.name.ifBlank { this.window.title.ifBlank { "my-amazing-drawing" } }
+    val screenshots = extend(CustomScreenshots()) {
       quitAfterScreenshot = false
-      scale = 2.0
+      scale = 3.0
+      captureEveryFrame = false
+      name = "screenshots/${progName}/${timestamp()}-seed-${seed}.png"
     }
 
     backgroundColor = ColorRGBa.WHITE
 
-    // It's good to know your seed 😛
-    val seed = random(1.0, Int.MAX_VALUE.toDouble()).toInt()
-    val rand = Random(seed.toLong())
-    println("seed = $seed")
+    val rand = Random(seed)
 
     // a few properties for the sketch;
     // These don't need to be declared separately but it's nice to have them in one place for tweakability
@@ -85,6 +90,11 @@ fun main() = application {
 
       // Sometimes trying to draw too many contours at once causes issues
       contours.chunked(500).forEach { drawer.contours(it) }
+
+      if (screenshots.captureEveryFrame) {
+        seed = random(0.0, Int.MAX_VALUE.toDouble()).toInt()
+        screenshots.name = "screenshots/${progName}/${timestamp()}-seed-${seed}.png"
+      }
     }
   }
 }

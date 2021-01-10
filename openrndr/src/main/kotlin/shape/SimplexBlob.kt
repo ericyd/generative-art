@@ -1,5 +1,6 @@
 package shape
 
+import org.openrndr.extra.noise.random
 import org.openrndr.extra.noise.simplex
 import org.openrndr.math.Vector2
 import org.openrndr.math.map
@@ -9,6 +10,7 @@ import java.lang.Math.pow
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
+import kotlin.random.Random
 
 /**
  * A disformed blobby thing
@@ -91,4 +93,21 @@ class SimplexBlob(
   // SO FTW https://stackoverflow.com/a/2259502
   private fun rotate(x: Double, y: Double): Vector2 =
     rotatePoint(x, y, rotation, origin)
+
+  companion object {
+    // generate a small blob, nice for pointillism effects
+    fun pointBlob(
+      pos: Vector2,
+      rng: Random = Random.Default,
+      radiusRange: Pair<Double, Double> = 1.0 to 4.0,
+      noiseRange: Pair<Double, Double> = 0.5 to 0.9
+    ) =
+      SimplexBlob(
+        pos,
+        seed = random(0.0, Int.MAX_VALUE.toDouble(), rng).toInt(),
+        radius = random(radiusRange.first, radiusRange.second, rng),
+        noiseScale = random(noiseRange.first, noiseRange.second, rng),
+        moreConvexPlz = true
+      ).contour()
+  }
 }

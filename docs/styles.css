@@ -27,6 +27,11 @@ h3 {
   color: var(--font-color);
 }
 
+h1,
+h2 {
+  margin-bottom: 0;
+}
+
 .source {
   font-family: monospace;
   font-weight: 900;
@@ -72,8 +77,23 @@ h3 {
   align-items: flex-start;
 }
 
-.card .image-container {
-  display: block;
+.flex-col-center {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+}
+
+.flex-row-center {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+}
+
+.image-container {
   width: 100%;
 }
 
@@ -91,18 +111,31 @@ a:link {
   color: var(--link-color);
 }
 
-.card img {
+.card .img {
   width: 100%;
-  border: 1px solid var(--border-color);
-  transition: 0.3s all;
 }
 
-@media screen and (min-width: 800px) {
+.img {
+  display: block;
+  max-height: 100vh;
+  max-width: 100%;
+  border: 1px solid var(--border-color);
+  transition: 0.3s all;
+  background-size: contain;
+}
+
+.card-detail {
+  padding: 0 2em;
+  margin: 0 auto;
+}
+
+@media screen and (min-width: 960px) {
   .card {
     max-width: 50em;
   }
 
-  .card .image-container {
+  /* qualify this with .cards because in .card-detail the image-container can stay at 100% width */
+  .cards .image-container {
     width: 60%;
   }
 
@@ -112,7 +145,7 @@ a:link {
   }
 }
 
-.card img:hover {
+.img:hover {
   transform: translateY(-0.25em);
   box-shadow: 0em 0.25em 0.9em var(--shadow-color);
 }

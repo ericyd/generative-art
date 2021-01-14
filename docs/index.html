@@ -13,27 +13,33 @@
   <div class="vert-container">
 
     <!-- Thanks to https://github.com/edent/SuperTinyIcons/blob/fef4b0e576726f4f78c5707327281e689b5b5801/images/svg/github.svg for the icon -->
-    <h1 class="source">Generative art
+    <a href="/">
+      <h1 class="source">Generative art</h1>
+      <h2 class="source">by eric</h2>
+    </a>
+    <h3 class="source">
+      made with <a href="https://openrndr.org/" target="_blank">OPENRNDR</a> and 
       <a href="https://github.com/ericyd/generative-art">
-      <svg xmlns="http://www.w3.org/2000/svg"
-      class="github-logo"
-        aria-label="GitHub" role="img"
-        viewBox="0 0 512 512"><rect
-        width="512" height="512"
-        rx="15%"
-        fill="#1B1817"/>
-        <path fill="#fff" d="M335 499c14 0 12 17 12 17H165s-2-17 12-17c13 0 16-6 16-12l-1-50c-71 16-86-28-86-28-12-30-28-37-28-37-24-16 1-16 1-16 26 2 40 26 40 26 22 39 59 28 74 22 2-17 9-28 16-35-57-6-116-28-116-126 0-28 10-51 26-69-3-6-11-32 3-67 0 0 21-7 70 26 42-12 86-12 128 0 49-33 70-26 70-26 14 35 6 61 3 67 16 18 26 41 26 69 0 98-60 120-117 126 10 8 18 24 18 48l-1 70c0 6 3 12 16 12z"/>
-      </svg>
-    </a></h1>
-    <h2 class="source">by eric</h2>
-    <h3 class="source">made with <a href="https://openrndr.org/" target="_blank">OPENRNDR</a></h3>
+        <svg xmlns="http://www.w3.org/2000/svg"
+        class="github-logo"
+          aria-label="GitHub" role="img"
+          viewBox="0 0 512 512"><rect
+          width="512" height="512"
+          rx="15%"
+          fill="#1B1817"/>
+          <path fill="#fff" d="M335 499c14 0 12 17 12 17H165s-2-17 12-17c13 0 16-6 16-12l-1-50c-71 16-86-28-86-28-12-30-28-37-28-37-24-16 1-16 1-16 26 2 40 26 40 26 22 39 59 28 74 22 2-17 9-28 16-35-57-6-116-28-116-126 0-28 10-51 26-69-3-6-11-32 3-67 0 0 21-7 70 26 42-12 86-12 128 0 49-33 70-26 70-26 14 35 6 61 3 67 16 18 26 41 26 69 0 98-60 120-117 126 10 8 18 24 18 48l-1 70c0 6 3 12 16 12z"/>
+        </svg></a> and ❤️</h3>
+
+    <div class="card-detail flex-col-center" id="card-detail">
+      <!-- populated dynamically from data in images.json -->
+    </div>
 
     <div class="cards" id="cards">
-      <!-- Cards are populated dynamically from data in images.json -->
+      <!-- populated dynamically from data in images.json -->
     </div>
 
     <div class="pagination" id="pagination">
-      <!-- Pagination is populated dynamically from data in images.json -->
+      <!-- populated dynamically from data in images.json -->
     </div>
 
     <div class="vert-spacer"></div>
@@ -54,6 +60,7 @@
      *
      * type Image = {
      *   title: string,
+     *   id: string,
      *   imageSeries: ImageSource[],
      *   description: string,
      *   sourceCodeLink: string,
@@ -75,15 +82,24 @@
      * @param {ImageSource} imgSource source details for the current ImageSource
      * @param {number} index the current index of the imgSource
      * @param {Image} image the parent image
+     * @param {string} source the source to populate ("srcSmall" or "src")
      */
-    function buildImageTag(imgSource, index, image) {
+    function buildImageLink(imgSource, index, image, source = "srcSmall") {
       const a = document.createElement("a")
-      a.setAttribute("href", imgSource.src)
-      a.setAttribute("target", "_blank")
+      // A little hacky, but we can assume that if we're using the small source we want to link to the detail page. If we're using the big image then we link to the raw image
+      if (source === "src") {
+        a.setAttribute("href", imgSource.src)
+        a.setAttribute("target", "_blank")
+      } else {
+        const params = new URLSearchParams({"thingy": image.id, "which-one": index})
+        a.setAttribute("href", `?${params.toString()}`)
+      }
+      a.classList.add("img-link")
 
       const img = document.createElement("img")
-      img.setAttribute("src", imgSource.srcSmall)
+      img.setAttribute("src", imgSource[source])
       img.setAttribute("alt", `${image.title} ${index}`)
+      img.classList.add("img")
 
       a.appendChild(img)
       return a
@@ -91,19 +107,23 @@
 
     /**
      * @param {Image} image
+     * @param {boolean} updateParamsOnRotate when true, URL params will update when image is rotated
+     * @param {string} source the source to populate ("srcSmall" or "src")
      */
-    function buildImageContainer(image) {
+    function buildImageContainer(image, updateParamsOnRotate = false, source = "srcSmall") {
       const container = document.createElement("div")
       container.classList.add("image-container")
-      const imageLinks = image.imageSeries.map((imgSource, index) => buildImageTag(imgSource, index, image))
+      container.classList.add("flex-col-center")
+      const imageLinks = image.imageSeries.map((imgSource, index) => buildImageLink(imgSource, index, image, source))
 
       // Add the first image source as the default
-      container.appendChild(imageLinks[0])
+      container.appendChild(imageLinks[getRequestedListItem(imageLinks)])
 
       // If there are multiple image sources, we need to add buttons to cycle through them
-      console.log(imageLinks.length)
       if (imageLinks.length > 1) {
-        let currentIndex = 0
+        let currentIndex = getRequestedListItem(imageLinks)
+        const paginationButtonContainer = document.createElement("div")
+        paginationButtonContainer.classList.add("flex-row-center")
 
         const leftButton = document.createElement("button")
         leftButton.classList.add("pagination-btn")
@@ -117,17 +137,28 @@
         leftButton.addEventListener('click', e => {
           currentIndex = currentIndex === 0 ? imageLinks.length - 1 : currentIndex - 1
           container.removeChild(container.children[0])
-          container.insertBefore(imageLinks[currentIndex], leftButton)
+          container.insertBefore(imageLinks[currentIndex], paginationButtonContainer)
+          if (updateParamsOnRotate) {
+            const params = (new URL(window.location)).searchParams
+            params.set("which-one", currentIndex)
+            history.replaceState(null, null, `?${params.toString()}`)
+          }
         })
 
         rightButton.addEventListener('click', e => {
           currentIndex = currentIndex === imageLinks.length - 1 ? 0 : currentIndex + 1
           container.removeChild(container.children[0])
-          container.insertBefore(imageLinks[currentIndex], leftButton)
+          container.insertBefore(imageLinks[currentIndex], paginationButtonContainer)
+          if (updateParamsOnRotate) {
+            const params = (new URL(window.location)).searchParams
+            params.set("which-one", currentIndex)
+            history.replaceState(null, null, `?${params.toString()}`)
+          }
         })
 
-        container.appendChild(leftButton)
-        container.appendChild(rightButton)
+        paginationButtonContainer.appendChild(leftButton)
+        paginationButtonContainer.appendChild(rightButton)
+        container.appendChild(paginationButtonContainer)
       }
 
       return container
@@ -178,6 +209,13 @@
       }
     }
 
+    function clearImageDetail() {
+      const detail = document.getElementById("card-detail")
+      while (detail.children.length > 0) {
+        detail.removeChild(cards.children[0])
+      }
+    }
+
     /**
      * Generates pagination links and binds events to each.
      * @returns {Array<Image>} images for first page
@@ -211,12 +249,61 @@
       return pages[0]
     }
 
+    /**
+     * @param {Array<T>} image
+     * @returns {number} the requested list index, or 0 if none requested or out of range
+     */
+    function getRequestedListItem(list) {
+      const url = new URL(window.location)
+      // could request with "which-one=2" or "n=2"
+      const requestedVariant = url.searchParams.get("which-one")
+
+      // If they didn't request one, or if there's only 1 image then show the first
+      if (!requestedVariant || list.length === 1) {
+        return 0
+      }
+
+      // if we can't parse the number, or the number is out of bounds, just return the first one
+      try {
+        const num = Number(requestedVariant)
+        return num
+      } catch (e) {
+        return 0
+      }
+    }
+
+    /**
+     * @param {Image} image
+     */
+    function populateImageDetail(image) {
+      const imageContainer = buildImageContainer(image, true, "src")
+      const description = buildDescription(image.description, image.sourceCodeLink)
+      const detailContainer = document.getElementById('card-detail')
+      detailContainer.appendChild(imageContainer)
+      detailContainer.appendChild(description)
+    }
+
+    /**
+     * @param {Array<Image>} images
+     * @returns {Image?}
+     */
+    function getImageFromParam(images) {
+      const url = new URL(window.location)
+      // for some reason it tickles me to think of search param named "thingy", but maybe some day I'll want to be mature and use "id"
+      const requestedId = url.searchParams.get("thingy")
+      return images.filter(i => i.id === requestedId)[0]
+    }
+
     function fetchImages(_event) {
       fetch('/generative-art/images.json')
         .then(response => response.json())
         .then(data => {
+          const requestedImage = getImageFromParam(data.images)
+          if (requestedImage) {
+            return populateImageDetail(requestedImage)
+          }
           const images = paginate(data.images)
-          populateImages(images)
+          return populateImages(images)
         })
         .catch(console.error.bind(console));
     }

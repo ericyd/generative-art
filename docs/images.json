@@ -5,6 +5,7 @@
   "images": [
     {
       "title": "Orbital pointillism",
+      "id": "orbital-pointillism",
       "imageSeries": [
         {
           "src": "https://res.cloudinary.com/ericyd/image/upload/v1610319118/2021-01-10T15.34.54-seed-1859366810_kh3iwv.png",
@@ -26,6 +27,7 @@
     },
     {
       "title": "Space in my body",
+      "id": "space-in-my-body",
       "imageSeries": [
         {
           "src": "https://res.cloudinary.com/ericyd/image/upload/v1610072964/2021-01-07T20.12.01-seed-99178672_bdw5oe.png",
@@ -39,6 +41,7 @@
     },
     {
       "title": "Glacial etchings",
+      "id": "glacial-etchings",
       "imageSeries": [
         {
           "src": "https://res.cloudinary.com/ericyd/image/upload/v1609116962/sketch.flow.F12_Curl2-2020-12-27-18.54.12_tf8onv.png",
@@ -60,6 +63,7 @@
     },
     {
       "title": "Electric Eye",
+      "id": "electric-eye",
       "imageSeries": [
         {
           "src": "https://res.cloudinary.com/ericyd/image/upload/v1607818933/good-2020-12-12T18.08.19-seed-1617241088_yvcnk6.png",
@@ -73,6 +77,7 @@
     },
     {
       "title": "Glowing graph",
+      "id": "glowing-graph",
       "imageSeries": [
         {
           "src": "https://res.cloudinary.com/ericyd/image/upload/v1607654447/nice-2020-12-10T15.36.16-seed-1933540311_kossmk.png",
@@ -86,6 +91,7 @@
     },
     {
       "title": "Noisy circle packing",
+      "id": "noisy-circle-packing",
       "imageSeries": [
         {
           "src": "https://res.cloudinary.com/ericyd/image/upload/v1607558352/2020-12-09T17.33.57-seed-205225107_wi8dac.png",
@@ -99,6 +105,7 @@
     },
     {
       "title": "Space in my mind",
+      "id": "space-in-my-mind",
       "imageSeries": [
         {
           "src": "https://res.cloudinary.com/ericyd/image/upload/v1607397402/uploader---2020-12-07T21.12.33-seed-2081555229_ko6caj.png",
@@ -112,6 +119,7 @@
     },
     {
       "title": "Generative hatching with concentration gradients",
+      "id": "generative-hatching-with-concentration-gradients",
       "imageSeries": [
         {
           "src": "https://res.cloudinary.com/ericyd/image/upload/v1607197826/2020-12-05T13.46.16-seed-938821407_qhxnws.png",
@@ -125,6 +133,7 @@
     },
     {
       "title": "Generative hatching v4",
+      "id": "generative-hatching-v4",
       "imageSeries": [
         {
           "src": "https://res.cloudinary.com/ericyd/image/upload/v1606794213/2020-11-30T16.25.44-seed-1651409604_streen.png",

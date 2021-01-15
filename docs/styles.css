@@ -11,7 +11,7 @@ html, body {
 body {
   --bg-color: #fcf0d1;
   --border-color: #999;
-  --shadow-color: #999999aa;
+  --shadow-color: #777777aa;
   --font-color: #333;
   --link-color: #5391c1;
 
@@ -120,8 +120,12 @@ a:link {
   max-height: 100vh;
   max-width: 100%;
   border: 1px solid var(--border-color);
-  transition: 0.3s all;
-  background-size: contain;
+  transition: 1.3s all;
+}
+
+.img:hover {
+  /* transform: translateY(-0.25em); */
+  box-shadow: 0em 0em 2.9em 1em var(--shadow-color);
 }
 
 .card-detail {
@@ -143,11 +147,6 @@ a:link {
     width: 40%;
     padding: 0 1em;
   }
-}
-
-.img:hover {
-  transform: translateY(-0.25em);
-  box-shadow: 0em 0.25em 0.9em var(--shadow-color);
 }
 
 .pagination {

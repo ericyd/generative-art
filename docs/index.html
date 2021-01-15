@@ -220,7 +220,7 @@
      * Generates pagination links and binds events to each.
      * @returns {Array<Image>} images for first page
      */
-    function paginate(images, size = 10) {
+    function paginate(images, size = 10, requestedPage = 1) {
       // returns an array of arrays, with each inner array representing a "page" of images with max length `size`
       const pages = images.reduce((accumulator, currentValue) => {
         if (accumulator.length === 0 || accumulator[accumulator.length - 1].length === size) {
@@ -235,18 +235,26 @@
       if (pages.length > 1) {
         pages.forEach((page, index) => {
           const pageBtn = document.createElement("button")
+          const pageNum = index + 1
           pageBtn.classList.add("pagination-btn")
           pageBtn.classList.add("source")
           pageBtn.addEventListener('click', e => {
             clearImages()
             populateImages(page)
+            const params = (new URL(window.location)).searchParams
+            params.set("page", pageNum)
+            history.replaceState(null, null, `?${params.toString()}`)
           })
-          pageBtn.appendChild(document.createTextNode(index.toString()))
+          pageBtn.appendChild(document.createTextNode(pageNum.toString()))
           document.getElementById("pagination").appendChild(pageBtn)
         })
       }
 
-      return pages[0]
+      // page param is 1-indexed. Not sure if that's smart 🤔
+      if (requestedPage > pages.length || requestedPage < 1) {
+        return pages[0]
+      }
+      return pages[requestedPage - 1]
     }
 
     /**
@@ -302,7 +310,9 @@
           if (requestedImage) {
             return populateImageDetail(requestedImage)
           }
-          const images = paginate(data.images)
+
+          const requestedPage = Number((new URL(window.location)).searchParams.get("page"))
+          const images = paginate(data.images, 2, requestedPage)
           return populateImages(images)
         })
         .catch(console.error.bind(console));

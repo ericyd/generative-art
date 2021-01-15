@@ -312,7 +312,7 @@
           }
 
           const requestedPage = Number((new URL(window.location)).searchParams.get("page"))
-          const images = paginate(data.images, 2, requestedPage)
+          const images = paginate(data.images, 10, requestedPage)
           return populateImages(images)
         })
         .catch(console.error.bind(console));

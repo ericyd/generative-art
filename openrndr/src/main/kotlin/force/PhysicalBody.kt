@@ -49,13 +49,18 @@ class PhysicalBody(coords: Vector2, val mass: Double, val speed: Double = 0.0, v
     return coords
   }
 
-  fun orbit(system: GravitySystem, scale: Double, center: Vector2 = Vector2.ZERO): Vector2 {
+  fun orbit(system: GravitySystem, scale: Double, center: Vector2 = Vector2.ZERO, move: Boolean = true): Vector2 {
     val pos = coords - center
     val extrinsicForce = system.orbitRaw(pos, mass, scale = scale)
     val intrinsicForce = (extrinsicForce - pos).normalized.perpendicular() * speed
     val movement = (extrinsicForce + intrinsicForce).normalized
 
-    coords += movement
-    return coords
+    // Sometimes it might be useful to know the calculation of movement without moving the body first...maybe
+    return if (move) {
+      coords += movement
+      coords
+    } else {
+      movement
+    }
   }
 }

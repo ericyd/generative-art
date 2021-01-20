@@ -40,19 +40,6 @@ class MovingBody(
   }
 
   /**
-   * I don't know what this function does yet,
-   * I just copied it from here: http://www.codeplastic.com/2017/07/22/differential-line-growth-with-processing/
-   */
-  fun seek(target: Vector2, maxSpeed: Double, maxForce: Double): Vector2 {
-    val desired = (target - position).normalized * maxSpeed
-    val steer = desired - velocity
-    if (steer.length > maxForce) {
-      return steer.normalized * maxForce
-    }
-    return steer
-  }
-
-  /**
    * This is kind of analogous to 'drag' or friction.... kinda sorta
    * Basically it slows down the body so it doesn't just explode immediately when it's touching lots of stuff.
    * @param factor is the factor by which to "drag" it down

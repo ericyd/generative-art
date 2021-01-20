@@ -16,20 +16,15 @@ import kotlin.math.sqrt
  */
 class DifferentialLine(
   var nodes: MutableList<MovingBody> = mutableListOf(),
-  var maxForce: Double = 0.9,
-  var maxSpeed: Double = 1.0,
-  desiredSeparation: Double = 9.0,
+  var maxForce: (MovingBody) -> Double = { _ -> 0.9 },
+  var maxSpeed: (MovingBody) -> Double = { _ -> 1.0 },
+  var desiredSeparation: Double = 9.0,
   var separationCohesionRatio: Double = 1.1,
-  var maxEdgeLen: Double = 5.0,
+  var maxEdgeLen: (MovingBody) -> Double = { _ -> 5.0 },
   // When true, the edges of the `nodes` list do not move
   var fixedEdges: Boolean = false,
 ) {
-  var desiredSeparation = desiredSeparation
-    set(value) {
-      squaredDesiredSeparation = value * value
-      field = value
-    }
-  var squaredDesiredSeparation: Double = desiredSeparation * desiredSeparation
+  var squaredDesiredSeparation: (MovingBody) -> Double = { m -> desiredSeparation * desiredSeparation }
 
   val smoothLine: SmoothLine
     get() = SmoothLine(nodes.map { it.position })
@@ -52,9 +47,9 @@ class DifferentialLine(
         node.applyFriction(Math.pow(nearNodes.toDouble(), 2.25), 0.13)
       }
       if (node.acceleration.length > 0) {
-        node.acceleration = node.acceleration.normalized * maxSpeed
-        if (node.acceleration.length > maxForce) {
-          node.acceleration = node.acceleration.normalized * maxForce
+        node.acceleration = node.acceleration.normalized * maxSpeed(node)
+        if (node.acceleration.length > maxForce(node)) {
+          node.acceleration = node.acceleration.normalized * maxForce(node)
         }
       }
       node.acceleration *= separationCohesionRatio
@@ -78,7 +73,7 @@ class DifferentialLine(
       newNodes.add(current)
 
       // This is our "rule" for whether or not to insert a node at this position
-      if (current.position.distanceTo(next.position) > maxEdgeLen) {
+      if (current.position.distanceTo(next.position) > maxEdgeLen(current)) { // && random() < -0.5) {
         val mid = MovingBody((current.position + next.position) / 2.0)
         newNodes.add(mid)
       }
@@ -104,7 +99,7 @@ class DifferentialLine(
   private fun separationForceBetween(n1: MovingBody, n2: MovingBody): Vector2 {
     var steer = Vector2.ZERO
     val squaredDistance = n2.position.squaredDistanceTo(n1.position)
-    if (squaredDistance > 0.0 && squaredDistance < squaredDesiredSeparation) {
+    if (squaredDistance > 0.0 && squaredDistance < squaredDesiredSeparation(n1)) {
       val diff = (n1.position - n2.position).normalized
       steer += (diff / sqrt(squaredDistance)) // Weight by distance
     }
@@ -122,7 +117,24 @@ class DifferentialLine(
     } else {
       Vector2.ZERO
     }
-    return node.seek(sum / 2.0, maxSpeed, maxForce)
+    return seek(node, sum / 2.0, maxSpeed(node), maxForce(node))
+  }
+
+  /**
+   * I don't know how to articular the purpose of this function
+   * I just copied it from here: http://www.codeplastic.com/2017/07/22/differential-line-growth-with-processing/
+   */
+  fun seek(node: MovingBody, target: Vector2, maxSpeed: Double, maxForce: Double): Vector2 {
+    var steer = Vector2.ZERO
+    val desired = (target - node.position).normalized * maxSpeed
+    val squaredDistance = target.squaredDistanceTo(node.position)
+    if (squaredDistance > 0.0 && squaredDistance < squaredDesiredSeparation(node)) {
+      steer += desired - node.velocity
+    }
+    if (steer.length > maxForce) {
+      return steer.normalized * maxForce
+    }
+    return steer
   }
 }
 

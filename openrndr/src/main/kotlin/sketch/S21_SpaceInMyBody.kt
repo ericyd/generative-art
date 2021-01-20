@@ -17,19 +17,14 @@ import org.openrndr.extras.color.palettes.colorSequence
 import org.openrndr.math.Vector2
 import org.openrndr.math.map
 import org.openrndr.shape.Circle
-import org.openrndr.shape.Ellipse
 import org.openrndr.shape.Rectangle
 import org.openrndr.shape.ShapeContour
 import org.openrndr.shape.contour
 import shape.SimplexBlob
 import util.RadialConcentrationGradient
-import util.intersects
 import util.packCirclesOnGradient
-import util.rotateShapeContour
 import util.timestamp
 import java.io.File
-import kotlin.math.PI
-import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.hypot
@@ -133,7 +128,7 @@ fun main() = application {
 
       // Add a larger spread to the sun. Doesn't have great density at center, otherwise could use *only* this
       val sunExterior = packCirclesOnGradient(
-      0.01..200.0,
+        0.01..200.0,
         Rectangle(0.0, 0.0, w, h),
         RadialConcentrationGradient(
           Vector2(sunOrigin.x / w, sunOrigin.y / h),

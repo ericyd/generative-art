@@ -7,16 +7,13 @@ import extensions.CustomScreenshots
 import force.GravityBody
 import force.GravitySystem
 import force.PhysicalBody
-import noise.curl
 import noise.simplexCurl
 import org.openrndr.application
 import org.openrndr.color.ColorRGBa
-import org.openrndr.color.hsla
 import org.openrndr.extra.noise.perlinHermite
 import org.openrndr.extra.noise.random
 import org.openrndr.extras.color.palettes.colorSequence
 import org.openrndr.extras.color.presets.GHOST_WHITE
-import org.openrndr.extras.color.presets.NAVAJO_WHITE
 import org.openrndr.math.Vector2
 import org.openrndr.math.map
 import org.openrndr.shape.contour
@@ -50,7 +47,7 @@ fun main() = application {
       quitAfterScreenshot = false
       scale = 3.0
       captureEveryFrame = true
-      name = "screenshots/${progName}/${timestamp()}-seed-${seed}.png"
+      name = "screenshots/$progName/${timestamp()}-seed-$seed.png"
     }
 
     val center = Vector2(width / 2.0, height / 2.0)
@@ -159,7 +156,7 @@ fun main() = application {
 
       if (screenshots.captureEveryFrame) {
         seed = random(0.0, Int.MAX_VALUE.toDouble()).toInt()
-        screenshots.name = "screenshots/${progName}/${timestamp()}-seed-${seed}.png"
+        screenshots.name = "screenshots/$progName/${timestamp()}-seed-$seed.png"
       }
     }
   }

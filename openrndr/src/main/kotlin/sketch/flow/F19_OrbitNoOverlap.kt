@@ -44,7 +44,7 @@ fun main() = application {
       quitAfterScreenshot = false
       scale = 4.0
       captureEveryFrame = false
-      name = "screenshots/${progName}/${timestamp()}-seed-${seed}.png"
+      name = "screenshots/$progName/${timestamp()}-seed-$seed.png"
     }
 
     val center = Vector2(width / 2.0, height / 2.0)
@@ -88,13 +88,13 @@ fun main() = application {
       val system = GravitySystem(2.0, gravityBodies)
 
       val colors = listOf(
-          hsla(261.0, 0.45, 0.43, opacity), // purple
-          hsla(212.0, 0.67, 0.30, opacity), // dark blue
-          hsla(194.0, 0.70, 0.85, opacity), // light blue
-          hsla(10.0, 0.40, 0.15, opacity), // dark brown
-          hsla(255.0, 0.46, 0.86, opacity), // light purple
-          hsla(173.0, 0.66, 0.975, opacity), // smokey white
-          hsla(29.0, 0.93, 0.83, opacity) // orange/salmon
+        hsla(261.0, 0.45, 0.43, opacity), // purple
+        hsla(212.0, 0.67, 0.30, opacity), // dark blue
+        hsla(194.0, 0.70, 0.85, opacity), // light blue
+        hsla(10.0, 0.40, 0.15, opacity), // dark brown
+        hsla(255.0, 0.46, 0.86, opacity), // light purple
+        hsla(173.0, 0.66, 0.975, opacity), // smokey white
+        hsla(29.0, 0.93, 0.83, opacity) // orange/salmon
       )
 
       val shuffledColors = colors.shuffled(rng).mapIndexed { index, color ->
@@ -150,7 +150,7 @@ fun main() = application {
 
       if (screenshots.captureEveryFrame) {
         seed = random(0.0, Int.MAX_VALUE.toDouble()).toInt()
-        screenshots.name = "screenshots/${progName}/${timestamp()}-seed-${seed}.png"
+        screenshots.name = "screenshots/$progName/${timestamp()}-seed-$seed.png"
       }
     }
   }

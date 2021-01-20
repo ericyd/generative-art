@@ -33,7 +33,7 @@ val orxFeatures = setOf(
 //  "orx-kdtree",
 //  "orx-mesh-generators",
 //  "orx-midi",
-//  "orx-no-clear",
+  "orx-no-clear",
   "orx-noise",
 //  "orx-obj-loader",
   "orx-olive",
@@ -60,7 +60,7 @@ val openrndrFeatures = setOf(
 
 /*  Which version of OPENRNDR and ORX should be used? */
 val openrndrUseSnapshot = false
-val openrndrVersion = if (openrndrUseSnapshot) "0.4.0-SNAPSHOT" else "0.3.44"
+val openrndrVersion = if (openrndrUseSnapshot) "0.4.0-SNAPSHOT" else "0.3.45-rc.8"
 
 val orxUseSnapshot = false
 val orxVersion = if (orxUseSnapshot) "0.4.0-SNAPSHOT" else "0.3.53"

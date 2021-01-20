@@ -18,7 +18,6 @@ import noise.curl
 import org.openrndr.application
 import org.openrndr.color.ColorRGBa
 import org.openrndr.draw.LineCap
-import org.openrndr.extensions.Screenshots
 import org.openrndr.extra.noise.random
 import org.openrndr.extra.noise.simplex
 import org.openrndr.math.Vector2
@@ -43,7 +42,7 @@ fun main() = application {
       quitAfterScreenshot = false
       scale = 3.0
       captureEveryFrame = false
-      name = "screenshots/${progName}/${timestamp()}-seed-${seed}.png"
+      name = "screenshots/$progName/${timestamp()}-seed-$seed.png"
     }
 
     backgroundColor = ColorRGBa.WHITE
@@ -93,7 +92,7 @@ fun main() = application {
 
       if (screenshots.captureEveryFrame) {
         seed = random(0.0, Int.MAX_VALUE.toDouble()).toInt()
-        screenshots.name = "screenshots/${progName}/${timestamp()}-seed-${seed}.png"
+        screenshots.name = "screenshots/$progName/${timestamp()}-seed-$seed.png"
       }
     }
   }

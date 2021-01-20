@@ -12,53 +12,25 @@ import org.openrndr.application
 import org.openrndr.color.ColorRGBa
 import org.openrndr.draw.BufferMultisample
 import org.openrndr.draw.TransformTarget
-import org.openrndr.draw.isolated
 import org.openrndr.draw.isolatedWithTarget
 import org.openrndr.draw.renderTarget
-import org.openrndr.extra.compositor.Layer
-import org.openrndr.extra.compositor.blend
-import org.openrndr.extra.compositor.compose
-import org.openrndr.extra.compositor.draw
-import org.openrndr.extra.compositor.layer
-import org.openrndr.extra.compositor.post
-import org.openrndr.extra.fx.blend.Add
-import org.openrndr.extra.fx.blur.ApproximateGaussianBlur
-import org.openrndr.extra.noise.gaussian
-import org.openrndr.extra.noise.random
-import org.openrndr.extra.noise.simplex
-import org.openrndr.extras.color.palettes.colorSequence
 import org.openrndr.extras.color.presets.ANTIQUE_WHITE
-import org.openrndr.extras.color.presets.BISQUE
 import org.openrndr.extras.color.presets.BLUE_STEEL
 import org.openrndr.extras.color.presets.FOREST_GREEN
 import org.openrndr.extras.color.presets.ORANGE_RED
 import org.openrndr.math.Matrix44
-import org.openrndr.math.Spherical
 import org.openrndr.math.Vector2
 import org.openrndr.math.Vector3
 import org.openrndr.math.map
-import org.openrndr.math.transforms.lookAt
-import org.openrndr.math.transforms.normalMatrix
 import org.openrndr.math.transforms.ortho
-import org.openrndr.math.transforms.project
 import org.openrndr.math.transforms.scale
-import org.openrndr.shape.Circle
-import org.openrndr.shape.Segment
 import org.openrndr.shape.Segment3D
-import org.openrndr.shape.SegmentProjection3D
-import org.openrndr.shape.contour
-import org.openrndr.shape.drawComposition
-import shape.FractalizedLine
-import shape.SimplexBlob
 import util.timestamp
 import java.io.File
 import java.lang.Math.toRadians
 import kotlin.math.PI
-import kotlin.math.atan2
 import kotlin.math.cos
-import kotlin.math.hypot
 import kotlin.math.sin
-import kotlin.random.Random
 
 fun main() = application {
   configure {
@@ -129,8 +101,7 @@ fun main() = application {
         // drawer.projection = org.openrndr.math.transforms.lookAt(camera, Vector3.ZERO, Vector3.UNIT_Z)
         // drawer.view = Matrix44.scale(Vector3(1.0 / camera.x, 1.0 / camera.y, 1.0 / camera.z))
 
-
-        drawer.projection = ortho(left=w*-0.5, right=w*0.5, bottom=h*-0.5, top=h*0.5, zNear=0.0, zFar=(w + h) * 0.5)
+        drawer.projection = ortho(left = w * -0.5, right = w * 0.5, bottom = h * -0.5, top = h * 0.5, zNear = 0.0, zFar = (w + h) * 0.5)
         drawer.view = Matrix44.IDENTITY
         // drawer.projection = org.openrndr.math.transforms.perspective(fovY=1.0, aspectRatio=1.4, zNear=0.0, zFar=(w+h)*0.5, xOffset=w, yOffset=h)
         // drawer.perspective(fovY=10.0, aspectRatio=1.4, zNear=(w+h)*0.05, zFar=(w+h)*0.5)
@@ -158,7 +129,6 @@ fun main() = application {
 
         drawer.stroke = ColorRGBa.BLUE_STEEL
         drawer.segment(Segment3D(Vector3.ZERO, Vector3.UNIT_Z * 2000.0))
-
       }
 
       drawer.scale(width.toDouble() / rt.width, TransformTarget.MODEL)

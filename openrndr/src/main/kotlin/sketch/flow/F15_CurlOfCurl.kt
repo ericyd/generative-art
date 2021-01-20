@@ -19,7 +19,6 @@ import org.openrndr.extra.noise.random
 import org.openrndr.extra.noise.simplex
 import org.openrndr.math.Vector2
 import org.openrndr.math.map
-import org.openrndr.shape.ShapeContour
 import org.openrndr.shape.contour
 import util.timestamp
 import java.lang.Math.pow

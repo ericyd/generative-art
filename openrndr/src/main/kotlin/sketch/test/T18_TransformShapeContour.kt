@@ -3,21 +3,15 @@
  */
 package sketch.test
 
-import force.MovingBody
 import org.openrndr.application
 import org.openrndr.color.ColorRGBa
-import org.openrndr.extra.parameters.Vector3Parameter
 import org.openrndr.math.Matrix44
 import org.openrndr.math.Vector2
 import org.openrndr.math.transforms.rotateZ
 import org.openrndr.math.transforms.translate
 import org.openrndr.shape.Ellipse
 import org.openrndr.shape.contour
-import shape.Hexagon
-import util.rotatePoint
 import kotlin.math.PI
-import kotlin.math.cos
-import kotlin.math.sin
 
 fun main() = application {
   configure {

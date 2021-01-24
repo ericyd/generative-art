@@ -4,6 +4,20 @@
   ],
   "images": [
     {
+      "title": "Resistance",
+      "id": "resistance",
+      "imageSeries": [
+        {
+          "src": "https://res.cloudinary.com/ericyd/image/upload/v1611446281/flow_field4_2020-05-17T13-55-17_000__hlbc0f.jpg",
+          "srcSmall": "https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1611446281/flow_field4_2020-05-17T13-55-17_000__hlbc0f.jpg"
+        }
+      ],
+      "description": "This is an old piece (May 17, 2020) but I included it in a blog post I wrote about generative art and I wanted to include a link to the article here. Check it out if you have spare time! <a href='https://ericyd.hashnode.dev/if-you-can-code-then-make-art-else-return-false' target='_blank'>If you can code, then make art. Else, return false</a>.",
+      "sourceCodeLink": "https://github.com/ericyd/generative-art/blob/bd9c2cd0475ce9e416a733459729fded1b55c569/nannou/examples/flow_field4.rs",
+      "comments": "",
+      "createdAt": "2020-05-17"
+    },
+    {
       "title": "Differential River",
       "id": "differential-river",
       "imageSeries": [

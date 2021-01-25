@@ -22,7 +22,8 @@ fun main() = application {
 
   program {
     backgroundColor = ColorRGBa.WHITE
-    val font = loadFont("/System/Library/Fonts/Supplemental/Tahoma.ttf", 12.0)
+    // find /System/Library/Fonts | grep ttf
+    val font = loadFont("/System/Library/Fonts/Supplemental/Arial.ttf", 12.0)
 
     extend {
       drawer.fill = ColorRGBa.BLACK
@@ -35,30 +36,38 @@ fun main() = application {
       val vector = { angle: Double, vertex: Vector2, len: Double -> Vector2(cos(angle), sin(angle)) * len + vertex }
 
       val anglePositionMap = mapOf(
-        PI * 0.125 to Vector2(width * 0.2, height * 0.3),
-        PI * 0.625 to Vector2(width * 0.4, height * 0.3),
-        PI * 0.875 to Vector2(width * 0.6, height * 0.3),
-        PI * 1.125 to Vector2(width * 0.8, height * 0.3),
-        PI * 1.375 to Vector2(width * 0.2, height * 0.7),
-        PI * 1.625 to Vector2(width * 0.4, height * 0.7),
-        PI * 1.875 to Vector2(width * 0.6, height * 0.7),
-        PI * 1.99 to Vector2(width * 0.8, height * 0.7),
+        PI * 0.12 to Vector2(width * 0.05, height * 0.1),
+        PI * 0.25 to Vector2(width * 0.25, height * 0.1),
+        PI * 0.38 to Vector2(width * 0.45, height * 0.1),
+        PI * 0.50 to Vector2(width * 0.65, height * 0.1),
+        PI * 0.64 to Vector2(width * 0.85, height * 0.1),
+        PI * 0.77 to Vector2(width * 0.05, height * 0.4),
+        PI * 0.90 to Vector2(width * 0.25, height * 0.4),
+        PI * 1.00 to Vector2(width * 0.45, height * 0.4),
+        PI * 1.12 to Vector2(width * 0.65, height * 0.4),
+        PI * 1.25 to Vector2(width * 0.85, height * 0.4),
+        PI * 1.38 to Vector2(width * 0.05, height * 0.7),
+        PI * 1.50 to Vector2(width * 0.25, height * 0.7),
+        PI * 1.64 to Vector2(width * 0.45, height * 0.7),
+        PI * 1.77 to Vector2(width * 0.65, height * 0.7),
+        PI * 1.99 to Vector2(width * 0.85, height * 0.7),
       )
 
       for ((angleB, vertex) in anglePositionMap) {
-        val vectorA = vector(angleA, vertex, length)
-        val vectorB = vector(angleB, vertex, length)
-        drawer.lineSegment(LineSegment(vertex, vectorA))
-        drawer.lineSegment(LineSegment(vertex, vectorB))
+        drawer.lineSegment(LineSegment(vertex, vector(angleA, vertex, length)))
+        drawer.lineSegment(LineSegment(vertex, vector(angleB, vertex, length)))
         drawer.text("a", vector(angleA, vertex, length * 1.1))
-        drawer.text("b", vector(angleB + PI * 0.1, vertex, length * 1.1))
+        drawer.text("b", vector(angleB + PI * 0.075, vertex, length * 1.1))
 
         // For this demonstration I think it makes more sense to consider the vectors from the origin rather than the "vertex"
-        // drawer.text("a • b = ${vectorA.dot(vectorB).round(2)}", vertex + Vector2(0.0, height * 0.1))
-        // drawer.text("a x️ b = ${vectorA.cross(vectorB).round(2)}", vertex + Vector2(0.0, height * 0.15))
-        drawer.text("a • b = ${vector(angleA, Vector2.ZERO, length).dot(vector(angleB, Vector2.ZERO, length)).round(2)}", vertex + Vector2(0.0, height * 0.1))
-        drawer.text("a x️ b = ${vector(angleA, Vector2.ZERO, length).cross(vector(angleB, Vector2.ZERO, length)).round(2)}", vertex + Vector2(0.0, height * 0.15))
+        // because the dot product is the sum of the product of the components (x,y), so it only makes sense to compare in relation to the origin
+        drawer.text("a • b = ${vector(angleA, Vector2.ZERO, length).normalized.dot(vector(angleB, Vector2.ZERO, length).normalized).round(2)}", vertex + Vector2(0.0, height * 0.1))
+        drawer.text("abs(a • b) = ${abs(vector(angleA, Vector2.ZERO, length).normalized.dot(vector(angleB, Vector2.ZERO, length).normalized).round(2))}", vertex + Vector2(0.0, height * 0.125))
+        drawer.text("a x️ b = ${vector(angleA, Vector2.ZERO, length).normalized.cross(vector(angleB, Vector2.ZERO, length).normalized).round(2)}", vertex + Vector2(0.0, height * 0.15))
+        drawer.text("abs(a x️ b) = ${abs(vector(angleA, Vector2.ZERO, length).normalized.cross(vector(angleB, Vector2.ZERO, length).normalized).round(2))}", vertex + Vector2(0.0, height * 0.175))
       }
+
+      drawer.text("all vector calculations are performed on normalized vector quantities", width * 0.25, height * 0.05)
     }
   }
 }

@@ -6,9 +6,11 @@ package sketch.test
 import org.openrndr.application
 import org.openrndr.color.ColorRGBa
 import org.openrndr.draw.loadFont
+import org.openrndr.extensions.Screenshots
 import org.openrndr.math.Vector2
 import org.openrndr.panel.elements.round
 import org.openrndr.shape.LineSegment
+import util.timestamp
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.cos
@@ -24,6 +26,10 @@ fun main() = application {
     backgroundColor = ColorRGBa.WHITE
     // find /System/Library/Fonts | grep ttf
     val font = loadFont("/System/Library/Fonts/Supplemental/Arial.ttf", 12.0)
+
+    extend(Screenshots()) {
+      name = "screenshots/dot-product-demo/${timestamp()}.png"
+    }
 
     extend {
       drawer.fill = ColorRGBa.BLACK
@@ -53,21 +59,42 @@ fun main() = application {
         PI * 1.99 to Vector2(width * 0.85, height * 0.7),
       )
 
+      // for ((angleB, vertex) in anglePositionMap) {
+      //   drawer.lineSegment(LineSegment(vertex, vector(angleA, vertex, length)))
+      //   drawer.lineSegment(LineSegment(vertex, vector(angleB, vertex, length)))
+      //   drawer.text("a", vector(angleA, vertex, length * 1.1))
+      //   drawer.text("b", vector(angleB + PI * 0.075, vertex, length * 1.1))
+      //
+      //   // For this demonstration I think it makes more sense to consider the vectors from the origin rather than the "vertex"
+      //   // because the dot product is the sum of the product of the components (x,y), so it only makes sense to compare in relation to the origin
+      //   drawer.text("a • b = ${vector(angleA, Vector2.ZERO, length).normalized.dot(vector(angleB, Vector2.ZERO, length).normalized).round(2)}", vertex + Vector2(0.0, height * 0.1))
+      //   drawer.text("abs(a • b) = ${abs(vector(angleA, Vector2.ZERO, length).normalized.dot(vector(angleB, Vector2.ZERO, length).normalized).round(2))}", vertex + Vector2(0.0, height * 0.125))
+      //   drawer.text("a x️ b = ${vector(angleA, Vector2.ZERO, length).normalized.cross(vector(angleB, Vector2.ZERO, length).normalized).round(2)}", vertex + Vector2(0.0, height * 0.15))
+      //   drawer.text("abs(a x️ b) = ${abs(vector(angleA, Vector2.ZERO, length).normalized.cross(vector(angleB, Vector2.ZERO, length).normalized).round(2))}", vertex + Vector2(0.0, height * 0.175))
+      // }
+      // drawer.text("all vector calculations are performed on normalized vector quantities", width * 0.25, height * 0.05)
+
       for ((angleB, vertex) in anglePositionMap) {
-        drawer.lineSegment(LineSegment(vertex, vector(angleA, vertex, length)))
-        drawer.lineSegment(LineSegment(vertex, vector(angleB, vertex, length)))
+        // drawer.circle(vertex, 5.0)
+        // drawer.lineSegment(LineSegment(vertex, vector(angleB, vertex, length)))
+        // drawer.text("a", vertex + vector(angleA, Vector2.ZERO, 5.0))
+        // drawer.text("b", vector(angleB + PI * 0.075, vertex, length * 1.1))
+
+        val vectorA = vector(angleA, vertex, length)
+        val vectorB = vector(angleB, vertex, length)
+        drawer.lineSegment(LineSegment(vertex, vectorA))
+        drawer.lineSegment(LineSegment(vertex, vectorB))
         drawer.text("a", vector(angleA, vertex, length * 1.1))
         drawer.text("b", vector(angleB + PI * 0.075, vertex, length * 1.1))
 
         // For this demonstration I think it makes more sense to consider the vectors from the origin rather than the "vertex"
         // because the dot product is the sum of the product of the components (x,y), so it only makes sense to compare in relation to the origin
-        drawer.text("a • b = ${vector(angleA, Vector2.ZERO, length).normalized.dot(vector(angleB, Vector2.ZERO, length).normalized).round(2)}", vertex + Vector2(0.0, height * 0.1))
-        drawer.text("abs(a • b) = ${abs(vector(angleA, Vector2.ZERO, length).normalized.dot(vector(angleB, Vector2.ZERO, length).normalized).round(2))}", vertex + Vector2(0.0, height * 0.125))
-        drawer.text("a x️ b = ${vector(angleA, Vector2.ZERO, length).normalized.cross(vector(angleB, Vector2.ZERO, length).normalized).round(2)}", vertex + Vector2(0.0, height * 0.15))
-        drawer.text("abs(a x️ b) = ${abs(vector(angleA, Vector2.ZERO, length).normalized.cross(vector(angleB, Vector2.ZERO, length).normalized).round(2))}", vertex + Vector2(0.0, height * 0.175))
+        drawer.text("a • b = ${vectorA.normalized.dot(vectorB.normalized).round(2)}", vertex + Vector2(0.0, height * 0.1))
+        drawer.text("abs(a • b) = ${abs(vectorA.normalized.dot(vectorB.normalized).round(2))}", vertex + Vector2(0.0, height * 0.125))
+        drawer.text("a x️ b = ${vectorA.normalized.cross(vectorB.normalized).round(2)}", vertex + Vector2(0.0, height * 0.15))
+        drawer.text("abs(a x️ b) = ${abs(vectorA.normalized.cross(vectorB.normalized).round(2))}", vertex + Vector2(0.0, height * 0.175))
       }
-
-      drawer.text("all vector calculations are performed on normalized vector quantities", width * 0.25, height * 0.05)
+      drawer.text("all vector calculations are performed on NON-normalized vector quantities", width * 0.25, height * 0.05)
     }
   }
 }

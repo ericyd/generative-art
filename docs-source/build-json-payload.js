@@ -22,5 +22,5 @@ const document = {
   images: json
 }
 
-// fs.writeFileSync('./docs/images.json', JSON.stringify(document))
-fs.writeFileSync('./docs/images.json', JSON.stringify(document, null, 2))
+fs.writeFileSync('./docs/images.json', JSON.stringify(document))
+// fs.writeFileSync('./docs/images.json', JSON.stringify(document, null, 2))

@@ -103,7 +103,7 @@ fun main() = application {
         this.strokeWeight = 0.10
         this.fill = null
 
-        this.lineStrip(line.smoothLine.movingWindow(3))
+        this.lineStrip(line.smoothLine.movingAverage(3))
         // // Uncomment this line if you want to see the individual "nodes" - can be useful for visualizing the effects of the algorithm
         // drawer.circles(line.nodes.map { it.position }, 3.0)
 

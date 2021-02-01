@@ -33,8 +33,11 @@ class FractalizedLine(var points: List<Vector2>, private val rng: Random = Rando
       return segments
     }
 
-  val shape: ShapeContour
+  val contour: ShapeContour
     get() = ShapeContour(segments, true)
+
+  val smoothLine: SmoothLine
+    get() = SmoothLine(points)
 
   /**
    * Recursively subdivide the points using perpendicular offset

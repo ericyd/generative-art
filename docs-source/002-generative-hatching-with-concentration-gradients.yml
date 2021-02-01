@@ -1,0 +1,12 @@
+title: Generative hatching with concentration gradients
+imageSeries:
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1607197826/2020-12-05T13.46.16-seed-938821407_qhxnws.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1607197826/2020-12-05T13.46.16-seed-938821407_qhxnws.png
+description: >
+  Still aiming for the cool 3D effects shown by <a href='https://www.instagram.com/piterpasma/'>@piterpasma (instagram)</a>,
+  but without actually using 3D. This version uses a concept of 'concentration gradients' to create the distribution of hashes.
+  It is pretty flexible - you can either define a radial gradient or bilinear gradient to determine where the hashes are dense
+  and where they are spread out.
+sourceCodeLink: https://github.com/ericyd/generative-art/blob/1099ce9a1359d2973146b5120c4f15ba0b2776ea/openrndr/src/main/kotlin/sketch/S14_Hatching5.kt
+comments:
+createdAt: 2020-12-05

@@ -1,0 +1,9 @@
+title: Space in my body
+id: space-in-my-body
+imageSeries:
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1610072964/2021-01-07T20.12.01-seed-99178672_bdw5oe.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1610072964/2021-01-07T20.12.01-seed-99178672_bdw5oe.png
+description: This was a really fun sketch to develop. It is heavily influenced by one of my favorite artists on Instagram, <a href='https://www.instagram.com/jetsyart/'>jetsyart</a>. They do not use generative methods but I find their asthetic to be very inspirational. My version is based on a pointillism concept and relatively simple, but I was happy with how it turned out.
+sourceCodeLink: https://github.com/ericyd/generative-art/blob/69ef7640ba493f4c9fc3c8c7a07004ad82da64d8/openrndr/src/main/kotlin/sketch/S21_SpaceInMyBody.kt
+comments:
+createdAt: 2021-01-07

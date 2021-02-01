@@ -1,0 +1,12 @@
+title: Electric Eye
+imageSeries:
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1607818933/good-2020-12-12T18.08.19-seed-1617241088_yvcnk6.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1607818933/good-2020-12-12T18.08.19-seed-1617241088_yvcnk6.png
+description: >
+  Using a fractal-subdivision algorithm inspired by
+  <a href='http://rectangleworld.com/blog/archives/462'>Rectangle World</a>,
+  and additive blending + blur post effects, we make...
+  The Electric Eye! (More in-depth description of algorithm in source code.)
+sourceCodeLink: https://github.com/ericyd/generative-art/blob/7c152cc5a2d4e29d6713d9d1f2c151046b27a478/openrndr/src/main/kotlin/sketch/S20_ElectricEye.kt
+comments:
+createdAt: 2020-12-12

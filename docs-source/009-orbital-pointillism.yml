@@ -1,0 +1,22 @@
+title: Orbital pointillism
+imageSeries:
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1610319118/2021-01-10T15.34.54-seed-1859366810_kh3iwv.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1610319118/2021-01-10T15.34.54-seed-1859366810_kh3iwv.png
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1610319123/2021-01-10T15.34.59-seed-1319521965_qdp1oa.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1610319123/2021-01-10T15.34.59-seed-1319521965_qdp1oa.png
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1610319117/2021-01-10T15.35.14-seed-458649401_zuqer4.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1610319117/2021-01-10T15.35.14-seed-458649401_zuqer4.png
+description: >
+  Tyler Hobbes is obviously an amazing artist.
+  While I was appreciating one of his pieces the other day,
+  I realized how his use of negative space in flow fields creates a really distinct texture for a piece.
+  Many flow field algorithms will produce lines that overlap and intersect at various places.
+  That can be a great look, but creating negative space between lines (or in this case, points)
+  can really emphasis certain aspects of the flow field and draw attention to different details.
+  I used the same pointillism code that I used in my previous post but used an orbital flow field
+  algorithm I developed a few months ago to create a pointillism flow field that I was really pleased with.
+  It's always fun when a piece has so many good variations that it's hard to pick a final few renderings.
+  This was just such a piece!!
+sourceCodeLink: https://github.com/ericyd/generative-art/blob/8c8c3cdcb43be10c76df54b66651eeccc8db55ab/openrndr/src/main/kotlin/sketch/flow/F19_OrbitNoOverlap.kt
+comments:
+createdAt: 2021-01-10

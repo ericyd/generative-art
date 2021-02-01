@@ -28,3 +28,5 @@ lib
 # Generated from OpenRNDR `Screenshots` extension
 screenshots
 .DS_Store
+
+node_modules

@@ -1,0 +1,13 @@
+title: Orbital curl-ism
+imageSeries:
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1610722779/2021-01-15T08.57.19-seed-1457615494_dkspgf.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1610722779/2021-01-15T08.57.19-seed-1457615494_dkspgf.png
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1610722803/2021-01-15T08.57.40-seed-1451363752_nhouyw.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1610722803/2021-01-15T08.57.40-seed-1451363752_nhouyw.png
+description: >
+  I was really pleased with my last piece and wanted to riff on it.
+  The flow field algorithm used here is a combination of my 'orbital'
+  flow used in my last work and curl noise. Enjoy! 👨🏼‍🍳
+sourceCodeLink: https://github.com/ericyd/generative-art/blob/e28d1b9f3cc358a58d7d43dee5dcf2bd51f931a0/openrndr/src/main/kotlin/sketch/flow/F20_OrbitCurlNoOverlap.kt
+comments:
+createdAt: 2021-01-15

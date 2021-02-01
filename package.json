@@ -1,0 +1,26 @@
+{
+  "name": "generative-art",
+  "version": "1.0.0",
+  "description": "Built with [Nannou][], [Processing][], and [OpenRNDR][]",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ericyd/generative-art.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ericyd/generative-art/issues"
+  },
+  "homepage": "https://github.com/ericyd/generative-art#readme",
+  "devDependencies": {
+    "yaml": "^1.10.0"
+  }
+}

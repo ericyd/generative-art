@@ -244,9 +244,19 @@
             const params = (new URL(window.location)).searchParams
             params.set("page", pageNum)
             history.replaceState(null, null, `?${params.toString()}`)
+            // clear active class from all pagination buttons, then add to current
+            document.querySelectorAll(".pagination-btn").forEach(el => el.classList.remove("active"))
+            e.target.classList.add("active")
           })
           pageBtn.appendChild(document.createTextNode(pageNum.toString()))
           document.getElementById("pagination").appendChild(pageBtn)
+        })
+
+        // add active class to selected page on load
+        document.querySelectorAll(".pagination-btn").forEach((el, i) => {
+          if (i + 1 === requestedPage || (requestedPage === 0 && i === 0)) {
+            el.classList.add("active")
+          }
         })
       }
 

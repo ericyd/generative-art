@@ -165,9 +165,15 @@ a:link {
   height: 3em;
   border-radius: 1.5em;
   border: 1px solid var(--font-color);
+  color: var(--font-color);
   margin: 1em;
   background: var(--bg-color);
   cursor: pointer;
+}
+
+.pagination-btn.active {
+  background: var(--font-color);
+  color: var(--bg-color);
 }
 
 footer {

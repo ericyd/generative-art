@@ -5,6 +5,7 @@ import org.openrndr.math.YPolarity
 import org.openrndr.shape.LineSegment
 import org.openrndr.shape.Segment
 import org.openrndr.shape.ShapeContour
+import util.angularDifference
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.atan2
@@ -125,30 +126,18 @@ class MeanderingRiver(
 
   /**
    * use atan2 b/c cross product doesn't work so well for this implementation
-   * get the difference in orientation between the segment and the next segment
+   * get the average difference in orientation between a list of segments
    */
   private fun averageCurvature(segments: List<Segment>): Double {
     val diffs = segments.mapIndexedNotNull { index, segment ->
       if (index == segments.size - 1) {
         null
       } else {
-        val diff = orientation(segments[index + 1]) - orientation(segment)
-        // when crossing the π/-π threshold, the difference will be large even though the angular difference is small.
-        // We can adjust for this special case by adding 2π to the negative value
-        when {
-          abs(diff) > PI && orientation(segments[index + 1]) > 0.0 -> orientation(segments[index + 1]) - (orientation(segment) + 2.0 * PI)
-          abs(diff) > PI && orientation(segments[index]) > 0.0 -> (orientation(segments[index + 1]) + 2.0 * PI) - orientation(segment)
-          else -> diff
-        }
+        angularDifference(segments[index + 1], segment)
       }
     }
     return diffs.sum() / diffs.size.toDouble()
   }
-
-  /**
-   * @return angle in radians in range [-π, π]
-   */
-  private fun orientation(s: Segment): Double = atan2(s.end.y - s.start.y, s.end.x - s.start.x)
 
   /**
    * Detect segments that are spatially close but but not close in index.

@@ -1,3 +1,10 @@
+/*
+TODO: Would be cool to implement a "masonry" layout (i.e. staggered cards)
+that way, images with very long descriptions wouldn't really matter, they could still be inline with the flow
+https://www.smashingmagazine.com/2021/02/things-you-can-do-with-css-today/
+
+oh... lol, it isn't supported yet. Well, maybe in the future
+*/
 * {
   box-sizing: border-box;
 }

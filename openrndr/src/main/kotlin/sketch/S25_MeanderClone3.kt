@@ -40,6 +40,7 @@ fun main() = application {
     // Seed is the basis for all our randomization, because it is used to create a seeded RNG (Random(seed))
     var seed = random(0.0, Int.MAX_VALUE.toDouble()).toInt()
     // seed = 1633427433
+    // seed = 1243183535
     println("seed = $seed")
     val rng = Random(seed)
 

@@ -9,7 +9,6 @@ package sketch
 
 import org.openrndr.application
 import org.openrndr.color.ColorRGBa
-import org.openrndr.color.hsla
 import org.openrndr.draw.isolated
 import org.openrndr.extensions.Screenshots
 import org.openrndr.extra.noise.random
@@ -19,8 +18,6 @@ import org.openrndr.extras.color.palettes.colorSequence
 import org.openrndr.math.Vector2
 import org.openrndr.math.map
 import org.openrndr.shape.Rectangle
-import org.openrndr.shape.Segment
-import org.openrndr.shape.Shape
 import org.openrndr.shape.ShapeContour
 import shape.FractalizedLine
 import shape.meanderRiver
@@ -41,6 +38,8 @@ fun main() = application {
     var seed = random(0.0, Int.MAX_VALUE.toDouble()).toInt()
     // seed = 1633427433
     // seed = 1243183535
+    // seed = 347936398
+    // seed = 1692932679 // <-- used in posted images
     println("seed = $seed")
     val rng = Random(seed)
 
@@ -76,16 +75,18 @@ fun main() = application {
     val noiseScale = hypot(width * 0.5, height * 0.5) * 0.2
 
     val river = meanderRiver {
-      this.points = FractalizedLine(listOf(Vector2(width * -0.1, height * 0.5), Vector2(width * 1.1, height * 0.5)), rng).perpendicularSubdivide(10, 0.3).points
-      this.meanderStrength = { 50.0 }
-      this.curvatureScale = 10
-      this.tangentBitangentRatio = { pt -> map(-1.0, 1.0, 0.3, 0.7, simplex(seed, (pt ?: Vector2.ONE) / noiseScale)) }
+      this.points = FractalizedLine(listOf(Vector2(width * -0.1, height * 0.5), Vector2(width * 1.1, height * 0.5)), rng).perpendicularSubdivide(10, 0.5).points
+      this.meanderStrength = { 40.0 }
+      this.curvatureScale = { pt -> map(-1.0, 1.0, 5.0, 65.0, simplex(seed, pt / noiseScale)).toInt() }
+      this.tangentBitangentRatio = { pt -> map(-1.0, 1.0, 0.2, 0.8, simplex(seed, pt / noiseScale)) }
       this.smoothness = 5
       this.oxbowShrinkRate = 10.0
-      this.curveMagnitude = { pt -> map(-1.0, 1.0, 0.25, 7.5, simplex(seed, (pt ?: Vector2.ONE) / noiseScale)) }
+      this.pointTargetDistance = { pt -> map(-1.0, 1.0, 0.5, 4.5, simplex(seed, pt / noiseScale)) }
+      this.firstFixedPointPct = 0.01
+      this.lastFixedPointPct = 0.99
     }
 
-    val layerSize = 12
+    val layerSize = 26
     val historicalRecord = mutableListOf<Pair<ColorRGBa, ShapeContour>>()
     var channels = mutableListOf<ShapeContour>()
 
@@ -93,13 +94,27 @@ fun main() = application {
     var drawIndex = 1
 
     fun channelsToContour(channels: List<ShapeContour>): ShapeContour {
-      val first = channels.first().clockwise.segments
-      val last = channels.last().counterClockwise.segments
-      // val segments = first + listOf(Segment(first.last().end, last.first().start)) + last + listOf(Segment(last.last().end, first.first().start))
-      val short = if (first.size > last.size) last else first
-      val long = if (first.size > last.size) first else last
-      val segments = short + listOf(Segment(short.last().end, long.first().start)) + long + listOf(Segment(long.last().end, short.first().start))
-      return ShapeContour(segments, closed = true)
+      val first = channels.first().counterClockwise
+      var i = channels.size - 1
+      var last = channels[i].clockwise
+
+      // This will reduce the number of large lakes, but also introduce lots of gaps
+      // while (i > 0 && abs(last.length - first.length) > 200.0) {
+      //   i--
+      //   last = channels[i].clockwise
+      // }
+      // if (abs(last.length - first.length) > 200.0) {
+      //   return ShapeContour(first.segments, closed = false)
+      // }
+
+      // Sometimes the first and last contours don't match up correctly.
+      // ShapeContour doesn't allow this, but we don't really care for our purposes,
+      // so we can just draw an open ShapeContour of the first line. It will just look like one edge of the shape
+      return try {
+        ShapeContour(first.segments + last.segments, closed = true)
+      } catch (e: IllegalArgumentException) {
+        ShapeContour(first.segments, closed = false)
+      }
     }
 
     extend {
@@ -144,16 +159,16 @@ fun main() = application {
 
       // draw active channel
       drawer.isolated {
-        if (channels.size > 0) {
+        if (channels.isNotEmpty()) {
           fill = spectrum.index(pct)
           stroke = border
           contour(channelsToContour(channels))
         }
       }
 
-      if (screenshots.captureEveryFrame) {
-        seed = random(0.0, Int.MAX_VALUE.toDouble()).toInt()
+      if (true && frameCount % 300 == 0) {
         screenshots.name = "screenshots/$progName/${timestamp()}-seed-$seed.png"
+        screenshots.trigger()
       }
     }
   }

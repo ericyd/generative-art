@@ -6,9 +6,7 @@ import org.openrndr.shape.LineSegment
 import org.openrndr.shape.Segment
 import org.openrndr.shape.ShapeContour
 import util.angularDifference
-import kotlin.math.PI
 import kotlin.math.abs
-import kotlin.math.atan2
 import kotlin.math.ceil
 
 typealias Polyline = List<Vector2>
@@ -29,21 +27,27 @@ typealias Polyline = List<Vector2>
  * @param meanderStrength The length of the meander influence vector
  * @param curvatureScale The number of adjacent segments to evaluate when determining the curvature at a point in a contour
  * @param oxbowShrinkRate The rate at which oxbows shrink
- * @param curveMagnitude Larger curveMagnitude will make the meanders larger
+ * @param pointTargetDistance The target distance between points when adjusting the spacing
  * @param oxbowNearnessMetric Segments that are closer together than this metric will be cut into an oxbow, unless the indices are closer than `indexNearnessMetric`
+ * @param shouldSmooth when false, no smoothing will occur
+ * @param firstFixedPointPct before this percentage down the channel, all points are fixed
+ * @param lastFixedPointPct after this percentage down the channel, all points are fixed
  */
 class MeanderingRiver(
   var channel: ShapeContour,
   var oxbows: MutableList<ShapeContour>,
-  val tangentBitangentRatio: (Vector2?) -> Double,
-  val meanderStrength: (Vector2?) -> Double,
-  val curvatureScale: Int,
+  val tangentBitangentRatio: (Vector2) -> Double,
+  val meanderStrength: (Vector2) -> Double,
+  val curvatureScale: (Vector2) -> Int,
   val oxbowShrinkRate: Double,
   val smoothness: Int,
-  val curveMagnitude: (Vector2?) -> Double,
-  val oxbowNearnessMetric: Double
+  val pointTargetDistance: (Vector2) -> Double,
+  val oxbowNearnessMetric: Double,
+  val shouldSmooth: Boolean,
+  val firstFixedPointPct: Double,
+  val lastFixedPointPct: Double,
 ) {
-  val indexNearnessMetric = ceil(curvatureScale * 1.5).toInt()
+  val indexNearnessMetric = ceil(curvatureScale(Vector2.ONE) * 1.5).toInt()
   val contours: List<ShapeContour>
     get() = listOf(channel) + oxbows
   val points: Polyline
@@ -74,8 +78,10 @@ class MeanderingRiver(
       }
 
   // chaikinSmooth(points, smoothness) adds points to increase smoothness. Might be worth experimenting with at some point
-  private fun smooth(points: Polyline): Polyline =
-    SmoothLine(points).movingAverage(smoothness)
+  private fun smooth(points: Polyline): Polyline = when {
+    shouldSmooth -> SmoothLine(points).movingAverage(smoothness)
+    else -> points
+  }
 
   /**
    * Calculate the "meandering forces" at each point, then apply the forces and create a new contour based on the updated values
@@ -87,8 +93,8 @@ class MeanderingRiver(
     // split the segments into 3 parts.
     // The first and third parts do not move (stops the line from going offscreen a lot)
     // The middle part is the only part that meanders
-    val firstFixedIndex = (segments.size * 0.05).toInt()
-    val lastFixedIndex = (segments.size * 0.85).toInt()
+    val firstFixedIndex = (segments.size * firstFixedPointPct).toInt()
+    val lastFixedIndex = (segments.size * lastFixedPointPct).toInt()
     val firstFixedPoints = segments.subList(0, firstFixedIndex).map { it.start }
     val lastFixedPoints = segments.subList(lastFixedIndex, segments.size).map { it.start } + segments.last().end
     val middleSegments = segments.subList(firstFixedIndex, lastFixedIndex)
@@ -109,8 +115,8 @@ class MeanderingRiver(
   private fun influence(segment: Segment, i: Int, segments: List<Segment>): Vector2 {
     val tangent = tangent(segment)
     // Use surrounding segments to determine curvature
-    val min = if (i < curvatureScale) 0 else i - curvatureScale
-    val max = if (i > segments.size - curvatureScale) segments.size else i + curvatureScale
+    val min = if (i < curvatureScale(segment.start)) 0 else i - curvatureScale(segment.start)
+    val max = if (i > segments.size - curvatureScale(segment.start)) segments.size else i + curvatureScale(segment.start)
     val curvature = averageCurvature(segments.subList(min, max))
     // in openrndr, positive rotation is clockwise. But, I have no intuition around YPolarity because it depends on which way the vector is pointing, and it all gets very confusing very fast
     val polarity = if (curvature < 0.0) YPolarity.CCW_POSITIVE_Y else YPolarity.CW_NEGATIVE_Y
@@ -196,7 +202,7 @@ class MeanderingRiver(
         }
 
         val next = polyline[index + 1]
-        val targetDist = curveMagnitude(point)
+        val targetDist = pointTargetDistance(point)
         val distance = next.distanceTo(point)
 
         // If too far apart, add a midpoint
@@ -253,8 +259,9 @@ class MeanderingRiver(
  * @param meanderStrength The length of the meander influence vector
  * @param curvatureScale The number of adjacent segments to evaluate when determining the curvature at a point in a contour
  * @param oxbowShrinkRate The rate at which oxbows shrink
- * @param curveMagnitude Larger curveMagnitude will make the meanders larger
+ * @param pointTargetDistance The target distance between points when adjusting the spacing
  * @param oxbowNearnessMetric Segments that are closer together than this metric will be cut into an oxbow, unless the indices are closer than `indexNearnessMetric`
+ * @param shouldSmooth when false, no smoothing will occur
  */
 class MeanderingRiverBuilder {
   var channel: ShapeContour = ShapeContour.fromPoints(listOf(Vector2.ZERO, Vector2.ONE), closed = false)
@@ -269,18 +276,21 @@ class MeanderingRiverBuilder {
   var end: Vector2? = null
   var nSegments: Int? = null
   var oxbows: MutableList<ShapeContour> = mutableListOf()
-  var tangentBitangentRatio: (Vector2?) -> Double = { 0.5 }
-  var meanderStrength: (Vector2?) -> Double = { 10.0 }
-  var curvatureScale: Int = 3
+  var tangentBitangentRatio: (Vector2) -> Double = { 0.5 }
+  var meanderStrength: (Vector2) -> Double = { 10.0 }
+  var curvatureScale: (Vector2) -> Int = { 3 }
   var oxbowShrinkRate: Double = 2.0
   var smoothness: Int = 5
-  var curveMagnitude: (Vector2?) -> Double = { 5.0 }
+  var pointTargetDistance: (Vector2) -> Double = { 5.0 }
   var oxbowNearnessMetric: Double = 10.0
+  var shouldSmooth: Boolean = true
+  var firstFixedPointPct: Double = 0.05
+  var lastFixedPointPct: Double = 0.85
 
   fun toMeanderingRiver(): MeanderingRiver =
     MeanderingRiver(
       channel, oxbows, tangentBitangentRatio, meanderStrength, curvatureScale, oxbowShrinkRate,
-      smoothness, curveMagnitude, oxbowNearnessMetric
+      smoothness, pointTargetDistance, oxbowNearnessMetric, shouldSmooth, firstFixedPointPct, lastFixedPointPct
     )
 }
 

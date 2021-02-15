@@ -43,11 +43,11 @@ fun main() = application {
       // vertical alternative
       // this.points = FractalizedLine(listOf(Vector2(width * 0.5, 0.0), Vector2(width * 0.5, height.toDouble())), rng).perpendicularSubdivide(10, 0.6).points
       this.meanderStrength = { 50.0 }
-      this.curvatureScale = 10
+      this.curvatureScale = { 10 }
       this.tangentBitangentRatio = { 0.550 }
       this.smoothness = 5
       this.oxbowShrinkRate = 10.0
-      this.curveMagnitude = { 2.50 }
+      this.pointTargetDistance = { 2.50 }
     }
 
     extend {

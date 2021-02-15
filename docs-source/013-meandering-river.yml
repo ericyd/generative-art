@@ -1,0 +1,36 @@
+title: Meandering River
+imageSeries:
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1613414537/2021-02-14T15.24.04-seed-1439963559_gvgxzk.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1613414537/2021-02-14T15.24.04-seed-1439963559_gvgxzk.png
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1613414535/2021-02-14T15.21.22-seed-1849979458_wgoa2e.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1613414535/2021-02-14T15.21.22-seed-1849979458_wgoa2e.png
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1613414549/2021-02-15T12.28.56-seed-1692932679_ag2hiy.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1613414549/2021-02-15T12.28.56-seed-1692932679_ag2hiy.png
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1613414550/2021-02-15T12.11.31-seed-1692932679_bzmhu6.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1613414550/2021-02-15T12.11.31-seed-1692932679_bzmhu6.png
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1613419398/2021-02-15T13.55.59-seed-1288818041_vdc6t7.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1613419398/2021-02-15T13.55.59-seed-1288818041_vdc6t7.png
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1613419408/2021-02-15T13.23.37-seed-359561763_s1zcxg.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1613419408/2021-02-15T13.23.37-seed-359561763_s1zcxg.png
+description: >
+  I've been working on various parts of this project for about a month and it felt like it was time to call it "done".
+  This project is original code, but not original concepts. I was incredibly inspired by
+  <a href="http://roberthodgin.com/project/meander">Meander by Robert Hodgin</a> (originally posted on Reddit <a href="https://www.reddit.com/r/Houdini/comments/glbj28/procedural_river_meander_map/">here</a>)
+  and used his description to write my own version. Almost every piece of generative art I've made has been based on concepts
+  I've found in others' works, so I don't find this to be unusual at all. Eventually I hope that I'll level up and be able
+  to create these types of ideas myself, but for now I'm plenty satisfied imitating others and taking a different spin on it.
+  All of these use the same underlying algorithm to creating the meandering river, but they utilize the result in different ways
+  (grouping into layers, adding color, duplicating various parts, etc).
+  The source code for these comes from a few different sketches:
+  <ul><li><a href="https://github.com/ericyd/generative-art/blob/665ac5d1c3dd20cea896cf35b10b5973fcbe6227/openrndr/src/main/kotlin/sketch/S24_MeanderClone2.kt">MeanderClone2</a></li>
+  <li><a href="https://github.com/ericyd/generative-art/blob/665ac5d1c3dd20cea896cf35b10b5973fcbe6227/openrndr/src/main/kotlin/sketch/S25_MeanderClone3.kt">MeanderClone3</a></li>
+  <li><a href="https://github.com/ericyd/generative-art/blob/1f5f916a6c78ea92bcc07ced47ac8063eba31f58/openrndr/src/main/kotlin/sketch/S26_MeanderClone4.kt">MeanderClone4</a></li>
+  </ul>
+  A fun extra: If you'd like to see the rivers animate, head over to Reddit! You can see two different videos
+  <a href="https://www.reddit.com/r/generative/comments/lbdhl6/another_meandering_river/">here</a>
+  and <a href="https://www.reddit.com/r/generative/comments/lfsl8t/pop_art_meandering_river/">here</a>.
+  My very first iteration is nice to just view the dynamics of the system: you can see that
+  <a href="https://www.reddit.com/r/generative/comments/l9t1kv/clone_of_meander_by_robert_hodgin/">here</a>
+sourceCodeLink: https://github.com/ericyd/generative-art/blob/665ac5d1c3dd20cea896cf35b10b5973fcbe6227/openrndr/src/main/kotlin/shape/MeanderingRiver.kt
+comments:
+createdAt: 2021-02-15

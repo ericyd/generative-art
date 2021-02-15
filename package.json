@@ -7,7 +7,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "build-docs": "node docs-source/build-json-payload.js"
+    "build": "node docs-source/build-json-payload.js"
   },
   "repository": {
     "type": "git",

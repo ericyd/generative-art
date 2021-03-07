@@ -1,0 +1,12 @@
+title: Canyon
+imageSeries:
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1615149217/canyon2-8bit-15-compression_hmgxvw.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1615149217/canyon2-8bit-15-compression_hmgxvw.png
+description: >
+  This is my very first 3D render ever! I followed
+  <a href="https://youtu.be/AMTglCOvKI8" target="_blank">this youtube tutorial</a>
+  to a T because I've never used Blender before and I didn't know what I was doing,
+  so my result looks basically identical to what the author created in the video.
+  Regardless, it was a fun experiment and I hope to do more explorations of Blender soon!
+comments:
+createdAt: 2021-03-06

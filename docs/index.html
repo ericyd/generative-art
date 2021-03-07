@@ -181,9 +181,11 @@
       description.appendChild(
         document.createElement("br")
       )
-      description.appendChild(
-        buildSourceCodeLink(sourceCodeLink)
-      )
+      if (sourceCodeLink) {
+        description.appendChild(
+          buildSourceCodeLink(sourceCodeLink)
+        )
+      }
       return description
     }
 

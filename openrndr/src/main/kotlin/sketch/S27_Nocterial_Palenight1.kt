@@ -56,7 +56,7 @@ fun main() = application {
 
     val screenshots = extend(Screenshots()) {
       quitAfterScreenshot = false
-      scale = 3.0
+      scale = 1.0
       captureEveryFrame = true
       name = "screenshots/$progName/${timestamp()}-seed-$seed.png"
     }

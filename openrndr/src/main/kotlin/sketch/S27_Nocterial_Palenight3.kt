@@ -56,7 +56,7 @@ fun main() = application {
 
     val screenshots = extend(Screenshots()) {
       quitAfterScreenshot = false
-      scale = 3.0
+      scale = 1.0
       captureEveryFrame = true
       name = "screenshots/$progName/${timestamp()}-seed-$seed.png"
     }
@@ -69,15 +69,15 @@ fun main() = application {
 
     extend {
       drawer.lineCap = LineCap.ROUND
-      drawer.strokeWeight = factor * 0.9
+      drawer.strokeWeight = factor * 0.85
 
       for (stripe in 0 until stripes) {
         var start = Vector2(cos(angle), sin(angle)) * hyp * 0.5
         start = start.perpendicular() * map(0.0, stripes.toDouble() - 1.0, -1.0, 1.0, stripe.toDouble())
         // fill the screen
-        // val absoluteEnd = Vector2(cos(angle), sin(angle)) * hyp * 2.0
+        val absoluteEnd = Vector2(cos(angle), sin(angle)) * hyp * 2.0
         // or, leave gaps at the end
-        val absoluteEnd = Vector2(cos(angle), sin(angle)) * hyp * random(0.85, 1.25, rng)
+        // val absoluteEnd = Vector2(cos(angle), sin(angle)) * hyp * random(0.85, 1.25, rng)
         var end = start + Vector2(cos(angle), sin(angle)) * random(0.0, hyp * 0.5)
         val gap = hyp * 0.07
 

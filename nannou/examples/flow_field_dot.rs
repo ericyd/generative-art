@@ -1,4 +1,4 @@
-// cargo run --release --example wip_flow_field2 -- --nx 150 --ny 150 --steps 350 --radius 2 --palette eric1 -g 20 --bodies 3
+// cargo run --release --example flow_field_dot -- --palette eric3
 extern crate chrono;
 extern crate nannou;
 
@@ -103,7 +103,7 @@ fn model(app: &App) -> Model {
     n_steps: args.get("steps", 400),
     bodies,
     dot_radius: args.get("radius", 3),
-    palette: args.get_string("palette", "random"),
+    palette: args.get_string("palette", "eric3"),
   }
 }
 

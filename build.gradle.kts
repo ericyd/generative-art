@@ -21,7 +21,7 @@ val orxFeatures = setOf(
 //  "orx-easing",
 //  "orx-file-watcher",
 //  "orx-parameters",
-//  "orx-filter-extension",
+  "orx-filter-extension",
   "orx-fx",
 //  "orx-glslify",
 //  "orx-gradient-descent",

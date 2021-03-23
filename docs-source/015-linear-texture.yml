@@ -1,0 +1,10 @@
+title: Linear Texture
+imageSeries:
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1616466446/2021-03-22T21.25.46-seed-1407025804_ky0iqu.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1616466446/2021-03-22T21.25.46-seed-1407025804_ky0iqu.png
+description: >
+  When I look back through the art I've made in the past year, I see a resounding <em>lack</em> of simplicity.
+  And yet, I value simplicity, so I tried to bring some into this piece.
+  If I wanted to sound fancy, I'd say "it's a study on texture".
+sourceCodeLink: https://github.com/ericyd/generative-art/blob/472b4903e54baca8f3efa934749da2326f2c489b/openrndr/src/main/kotlin/sketch/S28_VerticalLines.kt
+createdAt: 2021-03-22

@@ -1,0 +1,9 @@
+title: Circles in circle
+imageSeries:
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1616726330/2021-03-25T21.27.30-seed-48062633_wanz0q.png
+    # /c_scale,w_500
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1616726330/2021-03-25T21.27.30-seed-48062633_wanz0q.png
+description: >
+  More simple designs coming at you! No huge inspiration or anything here, I just have been wanting to do more simple designs
+sourceCodeLink: https://github.com/ericyd/generative-art/blob/ad495ee391d5933f9c40129a23a82fc89234ad8e/openrndr/src/main/kotlin/sketch/S29_CirclesInCircle.kt
+createdAt: 2021-03-25

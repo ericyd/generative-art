@@ -8,6 +8,7 @@ import org.openrndr.color.ColorRGBa
 import org.openrndr.color.hsl
 import org.openrndr.draw.isolated
 import org.openrndr.extensions.Screenshots
+import org.openrndr.extra.filterextension.extend
 import org.openrndr.extra.fx.dither.ADither
 import org.openrndr.extra.noise.random
 import org.openrndr.extra.noise.simplex
@@ -17,8 +18,6 @@ import shape.FractalizedLine
 import util.timestamp
 import kotlin.math.abs
 import kotlin.random.Random
-import org.openrndr.extra.filterextension.extend
-
 
 fun main() = application {
   configure {

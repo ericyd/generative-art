@@ -3,27 +3,57 @@ package util
 import org.openrndr.math.Vector2
 import org.openrndr.math.map
 
-/**
- * @param scale primary noise scale
- * @param influence the relative range of influence the noise function will play in the final mix. Both values must be in range [0.0, 1.0]
- * @param noiseFn the noise function for the mixable noise
- * @param ratioNoiseFn a function that determines how the noiseFn modulates spatially
- * @param ratioNoiseFnRange the range over which the ratioNoiseFn varies
- */
-class MixableNoise(val scale: Double, val influence: Pair<Double, Double>, val noiseFn: (Vector2) -> Vector2, val ratioNoiseFn: (Vector2) -> Double, val ratioNoiseFnRange: Pair<Double, Double> = -1.0 to 1.0) {
+class MixableNoise(
+  /**
+   * primary noise scale
+   */
+  val scale: Double,
+  /**
+   * primary noise scale
+   */
+  val influenceRange: Pair<Double, Double>,
+  /**
+   * the noise function for the mixable noise
+   */
+  val noiseFn: (Vector2) -> Vector2,
+  /**
+   * a function that determines how the noiseFn modulates spatially
+   */
+  val influenceNoiseFn: (Vector2) -> Double,
+  /**
+   * the range over which the ratioNoiseFn varies
+   */
+  val influenceNoiseFnRange: Pair<Double, Double> = -1.0 to 1.0,
+  /**
+   * scale for the influenceNoiseFn. Defaults to `scale` value
+   */
+  influenceScale: Double? = null
+) {
+  private val influenceScale = influenceScale ?: scale
   init {
-    if (influence.first < 0.0 || influence.second > 1.0) {
-      throw Exception("influence values must be in range [0.0, 1.0]. Got: $influence")
+    if (influenceRange.first < 0.0 || influenceRange.second > 1.0) {
+      throw Exception("influence values must be in range [0.0, 1.0]. Got: $influenceRange")
     }
   }
 
-  fun ratio(point: Vector2): Double = map(
-    ratioNoiseFnRange.first, ratioNoiseFnRange.second,
-    influence.first, influence.second,
-    ratioNoiseFn(point)
+  private fun influence(point: Vector2): Double = map(
+    influenceNoiseFnRange.first, influenceNoiseFnRange.second,
+    influenceRange.first, influenceRange.second,
+    influenceNoiseFn(point)
   )
 
-  fun eval(point: Vector2): Vector2 = noiseFn(point / scale) * ratio(point)
+  // do not normalize here!
+  fun eval(point: Vector2): Vector2 = noiseFn(point / scale) * influence(point / influenceScale)
+
+  override fun toString(): String =
+    """
+    MixableNoise(
+      scale = $scale,
+      influenceScale = $influenceScale,
+      influenceRange = $influenceRange,
+      influenceNoiseFnRange = $influenceNoiseFnRange
+    )
+    """.trimIndent()
 }
 
 class MixNoise(val noises: List<MixableNoise>) {

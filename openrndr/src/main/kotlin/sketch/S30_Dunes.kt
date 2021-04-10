@@ -121,16 +121,29 @@ fun main() = application {
 
     // will render these in order, then produce random versions afterwards
     val seedList = listOf<Int>(
-      // // These are some nice starter seeds!
+      // // These are some seeds!
       // 1629345285,
       // 1380165392,
       // 383392961,
       // 1099266297,
+      // 103892127,
+      // 1303362936,
+      // 216746526,
+      // 1099266297,
+      // 1299515037,
+      // 2019354023,
+      // 532051123,
+      // 411903119,
+      // 356158599,
+      // 1979567219,
+      // 1915933669,
+
       // // This seed has an odd artifact where subtle rays trace to the origin
       // // It actually looks kind of interesting but also suggests a bug!
       // 1811205709,
       // // this particular seed looks way cool with sharpEdges = true
       // seed = 1392132200
+
     )
 
     if (seedList.isNotEmpty()) {
@@ -151,7 +164,7 @@ fun main() = application {
     // demoMode goes a lot faster.... approx 1 render per minute
     // non-demo mode is much slower, approx 1 render per 10 minutes!!! 🤯
     // Best approach: generate some images you like using demoMode, then render a final result with the same seed
-    val demoMode = true
+    val demoMode = false
     val dotCount = if (demoMode) 100.0 else 1000.0
     val sizeRange = if (demoMode) 2.25 to 3.5 else 1.3 to 2.5
 
@@ -248,7 +261,7 @@ fun main() = application {
       rt.colorBuffer(0).saveToFile(targetFile, async = false)
 
       // if there are remaining seeds, advance in the list, otherwise generate
-      if (seedList.isNotEmpty() && seedList.indexOf(seed) != seedList.size - 1) {
+      if (seedList.isNotEmpty() && seedList.indexOf(seed) < seedList.size - 1) {
         seed = seedList[seedList.indexOf(seed) + 1]
       } else {
         seed = random(0.0, Int.MAX_VALUE.toDouble()).toInt()

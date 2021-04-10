@@ -24,7 +24,9 @@ import kotlin.random.Random
 fun main() = application {
   configure {
     width = 800
-    height = 1000
+    // height = 1000
+    // 11x17 aspect ratio
+    height = 1237
   }
 
   program {
@@ -45,7 +47,7 @@ fun main() = application {
     val progName = this.name.ifBlank { this.window.title.ifBlank { "my-amazing-drawing" } }
     val screenshots = extend(CustomScreenshots()) {
       quitAfterScreenshot = false
-      scale = 3.0
+      scale = 7.0
       name = "screenshots/$progName/${timestamp()}-seed-$seed.png"
       captureEveryFrame = true
     }
@@ -55,7 +57,7 @@ fun main() = application {
     val stepSize = 5
     val jitter = stepSize * 0.7
     val lineLength = 500
-    val opacity = 0.05
+    val opacity = 0.04
     val center = Vector2(width / 2.0, height / 2.0)
     val halfDiagonal = hypot(width / 2.0, height / 2.0)
     val noiseScales = listOf(1000.0, 100.0, 35.0)

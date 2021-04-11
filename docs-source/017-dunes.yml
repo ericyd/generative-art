@@ -1,0 +1,20 @@
+title: Dunes
+imageSeries:
+    # /c_scale,w_500
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1618178752/2021-04-08T14.29.54-seed-1553705800_oly0vo.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1618178752/2021-04-08T14.29.54-seed-1553705800_oly0vo.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1618178750/2021-04-09T14.18.00-8196000-points-seed-1392132200_kdfwkd.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1618178750/2021-04-09T14.18.00-8196000-points-seed-1392132200_kdfwkd.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1618178748/2021-04-07T11.33.27-seed-1020933038_skttxl.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1618178748/2021-04-07T11.33.27-seed-1020933038_skttxl.png
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1618178749/2021-04-08T13.41.15-seed-1970070282_lcqidt.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1618178749/2021-04-08T13.41.15-seed-1970070282_lcqidt.jpg
+description: >
+  This design is several months in the making.
+  Which is to say, I started this design a few months ago and then I'd spend about 5 minutes every week tinkering with it.
+  I almost gave up on it several times but I'm so happy I didn't because it became one of my favorite series I've worked on.
+  My initial concept was inspired by images of our galaxy, and some of the final renders evoke a galactic sentiment.
+  But the aesthetic that I appreciated even more was the fine, sand-like texture of the shapes. It reminded me of sand dunes
+  undulating and growing and eroding over time.
+sourceCodeLink: https://github.com/ericyd/generative-art/blob/3e71494a4e19d1bcb22870618e8d1b3b6b33fa03/openrndr/src/main/kotlin/sketch/S30_Dunes.kt
+createdAt: 2021-04-09

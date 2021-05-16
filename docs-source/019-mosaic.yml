@@ -1,0 +1,19 @@
+title: Mosaic
+imageSeries:
+    # /c_scale,w_500
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1621123560/2021-05-15T18.48.19-seed-210792187_pqwfxp.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1621123560/2021-05-15T18.48.19-seed-210792187_pqwfxp.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1621123560/2021-05-15T18.52.54-seed-1415266582_s1wcr4.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1621123560/2021-05-15T18.52.54-seed-1415266582_s1wcr4.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1621123560/2021-05-15T18.55.33-seed-599353856_soprrf.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1621123560/2021-05-15T18.55.33-seed-599353856_soprrf.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1621123561/2021-05-15T18.51.48-seed-700272972_raz5x6.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1621123561/2021-05-15T18.51.48-seed-700272972_raz5x6.jpg
+description: >
+  My goal with this was to create a pointillism piece where no natural unfilled space existed.
+  However, I wanted to utilize concepts from my previous pieces using non-overlapping points.
+  I ended up laying several of the same design, with slight jitter and variations so fill in extra space.
+  The color scheme and design was inspired by a landscape photo I saw, though of course it's been shifted quite a bit in the artistic process.
+  This is yet another piece where the texture was as, or more, interesting to me than any other aspect.
+sourceCodeLink: https://github.com/ericyd/generative-art/blob/c581026c76937bb85e5c40187ebb5e70b74d5bfd/openrndr/src/main/kotlin/sketch/flow/F24_Mosaic.kt
+createdAt: 2021-05-15

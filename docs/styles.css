@@ -144,16 +144,6 @@ a:link {
   .card {
     max-width: 50em;
   }
-
-  /* qualify this with .cards because in .card-detail the image-container can stay at 100% width */
-  .cards .image-container {
-    width: 60%;
-  }
-
-  .card .description {
-    width: 40%;
-    padding: 0 1em;
-  }
 }
 
 .pagination {

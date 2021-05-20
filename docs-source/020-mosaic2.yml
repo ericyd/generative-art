@@ -1,0 +1,17 @@
+title: Mosaic2
+imageSeries:
+    # /c_scale,w_500
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1621477880/2021-05-19T21.16.41-seed-682136510_g6fzbt.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1621477880/2021-05-19T21.16.41-seed-682136510_g6fzbt.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1621477879/2021-05-19T21.13.14-seed-180286083_rxmu5k.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1621477879/2021-05-19T21.13.14-seed-180286083_rxmu5k.jpg
+description: >
+  This is extremely similar to "Mosaic 1". Using a different flow field function and a different color scheme but otherwise identical.
+  Here's what I wrote about Mosaic 1:
+  "My goal with this was to create a pointillism piece where no natural unfilled space existed.
+  However, I wanted to utilize concepts from my previous pieces using non-overlapping points.
+  I ended up laying several of the same design, with slight jitter and variations so fill in extra space.
+  The color scheme and design was inspired by a landscape photo I saw, though of course it's been shifted quite a bit in the artistic process.
+  This is yet another piece where the texture was as, or more, interesting to me than any other aspect."
+sourceCodeLink: https://github.com/ericyd/generative-art/blob/19762b4ed16fc328202221e3604780ff959bc716/openrndr/src/main/kotlin/sketch/flow/F25_Mosaic2.kt
+createdAt: 2021-05-19

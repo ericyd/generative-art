@@ -25,21 +25,32 @@
 package sketch.flow
 
 import extensions.CustomScreenshots
+import noise.perlinCurl
+import noise.simplexCurl
 import org.openrndr.application
 import org.openrndr.color.ColorRGBa
 import org.openrndr.color.hsla
 import org.openrndr.draw.Drawer
 import org.openrndr.extensions.Screenshots
+import org.openrndr.extra.noise.cubicHermite
 import org.openrndr.extra.noise.gaussian
+import org.openrndr.extra.noise.perlin
+import org.openrndr.extra.noise.perlinHermite
 import org.openrndr.extra.noise.random
 import org.openrndr.extra.noise.simplex
+import org.openrndr.extra.shadestyles.RadialGradient
 import org.openrndr.extras.color.palettes.ColorSequence
 import org.openrndr.extras.color.palettes.colorSequence
 import org.openrndr.extras.color.presets.WHITE_SMOKE
 import org.openrndr.math.Vector2
+import org.openrndr.math.Vector3
 import org.openrndr.math.clamp
 import org.openrndr.math.map
 import org.openrndr.shape.Rectangle
+import shape.SimplexBlob
+import util.MixNoise
+import util.MixableNoise
+import util.grid
 import util.quantize
 import util.rotatePoint
 import util.timestamp
@@ -47,6 +58,7 @@ import java.util.*
 import kotlin.math.E
 import kotlin.math.PI
 import kotlin.math.absoluteValue
+import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.hypot
 import kotlin.math.log
@@ -62,9 +74,7 @@ fun main() = application {
     height = 1000
   }
 
-  data class CircleParams(val center: Vector2, val size: Int)
-
-  class FlowLine(var cursor: Vector2, val maxLength: Int, val field: (Vector2) -> Vector2, val spectrumFn: (Vector2) -> ColorRGBa, val bounds: Rectangle) {
+  class FlowLine(var cursor: Vector2, val maxLength: Int, val field: (Vector2) -> Vector2, val color: ColorRGBa, val bounds: Rectangle, val rng: Random) {
     var length = 1
     var isComplete: Boolean = false
     val currentLine = mutableListOf(cursor)
@@ -95,14 +105,71 @@ fun main() = application {
       if (bounds.contains(cursor)) {
         totalFilledPositions.add(cursor)
         currentLine.add(cursor)
-        // drawer.contour(SimplexBlob.pointBlob(cursor, rng, blobRadiusRange))
-        val color = spectrumFn(cursor)
-        drawer.stroke = color.shade(0.6)
-        // would be nice to randomly increase brightness with a low-probability chance
+
+        // wow... this makes for a convincing sphere effect but it's not the most attractive
+        // drawer.shadeStyle = RadialGradient(
+        //   color0 = color,
+        //   color1 = color.shade(0.9),
+        //   offset = Vector2(0.67),
+        //   rotation = PI / 4.0,
+        //   length = 0.25, // longer length makes gradient shrink...
+        // )
         drawer.fill = color
-        drawer.circle(cursor, collisionDistance * 0.55)
+        // drawer.circle(cursor, collisionDistance * 0.55)
+        drawer.contour(SimplexBlob.pointBlob(cursor, rng, collisionDistance * 0.25 to collisionDistance * 0.55))
       }
     }
+  }
+
+  // This is 100% copy/pasta from S30_Dunes - perhaps find a way to extract such a function?
+  // Define mixable noise function
+  fun generateMixable(width: Double, seed: Int, rng: Random): MixNoise {
+    val scale1 = width * random(0.8, 1.05, rng)
+    val epsilon1 = random(0.01, 0.5, rng)
+    val noiseFn1 = { v: Vector2 -> simplexCurl(seed, v, epsilon1) }
+    val noise1 = MixableNoise(
+      scale = scale1,
+      influenceScale = scale1 * 0.5,
+      influenceRange = 0.1 to 0.75,
+      noiseFn = noiseFn1,
+      influenceNoiseFn = { v: Vector2 -> simplex(seed, v * 2.0) },
+    )
+
+    val offset2 = random(0.0, 2.0 * PI, rng)
+    val noiseFn2 = { v: Vector2 ->
+      val angle = map(-1.0, 1.0, -PI + offset2, PI + offset2, perlinHermite(seed, v.x, v.y, atan2(v.y, v.x) / offset2))
+      Vector2(cos(angle), sin(angle))
+    }
+    val noise2 = MixableNoise(
+      scale = width * random(0.2, 0.4, rng),
+      noiseFn = noiseFn2,
+      influenceRange = 0.2 to 0.75,
+      influenceScale = width * random(0.025, 0.5, rng),
+      influenceNoiseFn = { v: Vector2 -> simplex(seed, v).pow(2.0) },
+      influenceNoiseFnRange = 0.0 to 1.0
+    )
+
+    val epsilon3 = random(0.01, 0.5, rng)
+    val chance3 = random(0.0, 1.0, rng) < 0.5
+    val offset3 = random(0.0, 2.0 * PI, rng)
+    val noiseFn3 = if (chance3) {
+      { v: Vector2 ->
+        val angle = map(-1.0, 1.0, -PI + offset3, PI + offset3, simplex(seed, v))
+        Vector2(cos(angle), sin(angle))
+      }
+    } else {
+      { v: Vector2 -> perlinCurl(seed, v, epsilon3) }
+    }
+    val noise3 = MixableNoise(
+      scale = width * random(0.035, 0.1, rng),
+      noiseFn = noiseFn3,
+      influenceRange = 0.1 to 0.75,
+      influenceScale = width * random(0.05, 0.8, rng),
+      influenceNoiseFn = { v: Vector2 -> perlin(seed, v).pow(2.0) },
+      influenceNoiseFnRange = 0.0 to 1.0
+    )
+
+    return MixNoise(listOf(noise1, noise2, noise3))
   }
 
   fun generateSpectrum(colors: List<ColorRGBa>, rng: Random? = null): ColorSequence {
@@ -119,11 +186,8 @@ fun main() = application {
     var seed = random(0.0, Int.MAX_VALUE.toDouble()).toInt()
 
     // good seeds go here 🙃
-    // seed = 210792187
-    // seed = 2062832415
-    // seed = 700272972
-    // seed = 1415266582
-    // seed = 599353856
+    seed = 682136510
+    seed = 180286083
 
     val progName = this.name.ifBlank { this.window.title.ifBlank { "my-amazing-drawing" } }
     val screenshots = extend(Screenshots()) {
@@ -137,6 +201,8 @@ fun main() = application {
       val rng = Random(seed)
       println("seed = $seed")
 
+      drawer.stroke = null
+
       //
       // Drawing params
       //
@@ -146,11 +212,12 @@ fun main() = application {
       // this is the minimum distance points must be apart in order to be drawn
       val collisionDistance = 8.0
 
+      val distributionNoiseScale = random(width * 0.6, width * 1.3, rng)
+
       //
       // Drawing bounds
       //
-      val boundsPct = 0.2
-      val gridScale = -0.1 // matted
+      val gridScale = -0.05 // matted
       // val gridScale = 0.2 // full bleed
       val w = width * (1.0 + gridScale * 2.0)
       val h = height * (1.0 + gridScale * 2.0)
@@ -160,43 +227,31 @@ fun main() = application {
         width = w,
         height = h,
       )
+      val gridSize = 5
+      val quantumX = w / (gridSize - 1.0)
+      val quantumY = h / (gridSize - 1.0)
 
       //
-      // Circle params
-      //
-      val numberOfCircles = random(60.0, 100.0, rng).toInt()
-      val circleParams = List(numberOfCircles) {
-        CircleParams(
-          Vector2(
-            random(width * -boundsPct, width * (1.0 + boundsPct), rng),
-            random(height * -boundsPct, height * (1.0 + boundsPct), rng),
-          ),
-          random(20.0, 60.0, rng).toInt()
-        )
-      }
-
-      val distributionNoiseScale = random(width * 0.6, width * 1.3, rng)
-
-      //
-      // COLORS
-      // Wow this ended up being way more work that I expected
+      // Colors
+      // lots going on here
       //
       val spectrum1 = generateSpectrum(listOf(
-        ColorRGBa.fromHex("dfe2e0"), // off-white
-        ColorRGBa.fromHex("67341e"), // brown
-        ColorRGBa.fromHex("e07024"), // light orange
-        ColorRGBa.fromHex("4f6459"), // gray-green
-        ColorRGBa.fromHex("cce2dd"), // light minty
-        ColorRGBa.fromHex("3e5468"), // gray-blue
-        ColorRGBa.fromHex("cad7ed"), // light-blue
-      ))
+        ColorRGBa.fromHex("ede9e8"),
+        ColorRGBa.fromHex("dbd7d6"),
+        ColorRGBa.fromHex("c1bbb4"),
+        ColorRGBa.fromHex("141313"),
+        ColorRGBa.fromHex("75625c"),
+        ColorRGBa.fromHex("421f1f"),
+      ), rng)
 
       val spectrum2 = generateSpectrum(listOf(
-        ColorRGBa.fromHex("b4cec8"), // light minty (modified from cce2dd)
-        ColorRGBa.fromHex("394856"), // gray-blue (modified from 3e5468)
-        ColorRGBa.fromHex("9eadc6"), // light-blue (modified from cad7ed)
-        ColorRGBa.fromHex("605880"), // purple-y
-      ))
+        ColorRGBa.fromHex("5d3e77"),
+        ColorRGBa.fromHex("7697d3"),
+        ColorRGBa.fromHex("5b80af"),
+        ColorRGBa.fromHex("514966"),
+        ColorRGBa.fromHex("8c75ad"),
+        ColorRGBa.fromHex("d38797"),
+      ), rng)
 
       val spectrumChance = random(0.0, 1.0, rng)
       val spectrumCenter = if (spectrumChance < 0.25) {
@@ -213,62 +268,17 @@ fun main() = application {
       val spectrumCenter2dist = random(hypot(w, h) * 0.25, hypot(w, h), rng)
       val spectrumCenter2 = Vector2(cos(spectrumCenter2angle), sin(spectrumCenter2angle)) * spectrumCenter2dist + Vector2(w, h) * 0.5
 
-      // Two paradigms:
-      // 1. Decide color spectrum inside the spectrumFn, which results in sharper lines
-      // 2. Make two discrete spectrumFns that use different spectrums, and assign to the FlowLine
-      // It took a damn while, but I believe I prefer #2
-      //
-      // val spectrumFn = { v: Vector2 ->
-      //   val dist1 = v.distanceTo(spectrumCenter)
-      //   val dist2 = v.distanceTo(spectrumCenter2)
-      //
-      //   val color = if (dist1 * (1.0 + simplex(seed, v / distributionNoiseScale) * 0.4) < dist2) {
-      //     val distPct = dist1 / hypot(width.toDouble(), height.toDouble())
-      //     val spectrumIndex = distPct + (simplex(seed, v / distributionNoiseScale * 0.5) + 1.0).pow(1.4) / 2.325 / 3.0 + // 3.0 is only necessary because this is adjusting the distPct
-      //       random(-0.05, 0.05, rng)
-      //     spectrum1.index(spectrumIndex)
-      //   } else {
-      //     // this bizarre adjustment ended up being a personal preference after testing logarithmic (base10 and base e), exponential, linear shift, and absolute value adjustments
-      //     val spectrumIndex = (simplex(seed, v / distributionNoiseScale * 0.5) + 1.0).pow(1.4) / 2.325 +
-      //       random(-0.05, 0.05, rng)
-      //     spectrum2.index(spectrumIndex)
-      //   }
-      //
-      //   if (random(0.0, 1.0, rng) < 0.1) {
-      //     color.shade(random(0.5, 2.5, rng))
-      //   } else {
-      //     color
-      //   }
-      // }
-
-      val spectrumFn1 = { v: Vector2 ->
-        val dist = v.distanceTo(spectrumCenter)
-
-        val distPct = dist / hypot(width.toDouble(), height.toDouble())
-        val spectrumIndex = distPct + (simplex(seed, v / distributionNoiseScale * 0.5) + 1.0).pow(1.4) / 2.325 / 3.0 + // 3.0 is only necessary because this is adjusting the distPct
-          random(-0.05, 0.05, rng)
-        val color = spectrum1.index(spectrumIndex)
-
-        if (random(0.0, 1.0, rng) < 0.1) {
-          val lightened = color.toHSLa().shade(random(0.5, 2.5, rng))
-          lightened.invoke(l = clamp(lightened.l, color.luminance, 0.9)).toRGBa()
-        } else {
-          color
-        }
+      val seed1 = seed / 2
+      val mixable = generateMixable(width.toDouble(), seed1, Random(seed1))
+      val flowFieldFn1 = { v: Vector2 ->
+        mixable.mix(v)
       }
 
-      val spectrumFn2 = { v: Vector2 ->
-        // this bizarre adjustment ended up being a personal preference after testing logarithmic (base10 and base e), exponential, linear shift, and absolute value adjustments
-        val spectrumIndex = (simplex(seed, v / distributionNoiseScale * 0.5) + 1.0).pow(1.4) / 2.325 +
-          random(-0.05, 0.05, rng)
-        val color = spectrum2.index(spectrumIndex)
-
-        if (random(0.0, 1.0, rng) < 0.1) {
-          val lightened = color.toHSLa().shade(random(0.5, 2.5, rng))
-          lightened.invoke(l = clamp(lightened.l, color.luminance, 0.9)).toRGBa()
-        } else {
-          color
-        }
+      val noiseScale2 = random(width * 0.4, width * 0.8, rng)
+      val flowFieldFn2 = { v: Vector2 ->
+        val noise = cubicHermite(seed * 2, Vector3(v.x, v.y, atan2(v.y, v.x)) / noiseScale2)
+        val angle = map(-1.0, 1.0, -PI, PI, noise)
+        Vector2(cos(angle), sin(angle))
       }
 
       drawer.clear(ColorRGBa.WHITE_SMOKE)
@@ -279,41 +289,61 @@ fun main() = application {
       for (n in 0..numberOfLayers) {
         val totalFilledPositions = mutableListOf<Vector2>()
 
-        val lines = mutableListOf<FlowLine>()
+        val buckets = List(gridSize * gridSize) {
+          mutableListOf<FlowLine>()
+        }
+        val bucketIndex = { x: Double, y: Double ->
+          y.toInt() * gridSize + x.toInt()
+        }
 
-        // draw lines
-        for (params in circleParams) {
-          val circleOffset = random(-collisionDistance, collisionDistance, rng)
-          // start point is based on random angle + radius
-          for (r in 1..params.size) {
-            val angle = random(-PI, PI, rng)
-            val radius = r * collisionDistance + circleOffset
-            val cursor = Vector2(cos(angle), sin(angle)) * radius + params.center
+        val stepSize = 2
+        grid(
+          rect = bounds,
+          stepSize
+        ) { v: Vector2 ->
+          val cursor = Vector2.gaussian(v, Vector2(stepSize * 0.5), rng)
 
-            val rotationAngle = if(random(0.0, 1.0, rng) < 0.5) PI / 100.0 else -PI / 100.0
-            val flowFieldFn = { v: Vector2 ->
-              rotatePoint(v, rotationAngle, about = params.center) - v
+          val lineLength = random(meanLineLength * 0.75, meanLineLength * 1.25, rng).toInt()
+
+          val dist1 = cursor.distanceTo(spectrumCenter)
+          val dist2 = cursor.distanceTo(spectrumCenter2)
+
+          val line = if (dist1 * (1.0 + simplex(seed, cursor / distributionNoiseScale) * 0.4) < dist2) {
+            val dist = v.distanceTo(spectrumCenter)
+
+            val distPct = dist / hypot(width.toDouble(), height.toDouble())
+            val spectrumIndex = distPct + (simplex(seed, v / distributionNoiseScale * 0.5) + 1.0).pow(1.4) / 2.325 / 3.0 + // 3.0 is only necessary because this is adjusting the distPct
+              random(-0.05, 0.05, rng)
+            var color = spectrum1.index(spectrumIndex)
+
+            if (random(0.0, 1.0, rng) < 0.1) {
+              val lightened = color.toHSLa().shade(random(0.5, 2.5, rng))
+              color = lightened.invoke(l = clamp(lightened.l, color.luminance, 0.9)).toRGBa()
             }
+            FlowLine(cursor, lineLength, flowFieldFn1, color, bounds, rng)
+          } else {
+            // this bizarre adjustment ended up being a personal preference after testing logarithmic (base10 and base e), exponential, linear shift, and absolute value adjustments
+            val spectrumIndex = (simplex(seed, v / distributionNoiseScale * 0.5) + 1.0).pow(1.4) / 2.325 +
+              random(-0.05, 0.05, rng)
+            var color = spectrum2.index(spectrumIndex)
 
-            val lineLength = random(meanLineLength * 0.75, meanLineLength * 1.25, rng).toInt()
-
-            // val line = FlowLine(cursor, lineLength, flowFieldFn, spectrumFn, bounds)
-
-            val dist1 = params.center.distanceTo(spectrumCenter)
-            val dist2 = params.center.distanceTo(spectrumCenter2)
-            val line = if (dist1 * (1.0 + simplex(seed, cursor / distributionNoiseScale) * 0.4) < dist2) {
-              FlowLine(cursor, lineLength, flowFieldFn, spectrumFn1, bounds)
-            } else {
-              FlowLine(cursor, lineLength, flowFieldFn, spectrumFn2, bounds)
+            if (random(0.0, 1.0, rng) < 0.1) {
+              val lightened = color.toHSLa().shade(random(0.5, 2.5, rng))
+              color = lightened.invoke(l = clamp(lightened.l, color.luminance, 0.9)).toRGBa()
             }
-
-            lines.add(line)
+            FlowLine(cursor, lineLength, flowFieldFn2, color, bounds, rng)
           }
 
-          //
-          // Draw flow lines
-          //
-          for (line in lines) {
+          val bucketX = quantize(quantumX, cursor.x + (width * gridScale)) / quantumX
+          val bucketY = quantize(quantumY, cursor.y + (height * gridScale)) / quantumY
+          buckets[bucketIndex(bucketX, bucketY)].add(line)
+        }
+
+        //
+        // Draw flow lines
+        //
+        for (bucket in buckets.shuffled(rng)) {
+          for (line in bucket.shuffled(rng)) {
             while (!line.isComplete) {
               line.move(totalFilledPositions, collisionDistance, drawer)
             }

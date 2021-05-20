@@ -140,6 +140,11 @@ a:link {
   margin: 1em auto;
 }
 
+.card-detail description {
+  padding: 2em;
+  max-width: 1200px;
+}
+
 @media screen and (min-width: 960px) {
   .card {
     max-width: 50em;

@@ -59,6 +59,7 @@ h2 {
   flex-direction: column;
   height: 100vh;
   justify-content: space-between;
+  padding: 1em;
 }
 
 .vert-spacer {
@@ -69,7 +70,6 @@ h2 {
   display: flex;
   align-items: flex-start;
   justify-items: center;
-  padding: 1em;
   flex-direction: column;
   margin: auto;
 }
@@ -151,7 +151,7 @@ a:link {
   }
 }
 
-.pagination {
+.load-more-container {
   display: flex;
   flex-flow: row wrap;
   align-items: center;
@@ -159,6 +159,18 @@ a:link {
   justify-items: center;
   width: 100%;
   margin: auto;
+}
+
+#load-more-btn {
+  width: 100%;
+  max-width: 300px;
+  height: 4em;
+  display: block;
+  font-size: 1em;
+  background: none;
+  border: 1px solid #000;
+  border-radius: 2em;
+  cursor: pointer;
 }
 
 .pagination-btn {
@@ -182,4 +194,16 @@ footer {
   text-align: center;
   width: 100%;
   padding: 2em 0;
+  font-size: 0.9em;
+}
+
+/*********************
+Utility
+**********************/
+.display-none {
+  display: none !important;
+}
+
+.text-align-center {
+  text-align: center;
 }

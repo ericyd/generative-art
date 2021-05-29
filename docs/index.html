@@ -18,7 +18,7 @@
       <h2 class="source">by eric</h2>
     </a>
     <h3 class="source">
-      made with <a href="https://openrndr.org/" target="_blank">OPENRNDR</a> and 
+      made with <a href="https://openrndr.org/" target="_blank">OPENRNDR</a> &amp; 
       <a href="https://github.com/ericyd/generative-art">
         <svg xmlns="http://www.w3.org/2000/svg"
         class="github-logo"
@@ -28,7 +28,9 @@
           rx="15%"
           fill="#1B1817"/>
           <path fill="#fff" d="M335 499c14 0 12 17 12 17H165s-2-17 12-17c13 0 16-6 16-12l-1-50c-71 16-86-28-86-28-12-30-28-37-28-37-24-16 1-16 1-16 26 2 40 26 40 26 22 39 59 28 74 22 2-17 9-28 16-35-57-6-116-28-116-126 0-28 10-51 26-69-3-6-11-32 3-67 0 0 21-7 70 26 42-12 86-12 128 0 49-33 70-26 70-26 14 35 6 61 3 67 16 18 26 41 26 69 0 98-60 120-117 126 10 8 18 24 18 48l-1 70c0 6 3 12 16 12z"/>
-        </svg></a> and ❤️</h3>
+        </svg></a> &amp; ❤️</h3>
+
+    <a href="https://ericyd.hashnode.dev/if-you-can-code-then-make-art-else-return-false" class="text-align-center"><em>Not sure what generative art is? Check out my blog post about it!</em></a>
 
     <div class="card-detail flex-col-center" id="card-detail">
       <!-- populated dynamically from data in images.json -->
@@ -38,8 +40,8 @@
       <!-- populated dynamically from data in images.json -->
     </div>
 
-    <div class="pagination" id="pagination">
-      <!-- populated dynamically from data in images.json -->
+    <div class="load-more-container">
+      <button id="load-more-btn">Load more</button>
     </div>
 
     <div class="vert-spacer"></div>
@@ -217,11 +219,15 @@
       }
     }
 
+    function hideLoadMoreButton() {
+      document.getElementById('load-more-btn').classList.add('display-none')
+    }
+
     /**
      * Generates pagination links and binds events to each.
      * @returns {Array<Image>} images for first page
      */
-    function paginate(images, size = 10, requestedPage = 1) {
+    function paginate(images, size = 10) {
       // returns an array of arrays, with each inner array representing a "page" of images with max length `size`
       const pages = images.reduce((accumulator, currentValue) => {
         if (accumulator.length === 0 || accumulator[accumulator.length - 1].length === size) {
@@ -231,41 +237,24 @@
         return accumulator
       }, [])
 
+      // alternative is to reverse the array but for such an infrequent operation it doesn't matter
+      const firstPage = pages.shift()
 
-      // Only add pagination buttons if there is more than 1 page
-      if (pages.length > 1) {
-        pages.forEach((page, index) => {
-          const pageBtn = document.createElement("button")
-          const pageNum = index + 1
-          pageBtn.classList.add("pagination-btn")
-          pageBtn.classList.add("source")
-          pageBtn.addEventListener('click', e => {
-            clearImages()
-            populateImages(page)
-            const params = (new URL(window.location)).searchParams
-            params.set("page", pageNum)
-            history.replaceState(null, null, `?${params.toString()}`)
-            // clear active class from all pagination buttons, then add to current
-            document.querySelectorAll(".pagination-btn").forEach(el => el.classList.remove("active"))
-            e.target.classList.add("active")
-          })
-          pageBtn.appendChild(document.createTextNode(pageNum.toString()))
-          document.getElementById("pagination").appendChild(pageBtn)
-        })
+      // load more button grabs next page of images and populates
+      const loadMoreBtn = document.getElementById('load-more-btn')
+      if (pages.length >= 1) {
+        loadMoreBtn.addEventListener('click', e => {
+          populateImages(pages.shift())
 
-        // add active class to selected page on load
-        document.querySelectorAll(".pagination-btn").forEach((el, i) => {
-          if (i + 1 === requestedPage || (requestedPage === 0 && i === 0)) {
-            el.classList.add("active")
+          if (pages.length === 0) {
+            hideLoadMoreButton()
           }
         })
+      } else {
+        hideLoadMoreButton()
       }
 
-      // page param is 1-indexed. Not sure if that's smart 🤔
-      if (requestedPage > pages.length || requestedPage < 1) {
-        return pages[0]
-      }
-      return pages[requestedPage - 1]
+      return firstPage
     }
 
     /**
@@ -295,6 +284,7 @@
      * @param {Image} image
      */
     function populateImageDetail(image) {
+      hideLoadMoreButton()
       const imageContainer = buildImageContainer(image, true, "src")
       const description = buildDescription(image.description, image.sourceCodeLink)
       const detailContainer = document.getElementById('card-detail')
@@ -322,8 +312,7 @@
             return populateImageDetail(requestedImage)
           }
 
-          const requestedPage = Number((new URL(window.location)).searchParams.get("page"))
-          const images = paginate(data.images, 10, requestedPage)
+          const images = paginate(data.images, 2)
           return populateImages(images)
         })
         .catch(console.error.bind(console));

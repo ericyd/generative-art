@@ -1,0 +1,19 @@
+title: Harmonograph
+id: harmonograph
+imageSeries:
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622067933/art/2020-04-12-harmonograph-1_blvpqg.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622067933/art/2020-04-12-harmonograph-1_blvpqg.png
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622067948/art/2020-04-12-harmonograph-2_awjtdd.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622067948/art/2020-04-12-harmonograph-2_awjtdd.png
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622067945/art/2020-04-12-harmonograph-3_t5hknk.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622067945/art/2020-04-12-harmonograph-3_t5hknk.png
+description: >
+  I made a programmatic harmonograph! This is one of my more "experiential" pieces - that is, it's more fun to play with it
+  than to look at it. There are two different versions available to play with. They are actually the same code but the layout
+  of the controls is different:
+  <a href="http://ericyd.com/line-art/harmonograph/" target="_blank">Harmonograph</a> and
+  <a href="http://ericyd.com/line-art/harmonograph2/" target="_blank">Harmonograph 2</a>
+sourceCodeLink: https://github.com/ericyd/line-art
+comments:
+createdAt: 2020-04-12
+

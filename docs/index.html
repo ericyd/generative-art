@@ -312,7 +312,7 @@
             return populateImageDetail(requestedImage)
           }
 
-          const images = paginate(data.images, 2)
+          const images = paginate(data.images, 10)
           return populateImages(images)
         })
         .catch(console.error.bind(console));

@@ -7,7 +7,7 @@ const json = imageFiles.map(filename => {
   const raw = fs.readFileSync(`./docs-source/${filename}`, 'utf8')
   const parsed = yaml.parse(raw)
   return Object.assign(parsed, {
-    id: filename.replace(/\d{3}-/, '').replace(path.extname(filename), ''),
+    id: filename.replace(/\d{3,8}-/, '').replace(path.extname(filename), ''),
     description: parsed.description.replace(/\n$/, '')
   })
 }).reverse() // reverse to maintain the right order of files

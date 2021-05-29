@@ -1,0 +1,31 @@
+
+title: Smoke
+id: smoke
+imageSeries:
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622068049/art/2020-04-27-smoke-dark_xzl26o.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622068049/art/2020-04-27-smoke-dark_xzl26o.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622067899/art/2020-04-27-smoke-light_mfrwcf.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622067899/art/2020-04-27-smoke-light_mfrwcf.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622068005/art/2020-05-01-smoke-panels_l4ogvz.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622068005/art/2020-05-01-smoke-panels_l4ogvz.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622067917/art/2020-04-25t14-55-15_000-blue-smoke-2_tlydqn.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622067917/art/2020-04-25t14-55-15_000-blue-smoke-2_tlydqn.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622067937/art/2020-04-25-blue-smoke1_fktqdb.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622067937/art/2020-04-25-blue-smoke1_fktqdb.jpg
+description: >
+  I imagine that there is a huge amount of generative art in the world that was inspired by DOGAMI's breathtaking poster
+  of <a href="https://www.oregongeology.org/pubs/ll/p-poster-willamette.htm" target="_blank">the Willamette River</a>.
+  (aside: I was born and raised in Oregon not far from where this Lidar data was collected!)
+  The "blue smoke" pieces are more clearly inspired by the color scheme, though the form is not very similar to a river system.
+  I realized that my output looked more like smoke and ended up creating a whole series of smoke pieces which I like very much.
+
+# TODO: update JS to handle array of sourceCodeLinks
+sourceCodeLinks:
+  - https://github.com/ericyd/generative-art-rs/blob/5f072452563a05ea9fa4e895336504654df5f971/examples/meander_smoke2.rs
+  - https://github.com/ericyd/generative-art-rs/blob/5f072452563a05ea9fa4e895336504654df5f971/examples/meander_smoke.rs
+  - https://github.com/ericyd/generative-art-rs/blob/5f072452563a05ea9fa4e895336504654df5f971/examples/meander_smoke3.rs
+
+comments:
+createdAt: 2020-04-12
+
+

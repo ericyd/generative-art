@@ -1,0 +1,17 @@
+
+title: Segmentation
+id: segmentation
+imageSeries:
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622067984/art/2020-04-20-segmentation-1_h4ebjb.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622067984/art/2020-04-20-segmentation-1_h4ebjb.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622067975/art/2020-04-21-segmentation-2_cubcad.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622067975/art/2020-04-21-segmentation-2_cubcad.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622067918/art/2020-04-22t15-54-19_000-segmentation-3_hbrukf.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622067918/art/2020-04-22t15-54-19_000-segmentation-3_hbrukf.jpg
+description: >
+  This was back when I was making art with Nannou and Rust.
+  My inspiration here was just to explore arc segmentation.
+  I think there is more to explore here but this is all I made at the time!
+sourceCodeLink: https://github.com/ericyd/generative-art-rs/blob/5f072452563a05ea9fa4e895336504654df5f971/examples/segmented_conch.rs
+comments:
+createdAt: 2020-04-12

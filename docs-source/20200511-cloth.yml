@@ -1,0 +1,23 @@
+
+title: Cloth
+id: cloth
+imageSeries:
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622068007/art/2020-04-28t20-40-01_000-cloth-1_cztsku.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622068007/art/2020-04-28t20-40-01_000-cloth-1_cztsku.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622067923/art/2020-05-11-cloth2_seed-68709_fzf4t0.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622067923/art/2020-05-11-cloth2_seed-68709_fzf4t0.jpg
+description: >
+  Attempting to make a cloth-like texture by using 3D perspective on a plane distorted with sine waves and noise.
+  Heavily inspired by <a href="https://www.instagram.com/p/B_c5_XnIBD9/" target="_blank">this piece on Instagram by @algorigraph</a>
+
+# TODO: update JS to handle array of sourceCodeLinks
+sourceCodeLinks:
+  - https://github.com/ericyd/generative-art-rs/blob/5f072452563a05ea9fa4e895336504654df5f971/examples/cloth.rs
+  - https://github.com/ericyd/generative-art-rs/blob/5f072452563a05ea9fa4e895336504654df5f971/examples/cloth2.rs
+
+comments:
+createdAt: 2020-04-12
+
+
+
+

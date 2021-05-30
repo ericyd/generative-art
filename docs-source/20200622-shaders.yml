@@ -1,0 +1,21 @@
+title: Shaders
+id: shaders
+imageSeries:
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622068004/art/2020-06-08-first_shader_vy6ooz.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622068004/art/2020-06-08-first_shader_vy6ooz.png
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622067940/art/2020-06-10-cellular_noise_2020-06-10_13-18-25_fhtps4.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622067940/art/2020-06-10-cellular_noise_2020-06-10_13-18-25_fhtps4.png
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622068019/art/2020-06-14-img_2020-06-14_13-57-37_gqivhn.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622068019/art/2020-06-14-img_2020-06-14_13-57-37_gqivhn.png
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622067924/art/2020-06-29-good_img_2020-06-25_10-40-48_seed-1146.942_mm3kli.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622067924/art/2020-06-29-good_img_2020-06-25_10-40-48_seed-1146.942_mm3kli.png
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622068007/art/2020-06-18_13-12-33_shader_k2ee0b.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622068007/art/2020-06-18_13-12-33_shader_k2ee0b.png
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622067993/art/2020-06-22-final__img_2020-06-22_15-47-20_seed-1146.942_srmkv6.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622067993/art/2020-06-22-final__img_2020-06-22_15-47-20_seed-1146.942_srmkv6.png
+description: >
+  TODO: write a description
+# TODO
+# sourceCodeLinks:
+comments:
+createdAt: 2020-06-22

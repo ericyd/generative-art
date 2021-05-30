@@ -1,0 +1,15 @@
+title: Watercolor
+id: watercolor
+imageSeries:
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622068015/art/2020-05-23T17-43-39-watercolor1_000_hdipxx.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622068015/art/2020-05-23T17-43-39-watercolor1_000_hdipxx.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622067913/art/2020-05-24T09-37-04-watercolor2_002__tuuitk.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622067913/art/2020-05-24T09-37-04-watercolor2_002__tuuitk.png
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622068003/art/2020-05-27T10-39-17-watercolor3_009_bvze0s.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622068003/art/2020-05-27T10-39-17-watercolor3_009_bvze0s.png
+description: >
+  TODO: write a description
+# TODO
+# sourceCodeLinks:
+comments:
+createdAt: 2020-05-27

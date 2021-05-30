@@ -1,0 +1,47 @@
+# Notes on titles, not sure if this matters rearlly
+# hex2: https://res.cloudinary.com/ericyd/image/upload/v1622067905/art/2020-05-15-hex2_yjyimd.jpg
+# autumn: https://res.cloudinary.com/ericyd/image/upload/v1622067913/art/2020-11-21T11.53.32-seed-1548490065_zqg6tk.png
+# triangulation-crystal: https://res.cloudinary.com/ericyd/image/upload/v1622067942/art/2020-04-29t22-10-28_000__fmh5mo.jpg
+# abstract-1: https://res.cloudinary.com/ericyd/image/upload/v1622067955/art/2020-04-30-nice4_vboz6g.jpg
+# abstract-4: https://res.cloudinary.com/ericyd/image/upload/v1622068000/art/2020-05-05-abstract4_mejkyo.jpg
+# shifting-boxes: https://res.cloudinary.com/ericyd/image/upload/v1622068014/art/2020-05-08-drifting_boxes_seed-72734_kkqasm.jpg
+# dripping-fruit: https://res.cloudinary.com/ericyd/image/upload/v1622068074/art/2020-04-26-dripping-fruit_nbrdnt.jpg
+# expando-blobs: https://res.cloudinary.com/ericyd/image/upload/v1622068034/art/2020-05-06-expando-blobs2_wdamul.jpg
+# walker: https://res.cloudinary.com/ericyd/image/upload/v1622068037/art/2020-07-15T15-51-56-walker_004__m3jnx4.png
+# flow-the-wave: https://res.cloudinary.com/ericyd/image/upload/v1622068048/art/2020-11-09-21.26.49-sure-sketch.S6_TheWave-seed-536719627_sdyaxr.png
+# flow-field-worley: https://res.cloudinary.com/ericyd/image/upload/v1622068063/art/2020-05-07-flow_field3_100x100_weight-padding-1.5-seed-8489_bw2mw1.jpg
+# disintegrating-column: https://res.cloudinary.com/ericyd/image/upload/v1622067915/art/2020-11-16-10.47.09-sketch.S9_DisintegratingColumn_kuke9z.png
+
+title: 2020 Miscellaneous
+id: 2020-misc
+imageSeries:
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622067905/art/2020-05-15-hex2_yjyimd.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622067905/art/2020-05-15-hex2_yjyimd.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622067913/art/2020-11-21T11.53.32-seed-1548490065_zqg6tk.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622067913/art/2020-11-21T11.53.32-seed-1548490065_zqg6tk.png
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622067942/art/2020-04-29t22-10-28_000__fmh5mo.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622067942/art/2020-04-29t22-10-28_000__fmh5mo.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622067955/art/2020-04-30-nice4_vboz6g.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622067955/art/2020-04-30-nice4_vboz6g.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622068000/art/2020-05-05-abstract4_mejkyo.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622068000/art/2020-05-05-abstract4_mejkyo.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622068014/art/2020-05-08-drifting_boxes_seed-72734_kkqasm.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622068014/art/2020-05-08-drifting_boxes_seed-72734_kkqasm.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622068074/art/2020-04-26-dripping-fruit_nbrdnt.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622068074/art/2020-04-26-dripping-fruit_nbrdnt.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622068034/art/2020-05-06-expando-blobs2_wdamul.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622068034/art/2020-05-06-expando-blobs2_wdamul.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622068037/art/2020-07-15T15-51-56-walker_004__m3jnx4.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622068037/art/2020-07-15T15-51-56-walker_004__m3jnx4.png
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622068048/art/2020-11-09-21.26.49-sure-sketch.S6_TheWave-seed-536719627_sdyaxr.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622068048/art/2020-11-09-21.26.49-sure-sketch.S6_TheWave-seed-536719627_sdyaxr.png
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622068063/art/2020-05-07-flow_field3_100x100_weight-padding-1.5-seed-8489_bw2mw1.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622068063/art/2020-05-07-flow_field3_100x100_weight-padding-1.5-seed-8489_bw2mw1.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622067915/art/2020-11-16-10.47.09-sketch.S9_DisintegratingColumn_kuke9z.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622067915/art/2020-11-16-10.47.09-sketch.S9_DisintegratingColumn_kuke9z.png
+description: >
+  This is all my art from 2020 that was just kinda random one-off pieces that I didn't want to categorize separately
+sourceCodeLink: https://github.com/ericyd/generative-art
+comments:
+createdAt: 2020-01-01
+

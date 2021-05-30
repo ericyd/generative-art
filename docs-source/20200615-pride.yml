@@ -1,0 +1,13 @@
+title: Pride
+id: pride
+imageSeries:
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622067930/art/2020-06-15-pride_aqwmna.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622067930/art/2020-06-15-pride_aqwmna.png
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622067973/art/2020-06-15_11-30-11-pride22_u2re9m.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622067973/art/2020-06-15_11-30-11-pride22_u2re9m.png
+description: >
+  TODO: write a description
+# TODO
+# sourceCodeLinks:
+comments:
+createdAt: 2020-06-15

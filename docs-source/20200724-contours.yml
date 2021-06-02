@@ -1,0 +1,25 @@
+title: Contours
+id: Contours
+imageSeries:
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622067947/art/2020-05-12-contours1-seed-63636_oiabyf.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622067947/art/2020-05-12-contours1-seed-63636_oiabyf.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622067957/art/2020-05-12-contours1-seed-57620_aa4czk.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622067957/art/2020-05-12-contours1-seed-57620_aa4czk.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622068033/art/2020-05-13-contours2-1_zfs5tr.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622068033/art/2020-05-13-contours2-1_zfs5tr.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622068047/art/2020-05-14-contours3_2020-05-14T18-19-52_000_qlqwv7.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622068047/art/2020-05-14-contours3_2020-05-14T18-19-52_000_qlqwv7.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622068032/art/2020-07-21-contours6_2020-07-21T22-40-21_000__ih7vmt.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622068032/art/2020-07-21-contours6_2020-07-21T22-40-21_000__ih7vmt.png
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622067976/art/2020-07-22-contours7_2020-07-22T10-06-37_000__cye9fu.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622067976/art/2020-07-22-contours7_2020-07-22T10-06-37_000__cye9fu.png
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622068142/art/2020-07-23-contours8_2020-07-22T18-18-46_000_rtkqxm.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622068142/art/2020-07-23-contours8_2020-07-22T18-18-46_000_rtkqxm.png
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622067991/art/2020-07-24-contours9_2020-07-24T12-29-12_000__tneak1.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622067991/art/2020-07-24-contours9_2020-07-24T12-29-12_000__tneak1.png
+description: >
+  TODO: write a description
+# TODO
+# sourceCodeLinks:
+comments:
+createdAt: 2020-07-24

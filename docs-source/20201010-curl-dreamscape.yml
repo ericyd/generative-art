@@ -1,0 +1,15 @@
+title: Curl dreamscape
+id: curl-dreamscape
+imageSeries:
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622067948/art/2020-10-10-16.48.22-sketch.flow.F11_CustomNoise3_pblp6r.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622067948/art/2020-10-10-16.48.22-sketch.flow.F11_CustomNoise3_pblp6r.png
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622067966/art/2020-10-08-22.10.50-sketch.flow.F9_CustomNoise_Dreamscape_ywcjyz.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622067966/art/2020-10-08-22.10.50-sketch.flow.F9_CustomNoise_Dreamscape_ywcjyz.png
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622067997/art/2020-10-08-22.06.29-sketch.flow.F9_CustomNoise_Dreamscape_z2jen3.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622067997/art/2020-10-08-22.06.29-sketch.flow.F9_CustomNoise_Dreamscape_z2jen3.png
+description: >
+  TODO: write a description
+# TODO
+# sourceCodeLinks:
+comments:
+createdAt: 2020-10-10

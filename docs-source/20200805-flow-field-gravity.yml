@@ -1,0 +1,23 @@
+title: Gravity flow fields
+id: Gravity flow fields
+imageSeries:
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622067976/art/2020-05-02-dotted-flow-field_vmiz1b.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622067976/art/2020-05-02-dotted-flow-field_vmiz1b.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622067983/art/2020-05-18-flow_field_gravity_2020-05-18T13-39-14_012_pfnybe.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622067983/art/2020-05-18-flow_field_gravity_2020-05-18T13-39-14_012_pfnybe.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622067980/art/2020-05-18-flow_field_gravity_2020-05-18T13-41-00_006_wolw9y.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622067980/art/2020-05-18-flow_field_gravity_2020-05-18T13-41-00_006_wolw9y.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622068011/art/2020-05-19-flow_field_gravity2_2020-05-19T14-57-45_000_ngjh3s.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622068011/art/2020-05-19-flow_field_gravity2_2020-05-19T14-57-45_000_ngjh3s.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622068025/art/2020-05-19-flow_field_gravity2_2020-05-19T15-45-56_000_a1ngxs.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622068025/art/2020-05-19-flow_field_gravity2_2020-05-19T15-45-56_000_a1ngxs.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622068030/art/2020-05-03T18-08-22_000-gravity-flow-field_aqswoe.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622068030/art/2020-05-03T18-08-22_000-gravity-flow-field_aqswoe.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622067917/art/2020-08-05-22.47.39-sketch.flow.F2_GravityWeb-seed-349383817327_bdklki.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622067917/art/2020-08-05-22.47.39-sketch.flow.F2_GravityWeb-seed-349383817327_bdklki.png
+description: >
+  TODO: write a description
+# TODO
+# sourceCodeLinks:
+comments:
+createdAt: 2020-08-05

@@ -1,0 +1,17 @@
+title: Planet curl
+id: Planet curl
+imageSeries:
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622067950/art/2020-10-21-good-sketch.flow.F17_Planet-2020-10-21-22.14.57seed-1799499850_k8panw.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622067950/art/2020-10-21-good-sketch.flow.F17_Planet-2020-10-21-22.14.57seed-1799499850_k8panw.png
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622067971/art/2020-10-21-agood-sketch.flow.F17_Planet-2020-10-21-22.13.57seed-144955555_tl6qaz.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622067971/art/2020-10-21-agood-sketch.flow.F17_Planet-2020-10-21-22.13.57seed-144955555_tl6qaz.png
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622067996/art/2020-10-21-agood-sketch.flow.F17_Planet-2020-10-21-22.16.17seed-1948639654_dsqik5.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622067996/art/2020-10-21-agood-sketch.flow.F17_Planet-2020-10-21-22.16.17seed-1948639654_dsqik5.png
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622068058/art/2020-10-17-14.24.06-sketch.flow.F16_RadialCurl-seed-700454207_ise5r0.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622068058/art/2020-10-17-14.24.06-sketch.flow.F16_RadialCurl-seed-700454207_ise5r0.png
+description: >
+  TODO: write a description
+# TODO
+# sourceCodeLinks:
+comments:
+createdAt: 2020-10-21

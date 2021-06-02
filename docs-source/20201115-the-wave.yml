@@ -1,0 +1,17 @@
+title: The Wave
+id: the-wave
+imageSeries:
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622068033/art/2020-11-14-19.07.39-sketch.S8_TheWave2-seed-1903690536_yqhw0g.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622068033/art/2020-11-14-19.07.39-sketch.S8_TheWave2-seed-1903690536_yqhw0g.png
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622068034/art/2020-11-14-19.20.58-sketch.S8_TheWave2-seed-315828984_ad6j3d.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622068034/art/2020-11-14-19.20.58-sketch.S8_TheWave2-seed-315828984_ad6j3d.png
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622068055/art/2020-11-14-18.41.33-sketch.S8_TheWave2-seed-567826920_wlnvhn.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622068055/art/2020-11-14-18.41.33-sketch.S8_TheWave2-seed-567826920_wlnvhn.png
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622068064/art/2020-11-15-18.11.32-sketch.S8_TheWave2-seed-1767137938_wbk7ez.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622068064/art/2020-11-15-18.11.32-sketch.S8_TheWave2-seed-1767137938_wbk7ez.png
+description: >
+  TODO: write a description
+# TODO
+# sourceCodeLinks:
+comments:
+createdAt: 2020-11-15

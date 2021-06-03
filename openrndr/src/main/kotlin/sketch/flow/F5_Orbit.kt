@@ -18,6 +18,7 @@ import org.openrndr.extra.noise.random
 import org.openrndr.math.Vector2
 import org.openrndr.math.map
 import org.openrndr.shape.contour
+import util.timestamp
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.hypot
@@ -62,13 +63,6 @@ fun main() = application {
   }
 
   program {
-    // In future, consider implementing own screenshot mechanism that could run after each draw loop
-    // screenshot: https://github.com/openrndr/openrndr/blob/9f17eb3c24813454cbad1a99d697cd279fa80d96/openrndr-extensions/src/main/kotlin/org/openrndr/extensions/Screenshots.kt
-    // timestamp: https://github.com/openrndr/openrndr/blob/9f17eb3c24813454cbad1a99d697cd279fa80d96/openrndr-core/src/main/kotlin/org/openrndr/utils/NamedTimestamp.kt
-    extend(Screenshots()) {
-      quitAfterScreenshot = false
-      scale = 2.0
-    }
     backgroundColor = ColorRGBa.BLACK
     val seed = random(1.0, Long.MAX_VALUE.toDouble()).toLong() // know your seed 😛
     var settings = Settings(
@@ -83,7 +77,7 @@ fun main() = application {
     //   scaleOrNull = 3.0
     // )
 
-    // Some collections of "settings" (probably should make a data class for this in future
+    // Some collections of "settings"
     // settings = Settings(
     //   seed = 4112586598597632001,
     //   scaleOrNull = 3.0,
@@ -126,12 +120,20 @@ fun main() = application {
     //   bodyCount = 8
     // )
 
-    settings = Settings(
-      seed = 5523107165134601478,
-      lineLength = 1000,
-      scaleOrNull = 3.81,
-      bodyCount = 6
-    )
+    // settings = Settings(
+    //   seed = 5523107165134601478,
+    //   lineLength = 1000,
+    //   scaleOrNull = 3.81,
+    //   bodyCount = 6
+    // )
+
+    val progName = this.name.ifBlank { this.window.title.ifBlank { "my-amazing-drawing" } }
+    extend(Screenshots()) {
+      quitAfterScreenshot = false
+      this.scale = 4.0
+      captureEveryFrame = false
+      name = "screenshots/$progName/${timestamp()}-seed-${settings.seed}.jpg"
+    }
 
     println("seed: $seed; settings: $settings")
     val center = Vector2(width / 2.0, height / 2.0)

@@ -15,6 +15,7 @@ import org.openrndr.extra.noise.random
 import org.openrndr.math.Vector2
 import org.openrndr.math.map
 import org.openrndr.shape.contour
+import util.timestamp
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.hypot
@@ -60,14 +61,6 @@ fun main() = application {
   }
 
   program {
-    // In future, consider implementing own screenshot mechanism that could run after each draw loop
-    // screenshot: https://github.com/openrndr/openrndr/blob/9f17eb3c24813454cbad1a99d697cd279fa80d96/openrndr-extensions/src/main/kotlin/org/openrndr/extensions/Screenshots.kt
-    // timestamp: https://github.com/openrndr/openrndr/blob/9f17eb3c24813454cbad1a99d697cd279fa80d96/openrndr-core/src/main/kotlin/org/openrndr/utils/NamedTimestamp.kt
-    extend(Screenshots()) {
-      quitAfterScreenshot = false
-      scale = 2.0
-    }
-
     val seed = random(1.0, Long.MAX_VALUE.toDouble()).toLong() // know your seed 😛
     val rand = Random(seed)
     // val settings = F8Settings(
@@ -170,6 +163,14 @@ fun main() = application {
     //   maxRadius = 0.7659692008014354,
     //   opacity = 0.585
     // )
+
+    val progName = this.name.ifBlank { this.window.title.ifBlank { "my-amazing-drawing" } }
+    extend(Screenshots()) {
+      quitAfterScreenshot = false
+      this.scale = 4.0
+      captureEveryFrame = false
+      name = "screenshots/$progName/${timestamp()}-seed-${settings.seed}.jpg"
+    }
 
     println(settings)
     // burn some Random cycles

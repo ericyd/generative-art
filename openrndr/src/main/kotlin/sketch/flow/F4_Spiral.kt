@@ -21,6 +21,7 @@ import org.openrndr.math.Vector2
 import org.openrndr.math.map
 import org.openrndr.shape.ShapeContour
 import org.openrndr.shape.contour
+import util.timestamp
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.hypot
@@ -36,38 +37,41 @@ fun main() = application {
   }
 
   program {
-    // In future, consider implementing own screenshot mechanism that could run after each draw loop
-    // screenshot: https://github.com/openrndr/openrndr/blob/9f17eb3c24813454cbad1a99d697cd279fa80d96/openrndr-extensions/src/main/kotlin/org/openrndr/extensions/Screenshots.kt
-    // timestamp: https://github.com/openrndr/openrndr/blob/9f17eb3c24813454cbad1a99d697cd279fa80d96/openrndr-core/src/main/kotlin/org/openrndr/utils/NamedTimestamp.kt
-    extend(Screenshots()) {
-      quitAfterScreenshot = false
-      scale = 2.0
-    }
     backgroundColor = ColorRGBa.BLACK
     val lineLength = 1500
-    val seed = random(1.0, 1000000000000.0).toLong() // know your seed 😛
+    var seed = random(1.0, 1000000000000.0).toLong() // know your seed 😛
+    var nBodies = 2
+    var scale = 2.0
 
     // Some collections of "settings" (probably should make a data class for this in future
-    // val seed = 596848407871
-    // val nBodies = 4
-    // val scale = 1.0
+    // seed = 596848407871
+    // nBodies = 4
+    // scale = 1.0
 
-    // val seed = 362244468987
-    // val nBodies = 2
-    // val scale = 2.0
+    // seed = 362244468987
+    // nBodies = 2
+    // scale = 2.0
 
-    // val seed = 230337025792
-    // val nBodies = 2
-    // val scale = 2.0
+    // seed = 230337025792
+    // nBodies = 2
+    // scale = 2.0
 
-    // val seed = 733914103222
-    // val nBodies = 2
-    val scale = 2.0
+    // seed = 733914103222
+    // nBodies = 2
+    // scale = 2.0
+
+    val progName = this.name.ifBlank { this.window.title.ifBlank { "my-amazing-drawing" } }
+    extend(Screenshots()) {
+      quitAfterScreenshot = false
+      this.scale = 4.0
+      captureEveryFrame = true
+      name = "screenshots/$progName/${timestamp()}-seed-$seed.jpg"
+    }
 
     println("seed: $seed")
     val rand = Random(seed)
     val center = Vector2(width / 2.0, height / 2.0)
-    val nBodies = random(2.0, 4.0, rand).toInt()
+    nBodies = random(2.0, 4.0, rand).toInt()
 
     // These are really beautiful but take a while for "prototyping"
     val strokeWeight = 0.75

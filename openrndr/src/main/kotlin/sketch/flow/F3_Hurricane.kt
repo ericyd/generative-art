@@ -24,6 +24,7 @@ import org.openrndr.math.Vector2
 import org.openrndr.math.map
 import org.openrndr.shape.ShapeContour
 import org.openrndr.shape.contour
+import util.timestamp
 import kotlin.random.Random
 
 fun main() = application {
@@ -33,18 +34,23 @@ fun main() = application {
   }
 
   program {
-    // In future, consider implementing own screenshot mechanism that could run after each draw loop
-    // screenshot: https://github.com/openrndr/openrndr/blob/9f17eb3c24813454cbad1a99d697cd279fa80d96/openrndr-extensions/src/main/kotlin/org/openrndr/extensions/Screenshots.kt
-    // timestamp: https://github.com/openrndr/openrndr/blob/9f17eb3c24813454cbad1a99d697cd279fa80d96/openrndr-core/src/main/kotlin/org/openrndr/utils/NamedTimestamp.kt
-    extend(Screenshots()) {
-      quitAfterScreenshot = false
-      scale = 2.0
-    }
     backgroundColor = ColorRGBa.WHITE
-    val lineLength = 1500
     val seed = random(1.0, 1000000000000.0).toLong() // know your seed 😛
     println("seed: $seed")
     val rand = Random(seed)
+
+    // In future, consider implementing own screenshot mechanism that could run after each draw loop
+    // screenshot: https://github.com/openrndr/openrndr/blob/9f17eb3c24813454cbad1a99d697cd279fa80d96/openrndr-extensions/src/main/kotlin/org/openrndr/extensions/Screenshots.kt
+    // timestamp: https://github.com/openrndr/openrndr/blob/9f17eb3c24813454cbad1a99d697cd279fa80d96/openrndr-core/src/main/kotlin/org/openrndr/utils/NamedTimestamp.kt
+    val progName = this.name.ifBlank { this.window.title.ifBlank { "my-amazing-drawing" } }
+    extend(Screenshots()) {
+      quitAfterScreenshot = false
+      scale = 4.0
+      captureEveryFrame = true
+      name = "screenshots/$progName/${timestamp()}-seed-$seed.jpg"
+    }
+
+    val lineLength = 1500
     val padding = 300
 
     val colors = listOf(

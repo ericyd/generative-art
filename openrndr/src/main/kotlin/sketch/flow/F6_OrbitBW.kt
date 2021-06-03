@@ -15,6 +15,7 @@ import org.openrndr.math.Vector2
 import org.openrndr.math.map
 import org.openrndr.shape.ShapeContour
 import org.openrndr.shape.contour
+import util.timestamp
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.hypot
@@ -27,12 +28,14 @@ fun main() = application {
   }
 
   program {
-    // In future, consider implementing own screenshot mechanism that could run after each draw loop
-    // screenshot: https://github.com/openrndr/openrndr/blob/9f17eb3c24813454cbad1a99d697cd279fa80d96/openrndr-extensions/src/main/kotlin/org/openrndr/extensions/Screenshots.kt
-    // timestamp: https://github.com/openrndr/openrndr/blob/9f17eb3c24813454cbad1a99d697cd279fa80d96/openrndr-core/src/main/kotlin/org/openrndr/utils/NamedTimestamp.kt
+    var seed = random(1.0, Long.MAX_VALUE.toDouble()).toLong() // know your seed 😛
+    // seed = 8238401536276667391
+    val progName = this.name.ifBlank { this.window.title.ifBlank { "my-amazing-drawing" } }
     extend(Screenshots()) {
       quitAfterScreenshot = false
-      scale = 2.0
+      this.scale = 4.0
+      captureEveryFrame = true
+      name = "screenshots/$progName/${timestamp()}-seed-$seed.jpg"
     }
 
     // if rendering with circles, the screenshot makes the result much brighter.
@@ -42,8 +45,7 @@ fun main() = application {
     val opacity = 0.185
     val nLines = 600
     var settings = Settings(
-      // random(1.0, Long.MAX_VALUE.toDouble()).toLong(), // know your seed 😛
-      8238401536276667391,
+      seed,
       lineLength = 3000,
       bodyCount = 10,
       scaleOrNull = 1.6

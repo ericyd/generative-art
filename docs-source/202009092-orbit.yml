@@ -1,0 +1,41 @@
+title: Orbit
+id: orbit
+
+imageSeries:
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622730538/art/sketch.flow.F8_Orbit_2021-06-03T09.27.10-seed-_8194798619954445312_wwxlws.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622730538/art/sketch.flow.F8_Orbit_2021-06-03T09.27.10-seed-_8194798619954445312_wwxlws.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622730536/art/sketch.flow.F4_Spiral_2021-06-03T09.14.12-seed-733914103222_uxr9j3.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622730536/art/sketch.flow.F4_Spiral_2021-06-03T09.14.12-seed-733914103222_uxr9j3.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622730527/art/sketch.flow.F4_Spiral_2021-06-03T09.13.36-seed-230337025792_lwdwkw.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622730527/art/sketch.flow.F4_Spiral_2021-06-03T09.13.36-seed-230337025792_lwdwkw.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622730524/art/sketch.flow.F4_Spiral_2021-06-03T09.12.50-seed-362244468987_t2lvng.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622730524/art/sketch.flow.F4_Spiral_2021-06-03T09.12.50-seed-362244468987_t2lvng.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622730535/art/sketch.flow.F3_Hurricane_2021-06-03T09.07.08-seed-80716766619_kxa8dz.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622730535/art/sketch.flow.F3_Hurricane_2021-06-03T09.07.08-seed-80716766619_kxa8dz.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622730532/art/sketch.flow.F7_Orbit2_2021-06-03T09.22.38-seed-_1363440141224000512_e4ripc.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622730532/art/sketch.flow.F7_Orbit2_2021-06-03T09.22.38-seed-_1363440141224000512_e4ripc.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622732043/art/sketch.flow.F5_Orbit.unknown_seed_bdpmkb.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622732043/art/sketch.flow.F5_Orbit.unknown_seed_bdpmkb.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622732051/art/sketch.flow.F5_Orbit.2021-06-03T09.34.11-seed-5580551685306258433_lpgtzk.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622732051/art/sketch.flow.F5_Orbit.2021-06-03T09.34.11-seed-5580551685306258433_lpgtzk.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622732055/art/sketch.flow.F5_Orbit.2021-06-03T09.33.12-seed-1517705629092318208_bewals.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622732055/art/sketch.flow.F5_Orbit.2021-06-03T09.33.12-seed-1517705629092318208_bewals.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622732057/art/sketch.flow.F5_Orbit.2021-06-03T09.31.10-seed-5523107165134601478_f0zihw.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622732057/art/sketch.flow.F5_Orbit.2021-06-03T09.31.10-seed-5523107165134601478_f0zihw.jpg
+  # unknown seed
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1622068085/art/2020-08-29-16.46.12-sketch.flow.F6_OrbitBW_GOOD_vmqikq.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1622068085/art/2020-08-29-16.46.12-sketch.flow.F6_OrbitBW_GOOD_vmqikq.png
+
+description: >
+  One of my favorite series I've done! Lots of variation on a theme
+
+sourceCodeLinks:
+  - https://github.com/ericyd/generative-art/blob/94394078574a83f7842ca38543a528ef95e34099/openrndr/src/main/kotlin/sketch/flow/F5_Orbit.kt
+  - https://github.com/ericyd/generative-art/blob/94394078574a83f7842ca38543a528ef95e34099/openrndr/src/main/kotlin/sketch/flow/F8_Orbit.kt
+  - https://github.com/ericyd/generative-art/blob/94394078574a83f7842ca38543a528ef95e34099/openrndr/src/main/kotlin/sketch/flow/F4_Spiral.kt
+  - https://github.com/ericyd/generative-art/blob/94394078574a83f7842ca38543a528ef95e34099/openrndr/src/main/kotlin/sketch/flow/F3_Hurricane.kt
+  - https://github.com/ericyd/generative-art/blob/94394078574a83f7842ca38543a528ef95e34099/openrndr/src/main/kotlin/sketch/flow/F7_Orbit2.kt
+  - https://github.com/ericyd/generative-art/blob/94394078574a83f7842ca38543a528ef95e34099/openrndr/src/main/kotlin/sketch/flow/F6_OrbitBW.kt
+
+comments:
+createdAt: 2020-09-02

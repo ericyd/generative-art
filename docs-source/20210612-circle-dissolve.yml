@@ -1,0 +1,14 @@
+title: Circle Dissolve
+imageSeries:
+    # /c_scale,w_500
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1623523207/2021-06-12T13.32.16-seed-805942075_tlto6b.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1623523207/2021-06-12T13.32.16-seed-805942075_tlto6b.jpg
+
+description: >
+  I will write more about this soon but basically it's differential growth using a QuadTree to manage the growth.
+  Huge thank you to
+  <a href="https://www.instagram.com/gengeomergence/">@gengeomergence</a> for help with the differential growth implementation!
+
+sourceCodeLinks:
+  - https://github.com/ericyd/generative-art/blob/be4acccbca4738b93e6eb60a18c46fe6239ae80e/openrndr/src/main/kotlin/sketch/flow/S31_CircleDissolve.kt
+createdAt: 2021-05-12

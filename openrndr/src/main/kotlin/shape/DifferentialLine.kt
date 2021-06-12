@@ -2,7 +2,8 @@ package shape
 
 import force.MovingBody
 import org.openrndr.math.Vector2
-import kotlin.math.sqrt
+import org.openrndr.shape.Rectangle
+import util.QuadTree
 
 /**
  * Differential Line
@@ -17,14 +18,32 @@ import kotlin.math.sqrt
 class DifferentialLine(
   var nodes: MutableList<MovingBody> = mutableListOf(),
   var maxForce: (MovingBody) -> Double = { _ -> 0.9 },
-  var maxSpeed: (MovingBody) -> Double = { _ -> 1.0 },
-  var desiredSeparation: Double = 9.0,
-  var separationCohesionRatio: Double = 1.1,
-  var maxEdgeLen: (MovingBody) -> Double = { _ -> 5.0 },
+  /**
+   * When nodes are further away than `maxNodeSeparation`, a new node will be added at their midpoint
+   */
+  var maxNodeSeparation: (MovingBody) -> Double = { _ -> 5.0 },
   // When true, the edges of the `nodes` list do not move
   var fixedEdges: Boolean = false,
+  var closed: Boolean = false,
+  var bounds: Rectangle = Rectangle(0.0, 0.0, 0.0, 0.0),
+  /**
+   * Customizable rule(s) that determine whether or not a node should spawn at a particular point.
+   * This may actually benefit from getting a reference to the quadtree too, but for now this is fine
+   */
+  var spawnRule: (MovingBody, QuadTree) -> Boolean = { _, _ -> true },
+  var cohesionForceFactor: (MovingBody) -> Double = { 1.0 },
+  var separationForceFactor: (MovingBody) -> Double = { 1.0 },
 ) {
-  var squaredDesiredSeparation: (MovingBody) -> Double = { m -> desiredSeparation * desiredSeparation }
+  private val quadtreeCapacity = 10
+  var qtree: QuadTree = QuadTree(bounds, quadtreeCapacity)
+
+  // Since we aren't using a very official builder pattern, there are some things that need to happen after the values are applied
+  fun init() {
+    qtree = QuadTree(bounds, quadtreeCapacity)
+    for (node in nodes) {
+      qtree.add(node)
+    }
+  }
 
   val smoothLine: SmoothLine
     get() = SmoothLine(nodes.map { it.position })
@@ -36,26 +55,26 @@ class DifferentialLine(
 
   fun differentiate() {
     for ((i, node) in nodes.withIndex()) {
-      if (fixedEdges && (i == 0 || i == nodes.size - 1)) {
+      if (!closed && fixedEdges && (i == 0 || i == nodes.size - 1)) {
         continue
       }
-      val nearNodes = applySeparationForces(node)
+      applySeparationForces(node)
 
-      // apply some damping to the node so it doesn't explode too fast
-      if (nearNodes > 0) {
-        // exponent and accuracy change this image quite a bit
-        node.applyFriction(Math.pow(nearNodes.toDouble(), 2.25), 0.13)
+      val maximum = maxForce(node)
+
+      // this first one is very important to ensure that separation and cohesion aren't too unbalanced
+      // TODO: would be nice to refactor this into some type of "limit" function, maybe in MovingBody
+      if (node.acceleration.length > maximum) {
+        node.acceleration = node.acceleration.normalized * maximum
       }
-      if (node.acceleration.length > 0) {
-        node.acceleration = node.acceleration.normalized * maxSpeed(node)
-        if (node.acceleration.length > maxForce(node)) {
-          node.acceleration = node.acceleration.normalized * maxForce(node)
-        }
-      }
-      node.acceleration *= separationCohesionRatio
 
       // Cohesion prevents the shape from overlapping itself
-      node.applyForce(cohesionForce(node, i))
+      applyCohesionForce(node, i)
+
+      if (node.acceleration.length > maximum) {
+        node.acceleration = node.acceleration.normalized * maximum
+      }
+
       node.update()
     }
   }
@@ -63,6 +82,8 @@ class DifferentialLine(
   // Extremely similar to `subdivide` function in FractalizedLine
   fun grow() {
     val newNodes = mutableListOf<MovingBody>()
+    // TODO: would it be better to _only_ add new nodes to QuadTree, and avoid clearing it each time? Downside: would not account for node positions moving through time
+    qtree = QuadTree(bounds, quadtreeCapacity)
 
     // Iterate through all points.
     // Skip the last index because we are accessing j+1 to get the "next" point anyway.
@@ -71,74 +92,99 @@ class DifferentialLine(
       val current = nodes[j]
       val next = nodes[j + 1]
       newNodes.add(current)
+      qtree.add(current)
 
       // This is our "rule" for whether or not to insert a node at this position
-      if (current.position.distanceTo(next.position) > maxEdgeLen(current)) { // && random() < -0.5) {
+      // current.position.distanceTo(next.position) > maxNodeSeparation(current)
+      // gahhh!! Just realized that the qtree isn't even fully populated at this point 🤦🏻‍ so this won't really be effective for a large number of the points
+      if (current.position.distanceTo(next.position) > maxNodeSeparation(current) && spawnRule(current, qtree)) {
         val mid = MovingBody((current.position + next.position) / 2.0)
         newNodes.add(mid)
+        qtree.add(mid)
       }
     }
     newNodes.add(nodes.last())
+    qtree.add(nodes.last())
+
+    // add point between "end" and "start" if distance is too big and shape is closed
+    if (closed && nodes.last().position.distanceTo(nodes.first().position) > maxNodeSeparation(nodes.last())) {
+      val mid = MovingBody((nodes.last().position + nodes.first().position) / 2.0)
+      newNodes.add(mid)
+      qtree.add(mid)
+    }
 
     nodes = newNodes
   }
 
   private fun applySeparationForces(node: MovingBody): Int {
-    var nearNodes = 0
-    for (other in nodes) {
-      val force = separationForceBetween(node, other)
+    val scaledRange = bounds.scale(0.1)
+    val searchRange = scaledRange.moved(node.position - scaledRange.center)
+    val otherNodes = qtree.query(searchRange)
+
+    for (other in otherNodes) {
+      val force = separationForce(node, other as MovingBody) * separationForceFactor(node)
       if (force.length > 0.0) {
         node.applyForce(force)
         other.applyForce(force * -1.0)
-        nearNodes++
       }
     }
-    return nearNodes
+
+    return otherNodes.size
   }
 
-  private fun separationForceBetween(n1: MovingBody, n2: MovingBody): Vector2 {
-    var steer = Vector2.ZERO
+  private fun separationForce(n1: MovingBody, n2: MovingBody): Vector2 {
+    // variation 1 (squared distance, no normalize
     val squaredDistance = n2.position.squaredDistanceTo(n1.position)
-    if (squaredDistance > 0.0 && squaredDistance < squaredDesiredSeparation(n1)) {
-      val diff = (n1.position - n2.position).normalized
-      steer += (diff / sqrt(squaredDistance)) // Weight by distance
-    }
-    return steer
+    val diff = (n1.position - n2.position)
+    return (diff / squaredDistance) // Weight by distance
+
+    // // variation 2 (regular distance, normalize
+    // val distance = n2.position.distanceTo(n1.position)
+    // val diff = (n1.position - n2.position).normalized // TODO: is .normalized needed? Answer: YES (but why???)
+    // return (diff / distance) // Weight by distance
   }
 
-  private fun cohesionForce(node: MovingBody, index: Int): Vector2 {
+  private fun applyCohesionForce(node: MovingBody, i: Int) {
+    val adjacentNodesMidpoint = getAdjacentNodesMidpoint(i)
+    val cohesionForce = cohesionForce(node, adjacentNodesMidpoint)
+    node.applyForce(cohesionForce)
+  }
+
+  private fun getAdjacentNodesMidpoint(index: Int): Vector2 {
     val size = nodes.size
-    val sum = if (index != 0 && index != size - 1) {
+    val isFirst = index == 0
+    val isLast = index == size - 1
+    val adjacentNodePositionsSum = if (!isFirst && !isLast) {
       nodes[index - 1].position + nodes[index + 1].position
-    } else if (index == 0) {
-      nodes[size - 1].position + nodes[index + 1].position
-    } else if (index == size - 1) {
-      nodes[index - 1].position + nodes[0].position
-    } else {
-      Vector2.ZERO
+    } else if (isFirst) {
+      nodes.last().position + nodes[index + 1].position
+    } else if (isLast) {
+      nodes[index - 1].position + nodes.first().position
+    } else { // should never happen
+      nodes[index].position * 2.0
     }
-    return seek(node, sum / 2.0, maxSpeed(node), maxForce(node))
+    return adjacentNodePositionsSum / 2.0
   }
 
   /**
-   * I don't know how to articular the purpose of this function
-   * I just copied it from here: http://www.codeplastic.com/2017/07/22/differential-line-growth-with-processing/
+   * The purpose of this is to calculate a force between the `node` and the `target`
    */
-  fun seek(node: MovingBody, target: Vector2, maxSpeed: Double, maxForce: Double): Vector2 {
-    var steer = Vector2.ZERO
-    val desired = (target - node.position).normalized * maxSpeed
-    val squaredDistance = target.squaredDistanceTo(node.position)
-    if (squaredDistance > 0.0 && squaredDistance < squaredDesiredSeparation(node)) {
-      steer += desired - node.velocity
-    }
-    if (steer.length > maxForce) {
-      return steer.normalized * maxForce
-    }
+  fun cohesionForce(node: MovingBody, target: Vector2): Vector2 {
+    // normalized vs denormalized
+    // normalized seems to give a "knobby-er" appearance, which I like
+    // but also seems to make it grow more slowly. Hmm
+    var steer = (target - node.position).normalized
+    steer -= node.velocity // TODO: figure out why this is required
+    steer *= cohesionForceFactor(node)
+    // steer -= node.acceleration
+
     return steer
   }
 }
 
 // I know this isn't a true "builder" pattern but I just wanted a shortcut way to write this
 fun differentialLine(f: DifferentialLine.() -> Unit): DifferentialLine {
-  return DifferentialLine().apply(f)
+  val line = DifferentialLine().apply(f)
+  line.init()
+  return line
 }

@@ -9,6 +9,7 @@ import org.openrndr.extra.noise.simplex
 import org.openrndr.math.Vector2
 import org.openrndr.math.map
 import org.openrndr.shape.Circle
+import org.openrndr.shape.Rectangle
 import org.openrndr.shape.ShapeContour
 import org.openrndr.shape.drawComposition
 import org.openrndr.shape.intersection
@@ -41,22 +42,28 @@ fun main() = application {
     val screenshots = extend(Screenshots()) {
       quitAfterScreenshot = false
       scale = 1.0
-      captureEveryFrame = true
+      captureEveryFrame = false
       name = "screenshots/$progName/${timestamp()}-seed-$seed.png"
     }
 
+    val center = Vector2(width * 0.5, height * 0.5)
     val nodeList = MutableList(100) {
       val angle = map(0.0, 100.0, -PI, PI, it.toDouble())
       val radius = hypot(width.toDouble(), height.toDouble()) * 0.2 * random(0.9, 1.1, rng)
-      val center = Vector2(width * 0.5, height * 0.5)
       MovingBody(Vector2(cos(angle), sin(angle)) * radius + center)
     }
 
     val line = differentialLine {
       nodes = nodeList
-      maxEdgeLen = { 6.0 }
-      desiredSeparation = 25.0
-      fixedEdges = false
+      // maxForce = {
+      //   2.5
+      // }
+      // fixedEdges = false
+      spawnRule = { node, qtree ->
+        node.position.distanceTo(center) < hypot(width.toDouble(), height.toDouble()) * 0.14
+      }
+      closed = true
+      bounds = Rectangle(Vector2.ZERO, width.toDouble(), height.toDouble())
     }
 
     backgroundColor = ColorRGBa.WHITE
@@ -71,10 +78,25 @@ fun main() = application {
       drawer.fill = ColorRGBa.BLACK
       drawer.contour(growth)
 
-      // Or, if using screenshots
-      if (screenshots.captureEveryFrame && frameCount % 100 == 0) {
-        screenshots.name = "screenshots/$progName/${timestamp()}-seed-$seed.png"
-      }
+      // this is some debugging shit right here
+      val scaledRange = line.bounds.scale(0.2)
+      val searchRange = scaledRange.moved(line.nodes.first().position - scaledRange.center)
+      val otherNodes = line.qtree.query(searchRange)
+      // println(searchRange)
+
+      drawer.fill = null
+      drawer.rectangle(searchRange)
+
+      drawer.fill = ColorRGBa.GREEN
+      drawer.stroke = null
+      drawer.circles(otherNodes.map { it.position}, 3.0)
+
+      drawer.fill = ColorRGBa.RED
+      drawer.circle(line.nodes.first().position, 3.0)
+
+      // if (screenshots.captureEveryFrame && frameCount % 500 == 0) {
+      //   screenshots.name = "screenshots/$progName/${timestamp()}-seed-$seed.png"
+      // }
     }
   }
 }

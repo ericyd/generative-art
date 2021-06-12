@@ -21,11 +21,11 @@ import org.openrndr.extra.noise.simplex
 import org.openrndr.extras.color.presets.GHOST_WHITE
 import org.openrndr.math.Vector2
 import org.openrndr.math.map
+import org.openrndr.shape.Rectangle
 import shape.FractalizedLine
 import shape.differentialLine
 import util.saveToFile
 import util.timestamp
-import java.lang.Math.pow
 import kotlin.random.Random
 
 fun main() = application {
@@ -68,21 +68,15 @@ fun main() = application {
     val line = differentialLine {
       nodes = nodeListLinear
 
-      maxEdgeLen = { m ->
+      maxNodeSeparation = { m ->
         map(-1.0, 1.0, 1.5, 10.0, simplex(seed, m.position / noiseScale))
-      }
-      desiredSeparation = 10.0
-      squaredDesiredSeparation = { m ->
-        map(-1.0, 1.0, pow(desiredSeparation, 0.25), pow(desiredSeparation, 3.5), simplex(seed, m.position / noiseScale))
       }
       fixedEdges = true
       // // experiments that I didn't love
-      // maxSpeed = { m ->
-      //   simplex(seed, m.position / noiseScale) * 2.0 + 2.0
-      // }
       // maxForce = { m ->
       //   simplex(seed, m.position / noiseScale) * 2.0 + 2.0
       // }
+      bounds = Rectangle(Vector2.ZERO, width.toDouble(), height.toDouble())
     }
 
     // running a few times to get things "started" looks better

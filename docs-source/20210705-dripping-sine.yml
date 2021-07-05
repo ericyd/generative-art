@@ -1,0 +1,12 @@
+title: Dripping Sine
+imageSeries:
+    # /c_scale,w_500
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1625515085/2021-07-05T14.56.59-seed-711884897_vuqymp.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1625515085/2021-07-05T14.56.59-seed-711884897_vuqymp.jpg
+
+description: >
+  I haven't had a bunch of time to work on art recently so here's a quick sketch
+
+sourceCodeLinks:
+  - https://github.com/ericyd/generative-art/blob/aef50e9fb86fe271293af30d231c4fc74758e837/openrndr/src/main/kotlin/sketch/flow/S32_DrippingSine.kt
+createdAt: 2021-07-05

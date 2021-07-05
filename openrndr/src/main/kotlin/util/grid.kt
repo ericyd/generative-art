@@ -35,9 +35,9 @@ fun <T : Any> grid(xMin: Int, xMax: Int, yMin: Int, yMax: Int, stepSize: Int = 1
   }
 
 @JvmName("gridRectVector2")
-fun <T : Any> grid(rect: Rectangle, stepSize: Int = 1, fn: (Vector2) -> T): List<T> =
-  (rect.x.toInt() until (rect.x + rect.width).toInt() step stepSize).flatMap { x ->
-    (rect.y.toInt() until (rect.y + rect.height).toInt() step stepSize).map { y ->
+fun <T : Any> grid(rect: Rectangle, stepSizeX: Int = 1, stepSizeY: Int = 1, fn: (Vector2) -> T): List<T> =
+  (rect.x.toInt() until (rect.x + rect.width).toInt() step stepSizeX).flatMap { x ->
+    (rect.y.toInt() until (rect.y + rect.height).toInt() step stepSizeY).map { y ->
       fn(Vector2(x.toDouble(), y.toDouble()))
     }
   }

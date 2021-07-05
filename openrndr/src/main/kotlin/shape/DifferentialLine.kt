@@ -83,7 +83,7 @@ class DifferentialLine(
   fun grow() {
     val newNodes = mutableListOf<MovingBody>()
     // TODO: would it be better to _only_ add new nodes to QuadTree, and avoid clearing it each time? Downside: would not account for node positions moving through time
-    qtree = QuadTree(bounds, quadtreeCapacity)
+    val newQtree = QuadTree(bounds, quadtreeCapacity)
 
     // Iterate through all points.
     // Skip the last index because we are accessing j+1 to get the "next" point anyway.
@@ -92,27 +92,28 @@ class DifferentialLine(
       val current = nodes[j]
       val next = nodes[j + 1]
       newNodes.add(current)
-      qtree.add(current)
+      newQtree.add(current)
 
       // This is our "rule" for whether or not to insert a node at this position
       // current.position.distanceTo(next.position) > maxNodeSeparation(current)
-      // gahhh!! Just realized that the qtree isn't even fully populated at this point 🤦🏻‍ so this won't really be effective for a large number of the points
-      if (current.position.distanceTo(next.position) > maxNodeSeparation(current) && spawnRule(current, qtree)) {
+      // gahhh!! Just realized that the newQtree isn't even fully populated at this point 🤦🏻‍ so this won't really be effective for a large number of the points
+      if (spawnRule(current, qtree)) {
         val mid = MovingBody((current.position + next.position) / 2.0)
         newNodes.add(mid)
-        qtree.add(mid)
+        newQtree.add(mid)
       }
     }
     newNodes.add(nodes.last())
-    qtree.add(nodes.last())
+    newQtree.add(nodes.last())
 
     // add point between "end" and "start" if distance is too big and shape is closed
     if (closed && nodes.last().position.distanceTo(nodes.first().position) > maxNodeSeparation(nodes.last())) {
       val mid = MovingBody((nodes.last().position + nodes.first().position) / 2.0)
       newNodes.add(mid)
-      qtree.add(mid)
+      newQtree.add(mid)
     }
 
+    qtree = newQtree
     nodes = newNodes
   }
 

@@ -66,13 +66,16 @@ fun main() = application {
       cohesionForceFactor = { 0.7 }
 
       // meh, this is "interesting" but is it "better"???
-      // spawnRule = { node, qtree ->
-      //   val scaledRange = bounds.scale(0.1)
-      //   val searchRange = scaledRange.moved(node.position - scaledRange.center)
-      //   val otherNodes = qtree.query(searchRange)
-      //   val noise = simplex(seed, node.position / noiseScale)
-      //   otherNodes.size > 10 && otherNodes.size < 95 && noise < 0.0
-      // }
+      spawnRule = { node, qtree ->
+        val scaledRange = bounds.scale(0.035)
+        val searchRange = scaledRange.moved(node.position - scaledRange.center)
+        val otherNodes = qtree.query(searchRange)
+        // println(otherNodes.size)
+        // node.position.distanceTo(next.position) > maxNodeSeparation(current)
+        otherNodes.size > 15 && otherNodes.size < 40
+        // val noise = simplex(seed, node.position / noiseScale)
+        // otherNodes.size < 10 && otherNodes.size < 95 && noise < 0.0
+      }
 
       closed = true
       this.bounds = bounds
@@ -142,7 +145,7 @@ fun main() = application {
       //   this.shapes(bands)
       // }
 
-      if (frameCount % 30 == 0) {
+      if (false && frameCount % 30 == 0) {
         screenshots.name = "screenshots/$progName/${timestamp()}-seed-$seed.jpg"
         screenshots.trigger()
       }

@@ -179,9 +179,9 @@
       sourceCodeLinks.forEach((link, i) => {
         const a = document.createElement("a")
         a.classList.add("source")
-        a.setAttribute("href", sourceCodeLink)
+        a.setAttribute("href", link)
         a.setAttribute("target", "_blank")
-        a.appendChild(document.createTextNode("source code ⬈"))
+        a.appendChild(document.createTextNode(`source code ${i + 1} ⬈`))
 
         const li = document.createElement("li")
         li.appendChild(a)

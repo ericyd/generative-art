@@ -8,5 +8,5 @@ description: >
   I haven't had a bunch of time to work on art recently so here's a quick sketch
 
 sourceCodeLinks:
-  - https://github.com/ericyd/generative-art/blob/aef50e9fb86fe271293af30d231c4fc74758e837/openrndr/src/main/kotlin/sketch/flow/S32_DrippingSine.kt
+  - https://github.com/ericyd/generative-art/blob/aef50e9fb86fe271293af30d231c4fc74758e837/openrndr/src/main/kotlin/sketch/S32_DrippingSine.kt
 createdAt: 2021-07-05

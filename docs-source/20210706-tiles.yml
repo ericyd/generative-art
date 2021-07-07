@@ -10,6 +10,6 @@ description: >
   Inspired by mosaic / tiled designs
 
 sourceCodeLinks:
-  - https://github.com/ericyd/generative-art/blob/62bf3e3c909e61826f97265c6b5ff571d0b07863/openrndr/src/main/kotlin/sketch/flow/S33_Tiles.kt
+  - https://github.com/ericyd/generative-art/blob/62bf3e3c909e61826f97265c6b5ff571d0b07863/openrndr/src/main/kotlin/sketch/S33_Tiles.kt
 
 createdAt: 2021-07-06

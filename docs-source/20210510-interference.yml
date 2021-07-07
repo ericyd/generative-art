@@ -15,6 +15,7 @@ description: >
   Pointillism is a great way to do that because there are no harsh edges where the flows meet -
   the boundary is natural because the points do not overlap.
   I was really pleased with how this turned out and like many of my pieces, generated so many fun variants that it was hard to pick final versions.
-  <a href='https://github.com/ericyd/generative-art/blob/56de8da7cff5cad5793fff2b1217c79287fccb91/openrndr/src/main/kotlin/sketch/flow/F22_FlowInterference.kt'>Additional source</a>.
-sourceCodeLink: https://github.com/ericyd/generative-art/blob/da059f8812f005e70709dd9ffcd9d1ebf81c7055/openrndr/src/main/kotlin/sketch/flow/F23_FlowInterference2.kt
+sourceCodeLinks:
+  - https://github.com/ericyd/generative-art/blob/da059f8812f005e70709dd9ffcd9d1ebf81c7055/openrndr/src/main/kotlin/sketch/flow/F23_FlowInterference2.kt
+  - https://github.com/ericyd/generative-art/blob/56de8da7cff5cad5793fff2b1217c79287fccb91/openrndr/src/main/kotlin/sketch/flow/F22_FlowInterference.kt
 createdAt: 2021-05-10

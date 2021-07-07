@@ -21,16 +21,16 @@ description: >
   to create these types of ideas myself, but for now I'm plenty satisfied imitating others and taking a different spin on it.
   All of these use the same underlying algorithm to creating the meandering river, but they utilize the result in different ways
   (grouping into layers, adding color, duplicating various parts, etc).
-  The source code for these comes from a few different sketches:
-  <ul><li><a href="https://github.com/ericyd/generative-art/blob/665ac5d1c3dd20cea896cf35b10b5973fcbe6227/openrndr/src/main/kotlin/sketch/S24_MeanderClone2.kt">MeanderClone2</a></li>
-  <li><a href="https://github.com/ericyd/generative-art/blob/665ac5d1c3dd20cea896cf35b10b5973fcbe6227/openrndr/src/main/kotlin/sketch/S25_MeanderClone3.kt">MeanderClone3</a></li>
-  <li><a href="https://github.com/ericyd/generative-art/blob/1f5f916a6c78ea92bcc07ced47ac8063eba31f58/openrndr/src/main/kotlin/sketch/S26_MeanderClone4.kt">MeanderClone4</a></li>
-  </ul>
+  The source code for these comes from a few different sketches, linked below.
   A fun extra: If you'd like to see the rivers animate, head over to Reddit! You can see two different videos
   <a href="https://www.reddit.com/r/generative/comments/lbdhl6/another_meandering_river/">here</a>
   and <a href="https://www.reddit.com/r/generative/comments/lfsl8t/pop_art_meandering_river/">here</a>.
   My very first iteration is nice to just view the dynamics of the system: you can see that
   <a href="https://www.reddit.com/r/generative/comments/l9t1kv/clone_of_meander_by_robert_hodgin/">here</a>
-sourceCodeLink: https://github.com/ericyd/generative-art/blob/665ac5d1c3dd20cea896cf35b10b5973fcbe6227/openrndr/src/main/kotlin/shape/MeanderingRiver.kt
+sourceCodeLinks:
+  - https://github.com/ericyd/generative-art/blob/665ac5d1c3dd20cea896cf35b10b5973fcbe6227/openrndr/src/main/kotlin/shape/MeanderingRiver.kt
+  - https://github.com/ericyd/generative-art/blob/665ac5d1c3dd20cea896cf35b10b5973fcbe6227/openrndr/src/main/kotlin/sketch/S24_MeanderClone2.kt
+  - https://github.com/ericyd/generative-art/blob/665ac5d1c3dd20cea896cf35b10b5973fcbe6227/openrndr/src/main/kotlin/sketch/S25_MeanderClone3.kt
+  - https://github.com/ericyd/generative-art/blob/1f5f916a6c78ea92bcc07ced47ac8063eba31f58/openrndr/src/main/kotlin/sketch/S26_MeanderClone4.kt
 comments:
 createdAt: 2021-02-15

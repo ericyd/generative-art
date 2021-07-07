@@ -10,5 +10,5 @@ description: >
   <a href="https://www.instagram.com/gengeomergence/">@gengeomergence</a> for help with the differential growth implementation!
 
 sourceCodeLinks:
-  - https://github.com/ericyd/generative-art/blob/be4acccbca4738b93e6eb60a18c46fe6239ae80e/openrndr/src/main/kotlin/sketch/flow/S31_CircleDissolve.kt
+  - https://github.com/ericyd/generative-art/blob/be4acccbca4738b93e6eb60a18c46fe6239ae80e/openrndr/src/main/kotlin/sketch/S31_CircleDissolve.kt
 createdAt: 2021-06-12

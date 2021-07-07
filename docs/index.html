@@ -174,7 +174,20 @@
       return a
     }
 
-    function buildDescription(content, sourceCodeLink) {
+    function buildSourceCodeLinks(sourceCodeLinks) {
+      const ul = document.createElement("ul")
+      sourceCodeLinks.forEach((link, i) => {
+        const li = document.createElement("li")
+        li.classList.add("source")
+        li.setAttribute("href", link)
+        li.setAttribute("target", "_blank")
+        li.appendChild(document.createTextNode(`source code link ${i} ⬈`))
+      })
+
+      return ul
+    }
+
+    function buildDescription(content, sourceCodeLink, sourceCodeLinks) {
       const description = document.createElement("div")
       description.classList.add('description')
       /* I mean... pretty unsafe, but hey, sometimes you gotta live on the edge 😎 */
@@ -187,13 +200,19 @@
           buildSourceCodeLink(sourceCodeLink)
         )
       }
+
+      if (sourceCodeLinks) {
+        description.appendChild(
+          buildSourceCodeLinks(sourceCodeLinks)
+        )
+      }
       return description
     }
 
     function populateImage(cardsContainer) {
       return (image) => {
         // console.log(image)
-        const description = buildDescription(image.description, image.sourceCodeLink)
+        const description = buildDescription(image.description, image.sourceCodeLink, image.sourceCodeLinks)
         const imageContainer = buildImageContainer(image)
         const card = buildCard(imageContainer, description)
         cardsContainer.appendChild(card)
@@ -286,7 +305,7 @@
     function populateImageDetail(image) {
       hideLoadMoreButton()
       const imageContainer = buildImageContainer(image, true, "src")
-      const description = buildDescription(image.description, image.sourceCodeLink)
+      const description = buildDescription(image.description, image.sourceCodeLink, image.sourceCodeLinks)
       const detailContainer = document.getElementById('card-detail')
       detailContainer.appendChild(imageContainer)
       detailContainer.appendChild(description)

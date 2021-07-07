@@ -1,0 +1,15 @@
+title: Tiles
+imageSeries:
+    # /c_scale,w_500
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1625623154/2021-07-06T20.53.37-seed-2021654391_ankh9x.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1625623154/2021-07-06T20.53.37-seed-2021654391_ankh9x.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1625623156/2021-07-06T20.51.57-seed-1848908453_tdhro7.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1625623156/2021-07-06T20.51.57-seed-1848908453_tdhro7.jpg
+
+description: >
+  Inspired by mosaic / tiled designs
+
+sourceCodeLinks:
+  - https://github.com/ericyd/generative-art/blob/62bf3e3c909e61826f97265c6b5ff571d0b07863/openrndr/src/main/kotlin/sketch/flow/S33_Tiles.kt
+
+createdAt: 2021-07-06

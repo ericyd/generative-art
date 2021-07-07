@@ -177,11 +177,14 @@
     function buildSourceCodeLinks(sourceCodeLinks) {
       const ul = document.createElement("ul")
       sourceCodeLinks.forEach((link, i) => {
+        const a = document.createElement("a")
+        a.classList.add("source")
+        a.setAttribute("href", sourceCodeLink)
+        a.setAttribute("target", "_blank")
+        a.appendChild(document.createTextNode("source code ⬈"))
+
         const li = document.createElement("li")
-        li.classList.add("source")
-        li.setAttribute("href", link)
-        li.setAttribute("target", "_blank")
-        li.appendChild(document.createTextNode(`source code link ${i} ⬈`))
+        li.appendChild(a)
         ul.appendChild(li)
       })
 

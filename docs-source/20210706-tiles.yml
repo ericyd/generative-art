@@ -3,13 +3,18 @@ imageSeries:
     # /c_scale,w_500
   - src: https://res.cloudinary.com/ericyd/image/upload/v1625623154/2021-07-06T20.53.37-seed-2021654391_ankh9x.jpg
     srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1625623154/2021-07-06T20.53.37-seed-2021654391_ankh9x.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1626377913/2021-07-15T14.26.36-seed-604577684_app14h.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1626377913/2021-07-15T14.26.36-seed-604577684_app14h.jpg
   - src: https://res.cloudinary.com/ericyd/image/upload/v1625623156/2021-07-06T20.51.57-seed-1848908453_tdhro7.jpg
     srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1625623156/2021-07-06T20.51.57-seed-1848908453_tdhro7.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1626377917/2021-07-15T14.23.50-seed-2043539834_k8m4ju.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1626377917/2021-07-15T14.23.50-seed-2043539834_k8m4ju.jpg
 
 description: >
   Inspired by mosaic / tiled designs
 
 sourceCodeLinks:
   - https://github.com/ericyd/generative-art/blob/62bf3e3c909e61826f97265c6b5ff571d0b07863/openrndr/src/main/kotlin/sketch/S33_Tiles.kt
+  - https://github.com/ericyd/generative-art/blob/108a2183a83b1c38704de78dd8d4d365ddb189e7/openrndr/src/main/kotlin/sketch/S34_Tiles2.kt
 
 createdAt: 2021-07-06

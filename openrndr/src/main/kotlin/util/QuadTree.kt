@@ -40,6 +40,12 @@ class QuadTree(val boundary: Rectangle, val capacity: Int) {
     northwest!!.add(point)
   }
 
+  fun addAll(points: List<QuadTreeNode>) {
+    for (point in points) {
+      this.add(point)
+    }
+  }
+
   private fun subdivide() {
     val w = boundary.width / 2.0
     val h = boundary.height / 2.0
@@ -73,5 +79,11 @@ class QuadTree(val boundary: Rectangle, val capacity: Int) {
       southeastPoints +
       southwestPoints +
       northwestPoints
+  }
+
+  fun clone(): QuadTree {
+    val newTree = QuadTree(boundary, capacity)
+    newTree.addAll(query(boundary))
+    return newTree
   }
 }

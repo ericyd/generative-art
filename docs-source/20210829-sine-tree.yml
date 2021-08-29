@@ -1,0 +1,20 @@
+title: Sine tree
+imageSeries:
+    # /c_scale,w_500
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1630278877/2021-08-29T18.02.03-seed-1160652480_yvfxq6.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1630278877/2021-08-29T18.02.03-seed-1160652480_yvfxq6.png
+
+description: >
+  I haven't had much time recently to make art.
+  I had an idea for a simple recursion tree that uses sine waves instead of straight lines for the branches,
+  with each recursion becoming slightly more dampened.
+  I used a quad tree to do some collision checking (though it isn't perfect),
+  and assigned colors based on how far down the tree the branch was.
+  I scaled the thickness of the branch so that each would start slightly thicker than it ended.
+  I like this effect because it reminded me of how real trees tend to end.
+  The overall effect kind of reminds me of a river delta.
+
+sourceCodeLinks:
+  - https://github.com/ericyd/generative-art/blob/30082b1ab94c11dbbdb45f83e5f312e31df3a43c/openrndr/src/main/kotlin/sketch/S35_SineTree.kt
+
+createdAt: 2021-08-29

@@ -1,0 +1,13 @@
+title: Bubbles
+imageSeries:
+    # /c_scale,w_500
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1635967411/2021-11-03T14.14.40-seed-930527176_cp6w4q.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1635967411/2021-11-03T14.14.40-seed-930527176_cp6w4q.jpg
+
+description: >
+  Bubbles. Inspired whole-heartedly by <a href="https://www.instagram.com/fortiesuk/" target="_blank">@fortiesuk</a>
+
+sourceCodeLinks:
+  - https://github.com/ericyd/generative-art/blob/dc2f51a096230c43cbe9bcbcfbb1bb9a7857836c/openrndr/src/main/kotlin/sketch/S36_Bubbles.kt
+
+createdAt: 2021-11-03

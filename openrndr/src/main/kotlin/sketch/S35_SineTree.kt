@@ -88,7 +88,7 @@ fun main() = application {
       // calculate points that do not intersect
       for (i in 0..length) {
         val next = nextPoint(cursor, angle, origin, period, amplitude)
-        if (i > 5 && qtree.query(boundingRect(next)).size > 0) {
+        if (i > 5 && qtree.query<QuadTreeNode>(boundingRect(next)).size > 0) {
           break
         }
         drawer.lineSegment(cursor, next)

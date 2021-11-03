@@ -19,6 +19,7 @@ import shape.FractalizedLine
 import shape.differentialLine
 import util.QuadTree
 import util.QTreeNode
+import util.QuadTreeNode
 import util.timestamp
 import kotlin.math.PI
 import kotlin.math.absoluteValue
@@ -58,7 +59,7 @@ fun main() = application {
 
     val scaledRange = bounds.scale(0.2)
     val searchRange = scaledRange.moved(specialCircle.center - scaledRange.center)
-    val queriedCircles = qtree.query(searchRange)
+    val queriedCircles = qtree.query<QuadTreeNode>(searchRange)
 
     backgroundColor = ColorRGBa.WHITE
 

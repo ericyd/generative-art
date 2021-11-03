@@ -9,6 +9,7 @@ import org.openrndr.math.clamp
 import org.openrndr.math.map
 import org.openrndr.shape.Circle
 import org.openrndr.shape.Rectangle
+import kotlin.math.abs
 import kotlin.math.sqrt
 import kotlin.random.Random
 
@@ -197,3 +198,84 @@ fun packCirclesControlled(
 //   circle_i.velocity.y *= -1
 //   circle_i.update()
 // }
+
+/**
+ * Pack circles with a fixed size that just need to be non-overlapping
+ * Uses a quadtree to speed up overlap detection
+ * [1] do while any bodies have velocity:
+ *   [2] for all bodies, apply separation forces
+ *   [3] for all bodies, zero the circle's velocity if it isn't intersecting any others
+ * [4] return bodies
+ *
+ * @param bodies provide a list of MovingBodies to pack
+ * @param incremental if true, returns only a single iteration of the "separating" process
+ * @param rng randomizer for when bodies are on top of each other and need a nudge
+ */
+fun packFixedCirclesControlled(
+  bodies: List<MovingBody>,
+  qtreeBase: QuadTree,
+  incremental: Boolean = false,
+  rng: Random = Random.Default,
+  verbose: Boolean = false
+): PackCompleteResult {
+  var packComplete = false
+  var iterationCount = 0
+  // [1]
+  do {
+    if (verbose && iterationCount % 100 == 0) println("iteration $iterationCount")
+    iterationCount++
+    val qtree = QuadTree(qtreeBase.boundary, qtreeBase.capacity)
+    qtree.addAll(bodies)
+    // [2]
+    bodies.forEach { primary ->
+      // only apply separation forces to circles that intersect
+      val nearCircles = qtree.queryCenteredAt<MovingBody>(primary.position, Rectangle(Vector2.ZERO, primary.radius * 5.0, primary.radius * 5.0))
+      val intersectingCircles = nearCircles.filter { it != primary && it.intersects(primary) }
+      for (other in intersectingCircles) {
+        val dist = other.position.distanceTo(primary.position)
+        // If the distance is 0, then they are on top of each other and just need a random nudge
+        val force = if (dist > 0.0) {
+          // wow. This is BY FAR the biggest slowdown in this algorithm.
+          // dividing by the distance makes it really nice and smooth but goddamn it slows it down like a m****f****
+          //  Original: (primary.position - other.position).normalized / dist
+          //  Also tried: (primary.position - other.position).normalized
+          //  Final version was chosen for a mix of speed and accuracy
+          (primary.position - other.position).normalized / sqrt(dist)
+        } else {
+          Vector2.gaussian(random = rng)
+        }
+
+        // do not update the `primary` until we've assessed all other circles
+        primary.applyForce(force)
+
+        // applying force immediately to secondary seems to speed up the "settling time" quite a bit
+        other
+          // this was an experiment to give "intertia" to big objects
+          .applyForce(force * -1.0 * sqrt(abs(primary.radius - other.radius)))
+          // .applyForce(force * -1.0)
+          .update()
+      }
+
+      // scaling by number of intersecting circles prevents wacky values
+      // but also ... slows things down a bunch. This needs some tweaking I think
+      if (intersectingCircles.size > 4) {
+        primary
+          .applyFriction(intersectingCircles.size.toDouble())
+      }
+      primary.update()
+    }
+
+    // [3]
+    bodies.forEach { primary ->
+      val nearCircles = qtree.queryCenteredAt<MovingBody>(primary.position, Rectangle(Vector2.ZERO, primary.radius * 5.0, primary.radius * 5.0))
+      if (nearCircles.none { other -> other != primary && other.intersects(primary) }) {
+        primary.velocity = Vector2.ZERO
+      }
+    }
+
+    packComplete = bodies.all { it.velocity == Vector2.ZERO }
+  } while (!incremental && !packComplete)
+
+  // [4]
+  return PackCompleteResult(bodies, packComplete)
+}

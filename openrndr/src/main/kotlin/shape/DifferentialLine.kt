@@ -120,10 +120,10 @@ class DifferentialLine(
   private fun applySeparationForces(node: MovingBody): Int {
     val scaledRange = bounds.scale(0.1)
     val searchRange = scaledRange.moved(node.position - scaledRange.center)
-    val otherNodes = qtree.query(searchRange)
+    val otherNodes = qtree.query<MovingBody>(searchRange)
 
     for (other in otherNodes) {
-      val force = separationForce(node, other as MovingBody) * separationForceFactor(node)
+      val force = separationForce(node, other) * separationForceFactor(node)
       if (force.length > 0.0) {
         node.applyForce(force)
         other.applyForce(force * -1.0)

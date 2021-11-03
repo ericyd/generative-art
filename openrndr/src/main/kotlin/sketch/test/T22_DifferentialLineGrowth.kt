@@ -17,6 +17,7 @@ import org.openrndr.shape.union
 import org.openrndr.shape.difference
 import shape.FractalizedLine
 import shape.differentialLine
+import util.QuadTreeNode
 import util.timestamp
 import kotlin.math.PI
 import kotlin.math.absoluteValue
@@ -81,7 +82,7 @@ fun main() = application {
       // this is some debugging shit right here
       val scaledRange = line.bounds.scale(0.2)
       val searchRange = scaledRange.moved(line.nodes.first().position - scaledRange.center)
-      val otherNodes = line.qtree.query(searchRange)
+      val otherNodes = line.qtree.query<QuadTreeNode>(searchRange)
       // println(searchRange)
 
       drawer.fill = null

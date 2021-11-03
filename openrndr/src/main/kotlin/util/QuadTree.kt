@@ -20,7 +20,7 @@ class QuadTree(val boundary: Rectangle, val capacity: Int) {
   var southwest: QuadTree? = null
   var northwest: QuadTree? = null
 
-  fun add(point: QuadTreeNode) {
+  fun <T : QuadTreeNode>add(point: T) {
     if (!boundary.contains(point.position)) {
       return
     }
@@ -40,7 +40,7 @@ class QuadTree(val boundary: Rectangle, val capacity: Int) {
     northwest!!.add(point)
   }
 
-  fun addAll(points: List<QuadTreeNode>) {
+  fun <T : QuadTreeNode>addAll(points: List<T>) {
     for (point in points) {
       this.add(point)
     }
@@ -65,20 +65,24 @@ class QuadTree(val boundary: Rectangle, val capacity: Int) {
     isSubdivided = true
   }
 
-  fun query(rect: Rectangle): List<QuadTreeNode> {
+  fun <T : QuadTreeNode>query(rect: Rectangle): List<T> {
     if (!boundary.intersects(rect)) {
       return listOf()
     }
 
-    val northeastPoints = northeast?.query(rect) ?: listOf()
-    val southeastPoints = southeast?.query(rect) ?: listOf()
-    val southwestPoints = southwest?.query(rect) ?: listOf()
-    val northwestPoints = northwest?.query(rect) ?: listOf()
-    return points.filter { rect.contains(it.position) } +
+    val northeastPoints = northeast?.query<T>(rect) ?: listOf()
+    val southeastPoints = southeast?.query<T>(rect) ?: listOf()
+    val southwestPoints = southwest?.query<T>(rect) ?: listOf()
+    val northwestPoints = northwest?.query<T>(rect) ?: listOf()
+    return (points as MutableList<T>).filter { rect.contains(it.position) } +
       northeastPoints +
       southeastPoints +
       southwestPoints +
       northwestPoints
+  }
+
+  fun <T : QuadTreeNode>queryCenteredAt(point: Vector2, rect: Rectangle): List<T> {
+    return this.query(rect.moved(point - rect.center))
   }
 
   fun clone(): QuadTree {

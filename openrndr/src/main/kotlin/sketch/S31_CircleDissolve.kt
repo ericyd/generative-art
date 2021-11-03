@@ -20,6 +20,7 @@ import org.openrndr.shape.intersection
 import org.openrndr.shape.difference
 import shape.SmoothLine
 import shape.differentialLine
+import util.QuadTreeNode
 import util.timestamp
 import kotlin.math.PI
 import kotlin.math.cos
@@ -69,7 +70,7 @@ fun main() = application {
       spawnRule = { node, qtree ->
         val scaledRange = bounds.scale(0.035)
         val searchRange = scaledRange.moved(node.position - scaledRange.center)
-        val otherNodes = qtree.query(searchRange)
+        val otherNodes = qtree.query<QuadTreeNode>(searchRange)
         // println(otherNodes.size)
         // node.position.distanceTo(next.position) > maxNodeSeparation(current)
         otherNodes.size > 15 && otherNodes.size < 40

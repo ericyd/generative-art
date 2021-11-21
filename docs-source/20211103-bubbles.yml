@@ -1,13 +1,21 @@
 title: Bubbles
 imageSeries:
     # /c_scale,w_500
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1637533336/2021-11-21T16.11.33-seed-844922680_klnhfo.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1637533336/2021-11-21T16.11.33-seed-844922680_klnhfo.jpg
+
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1637533338/2021-11-21T16.14.13-seed-1766677885_n4fqd9.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1637533338/2021-11-21T16.14.13-seed-1766677885_n4fqd9.jpg
+
   - src: https://res.cloudinary.com/ericyd/image/upload/v1635967411/2021-11-03T14.14.40-seed-930527176_cp6w4q.jpg
     srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1635967411/2021-11-03T14.14.40-seed-930527176_cp6w4q.jpg
 
 description: >
-  Bubbles. Inspired whole-heartedly by <a href="https://www.instagram.com/fortiesuk/" target="_blank">@fortiesuk</a>
+  Bubbles. Inspired whole-heartedly by <a href="https://www.instagram.com/fortiesuk/" target="_blank">@fortiesuk</a>.
+  The one on the black background looks terrible when compressed so you need a large monitor to appreciate it.
 
 sourceCodeLinks:
   - https://github.com/ericyd/generative-art/blob/dc2f51a096230c43cbe9bcbcfbb1bb9a7857836c/openrndr/src/main/kotlin/sketch/S36_Bubbles.kt
+  - https://github.com/ericyd/generative-art/blob/99082d9363ea89aa5a3800050961cf0e070268d1/openrndr/src/main/kotlin/sketch/S37_Bubbles2.kt
 
 createdAt: 2021-11-03

@@ -38,19 +38,21 @@ fun main() = application {
     val bleed = 0.4
     val bounds = Rectangle(width * -bleed, height * -bleed, width * (1.0 + bleed), height * (1.0 + bleed))
 
-    val spectrum = ColorSequence(listOf(
-      0.1 to ColorRGBa.fromHex("0B0C0F"),
-      0.3 to ColorRGBa.fromHex("0D0E0F"),
-      0.5 to ColorRGBa.fromHex("080908"),
-      0.6 to
-        ColorRGBa.fromHex("A8D2CA"),
-      0.7 to
-        ColorRGBa.fromHex("E7E090"),
-      0.9 to
-        ColorRGBa.fromHex("CB7979"),
-      1.0 to
-        ColorRGBa.fromHex("A392C1"),
-    ))
+    val spectrum = ColorSequence(
+      listOf(
+        0.1 to ColorRGBa.fromHex("0B0C0F"),
+        0.3 to ColorRGBa.fromHex("0D0E0F"),
+        0.5 to ColorRGBa.fromHex("080908"),
+        0.6 to
+          ColorRGBa.fromHex("A8D2CA"),
+        0.7 to
+          ColorRGBa.fromHex("E7E090"),
+        0.9 to
+          ColorRGBa.fromHex("CB7979"),
+        1.0 to
+          ColorRGBa.fromHex("A392C1"),
+      )
+    )
 
     fun color(y: Double, rng: Random): ColorRGBa {
       val colorMin = map(bounds.y, bounds.y + bounds.height, 1.0, -0.3, y)
@@ -83,12 +85,14 @@ fun main() = application {
 
           drawer.fill = null
           drawer.stroke = color(y, rng)
-          drawer.contour(contour {
-            moveTo(x, y)
-            List(length) {
-              lineTo(Vector2(fn(cursor.y), cursor.y + 1.0))
+          drawer.contour(
+            contour {
+              moveTo(x, y)
+              List(length) {
+                lineTo(Vector2(fn(cursor.y), cursor.y + 1.0))
+              }
             }
-          })
+          )
         }
       }
 

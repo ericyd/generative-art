@@ -18,24 +18,18 @@ import org.openrndr.extra.compositor.post
 import org.openrndr.extra.fx.blend.Add
 import org.openrndr.extra.fx.blur.ApproximateGaussianBlur
 import org.openrndr.extra.noise.fbm
-import org.openrndr.extra.noise.fbmFunc1D
 import org.openrndr.extra.noise.random
 import org.openrndr.extra.noise.simplex
 import org.openrndr.extras.color.palettes.colorSequence
 import org.openrndr.math.Vector2
-import org.openrndr.math.Vector3
 import org.openrndr.math.map
 import org.openrndr.shape.Circle
-import org.openrndr.shape.LineSegment
 import org.openrndr.shape.Rectangle
 import util.PackCompleteResult
 import util.QuadTree
-import util.generateMovingBodies
-import util.packCirclesControlled
 import util.packFixedCirclesControlled
 import util.timestamp
 import java.io.File
-import kotlin.math.abs
 import kotlin.math.sin
 import kotlin.math.sqrt
 import kotlin.random.Random
@@ -54,7 +48,7 @@ fun main() = application {
     val w = scaleInt(width)
     val h = scaleInt(height)
     val progName = this.name.ifBlank { this.window.title.ifBlank { "my-amazing-drawing" } }
-    var seed = 930527176 //random(0.0, Int.MAX_VALUE.toDouble()).toInt()
+    var seed = 930527176 // random(0.0, Int.MAX_VALUE.toDouble()).toInt()
     var rng = Random(seed.toLong())
     println("seed = $seed")
 

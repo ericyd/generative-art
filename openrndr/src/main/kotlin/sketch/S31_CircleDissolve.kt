@@ -16,9 +16,7 @@ import org.openrndr.shape.Circle
 import org.openrndr.shape.Rectangle
 import org.openrndr.shape.Shape
 import org.openrndr.shape.ShapeContour
-import org.openrndr.shape.intersection
 import org.openrndr.shape.difference
-import shape.SmoothLine
 import shape.differentialLine
 import util.QuadTreeNode
 import util.timestamp

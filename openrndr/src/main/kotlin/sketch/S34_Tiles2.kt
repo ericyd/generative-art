@@ -41,15 +41,17 @@ fun main() = application {
     val bleed = 0.0
     val bounds = Rectangle(width * -bleed, height * -bleed, width * (1.0 + bleed), height * (1.0 + bleed))
 
-    val spectrum = ColorSequence(listOf(
-      0.1 to ColorRGBa.fromHex("E1EAFA"),
-      0.3 to ColorRGBa.fromHex("D6DEE3"),
-      0.5 to ColorRGBa.fromHex("DCECEF"),
-      0.6 to ColorRGBa.fromHex("ECCFAA"),
-      0.7 to ColorRGBa.fromHex("A4E5CD"),
-      0.9 to ColorRGBa.fromHex("7192BC"),
-      1.0 to ColorRGBa.fromHex("DB8062"),
-    ))
+    val spectrum = ColorSequence(
+      listOf(
+        0.1 to ColorRGBa.fromHex("E1EAFA"),
+        0.3 to ColorRGBa.fromHex("D6DEE3"),
+        0.5 to ColorRGBa.fromHex("DCECEF"),
+        0.6 to ColorRGBa.fromHex("ECCFAA"),
+        0.7 to ColorRGBa.fromHex("A4E5CD"),
+        0.9 to ColorRGBa.fromHex("7192BC"),
+        1.0 to ColorRGBa.fromHex("DB8062"),
+      )
+    )
 
     fun color(value: Double, rng: Random): ColorRGBa {
       val deviation = if (value < 0.5) abs(value) else 1.0 - value
@@ -86,13 +88,15 @@ fun main() = application {
           List(nTiles.toInt()) {
             drawer.fill = baseColor.shade(random(0.85, 1.15, rng))
             drawer.stroke = baseColor.shade(0.5)
-            drawer.contour(contour {
-              moveTo(pos)
-              lineTo(cursor + parallelToEdge * tileWidth)
-              lineTo(cursor + perpendicularToEdge * -tileHeight)
-              lineTo(cursor + parallelToEdge * -tileWidth)
-              close()
-            })
+            drawer.contour(
+              contour {
+                moveTo(pos)
+                lineTo(cursor + parallelToEdge * tileWidth)
+                lineTo(cursor + perpendicularToEdge * -tileHeight)
+                lineTo(cursor + parallelToEdge * -tileWidth)
+                close()
+              }
+            )
             pos += parallelToEdge * tileWidth
           }
         }

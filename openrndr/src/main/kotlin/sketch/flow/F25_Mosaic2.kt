@@ -24,12 +24,10 @@
  */
 package sketch.flow
 
-import extensions.CustomScreenshots
 import noise.perlinCurl
 import noise.simplexCurl
 import org.openrndr.application
 import org.openrndr.color.ColorRGBa
-import org.openrndr.color.hsla
 import org.openrndr.draw.Drawer
 import org.openrndr.extensions.Screenshots
 import org.openrndr.extra.noise.cubicHermite
@@ -38,7 +36,6 @@ import org.openrndr.extra.noise.perlin
 import org.openrndr.extra.noise.perlinHermite
 import org.openrndr.extra.noise.random
 import org.openrndr.extra.noise.simplex
-import org.openrndr.extra.shadestyles.RadialGradient
 import org.openrndr.extras.color.palettes.ColorSequence
 import org.openrndr.extras.color.palettes.colorSequence
 import org.openrndr.extras.color.presets.WHITE_SMOKE
@@ -52,18 +49,11 @@ import util.MixNoise
 import util.MixableNoise
 import util.grid
 import util.quantize
-import util.rotatePoint
 import util.timestamp
-import java.util.*
-import kotlin.math.E
 import kotlin.math.PI
-import kotlin.math.absoluteValue
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.hypot
-import kotlin.math.log
-import kotlin.math.log10
-import kotlin.math.max
 import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.random.Random
@@ -235,23 +225,29 @@ fun main() = application {
       // Colors
       // lots going on here
       //
-      val spectrum1 = generateSpectrum(listOf(
-        ColorRGBa.fromHex("ede9e8"),
-        ColorRGBa.fromHex("dbd7d6"),
-        ColorRGBa.fromHex("c1bbb4"),
-        ColorRGBa.fromHex("141313"),
-        ColorRGBa.fromHex("75625c"),
-        ColorRGBa.fromHex("421f1f"),
-      ), rng)
+      val spectrum1 = generateSpectrum(
+        listOf(
+          ColorRGBa.fromHex("ede9e8"),
+          ColorRGBa.fromHex("dbd7d6"),
+          ColorRGBa.fromHex("c1bbb4"),
+          ColorRGBa.fromHex("141313"),
+          ColorRGBa.fromHex("75625c"),
+          ColorRGBa.fromHex("421f1f"),
+        ),
+        rng
+      )
 
-      val spectrum2 = generateSpectrum(listOf(
-        ColorRGBa.fromHex("5d3e77"),
-        ColorRGBa.fromHex("7697d3"),
-        ColorRGBa.fromHex("5b80af"),
-        ColorRGBa.fromHex("514966"),
-        ColorRGBa.fromHex("8c75ad"),
-        ColorRGBa.fromHex("d38797"),
-      ), rng)
+      val spectrum2 = generateSpectrum(
+        listOf(
+          ColorRGBa.fromHex("5d3e77"),
+          ColorRGBa.fromHex("7697d3"),
+          ColorRGBa.fromHex("5b80af"),
+          ColorRGBa.fromHex("514966"),
+          ColorRGBa.fromHex("8c75ad"),
+          ColorRGBa.fromHex("d38797"),
+        ),
+        rng
+      )
 
       val spectrumChance = random(0.0, 1.0, rng)
       val spectrumCenter = if (spectrumChance < 0.25) {

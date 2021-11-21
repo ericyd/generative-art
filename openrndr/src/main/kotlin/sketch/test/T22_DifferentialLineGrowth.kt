@@ -5,22 +5,14 @@ import org.openrndr.application
 import org.openrndr.color.ColorRGBa
 import org.openrndr.extensions.Screenshots
 import org.openrndr.extra.noise.random
-import org.openrndr.extra.noise.simplex
 import org.openrndr.math.Vector2
 import org.openrndr.math.map
-import org.openrndr.shape.Circle
 import org.openrndr.shape.Rectangle
 import org.openrndr.shape.ShapeContour
-import org.openrndr.shape.drawComposition
-import org.openrndr.shape.intersection
-import org.openrndr.shape.union
-import org.openrndr.shape.difference
-import shape.FractalizedLine
 import shape.differentialLine
 import util.QuadTreeNode
 import util.timestamp
 import kotlin.math.PI
-import kotlin.math.absoluteValue
 import kotlin.math.cos
 import kotlin.math.hypot
 import kotlin.math.sin
@@ -90,7 +82,7 @@ fun main() = application {
 
       drawer.fill = ColorRGBa.GREEN
       drawer.stroke = null
-      drawer.circles(otherNodes.map { it.position}, 3.0)
+      drawer.circles(otherNodes.map { it.position }, 3.0)
 
       drawer.fill = ColorRGBa.RED
       drawer.circle(line.nodes.first().position, 3.0)

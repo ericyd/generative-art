@@ -1,9 +1,7 @@
 package util
 
-import org.openrndr.extra.parameters.ParameterType
 import org.openrndr.math.Vector2
 import org.openrndr.shape.Rectangle
-
 
 interface QuadTreeNode {
   val position: Vector2
@@ -20,7 +18,7 @@ class QuadTree(val boundary: Rectangle, val capacity: Int) {
   var southwest: QuadTree? = null
   var northwest: QuadTree? = null
 
-  fun <T : QuadTreeNode>add(point: T) {
+  fun <T : QuadTreeNode> add(point: T) {
     if (!boundary.contains(point.position)) {
       return
     }
@@ -40,7 +38,7 @@ class QuadTree(val boundary: Rectangle, val capacity: Int) {
     northwest!!.add(point)
   }
 
-  fun <T : QuadTreeNode>addAll(points: List<T>) {
+  fun <T : QuadTreeNode> addAll(points: List<T>) {
     for (point in points) {
       this.add(point)
     }
@@ -65,7 +63,7 @@ class QuadTree(val boundary: Rectangle, val capacity: Int) {
     isSubdivided = true
   }
 
-  fun <T : QuadTreeNode>query(rect: Rectangle): List<T> {
+  fun <T : QuadTreeNode> query(rect: Rectangle): List<T> {
     if (!boundary.intersects(rect)) {
       return listOf()
     }
@@ -81,7 +79,7 @@ class QuadTree(val boundary: Rectangle, val capacity: Int) {
       northwestPoints
   }
 
-  fun <T : QuadTreeNode>queryCenteredAt(point: Vector2, rect: Rectangle): List<T> {
+  fun <T : QuadTreeNode> queryCenteredAt(point: Vector2, rect: Rectangle): List<T> {
     return this.query(rect.moved(point - rect.center))
   }
 

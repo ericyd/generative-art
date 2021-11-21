@@ -13,7 +13,6 @@ import org.openrndr.extra.noise.random
 import org.openrndr.extras.color.palettes.ColorSequence
 import org.openrndr.math.Vector2
 import org.openrndr.math.map
-import org.openrndr.panel.style.Color
 import org.openrndr.shape.Rectangle
 import util.QTreeNode
 import util.QuadTree
@@ -46,14 +45,16 @@ fun main() = application {
 
     backgroundColor = ColorRGBa.WHITE
 
-    val spectrum = ColorSequence(listOf(
-      0.0 to ColorRGBa.fromHex("0D1D2B"),
-      0.2 to ColorRGBa.fromHex("171E38"),
-      0.4 to ColorRGBa.fromHex("26233D"),
-      0.6 to ColorRGBa.fromHex("403854"),
-      0.8 to ColorRGBa.fromHex("31425E"),
-      1.0 to ColorRGBa.fromHex("4B6172")
-    ))
+    val spectrum = ColorSequence(
+      listOf(
+        0.0 to ColorRGBa.fromHex("0D1D2B"),
+        0.2 to ColorRGBa.fromHex("171E38"),
+        0.4 to ColorRGBa.fromHex("26233D"),
+        0.6 to ColorRGBa.fromHex("403854"),
+        0.8 to ColorRGBa.fromHex("31425E"),
+        1.0 to ColorRGBa.fromHex("4B6172")
+      )
+    )
 
     data class Config(
       val drawer: Drawer,
@@ -123,18 +124,20 @@ fun main() = application {
             }
             val newAngle = angle + offsetAngle
             val remainingLength = length - i
-            configs.add(Config(
-              drawer = drawer,
-              origin = cursor,
-              angle = newAngle,
-              length = (remainingLength * random(0.6, 0.85, rng)).toInt(),
-              depth = depth + 1,
-              strokeWeightMax = strokeWeight,
-              qtree = qtree,
-              rng = rng,
-              period = random(period * 0.5, period * 0.75, rng),
-              amplitude = random(amplitude * 0.6, amplitude * 0.95, rng)
-            ))
+            configs.add(
+              Config(
+                drawer = drawer,
+                origin = cursor,
+                angle = newAngle,
+                length = (remainingLength * random(0.6, 0.85, rng)).toInt(),
+                depth = depth + 1,
+                strokeWeightMax = strokeWeight,
+                qtree = qtree,
+                rng = rng,
+                period = random(period * 0.5, period * 0.75, rng),
+                amplitude = random(amplitude * 0.6, amplitude * 0.95, rng)
+              )
+            )
           }
         }
       }
@@ -152,18 +155,20 @@ fun main() = application {
       val rng = Random(seed)
       val qtree = QuadTree(Rectangle(0.0, 0.0, width.toDouble(), height.toDouble()), 10)
 
-      drawSine(Config(
-        drawer = drawer,
-        origin = Vector2(width * 0.5, 0.0),
-        angle = random(PI * 0.4, PI * 0.6, rng),
-        length = (width * random(1.0, 1.4, rng)).toInt(),
-        depth = 0,
-        strokeWeightMax = 20.0,
-        qtree = qtree,
-        rng = rng,
-        period = random(50.0, 80.0, rng),
-        amplitude = random(1.5, 1.90, rng)
-      ))
+      drawSine(
+        Config(
+          drawer = drawer,
+          origin = Vector2(width * 0.5, 0.0),
+          angle = random(PI * 0.4, PI * 0.6, rng),
+          length = (width * random(1.0, 1.4, rng)).toInt(),
+          depth = 0,
+          strokeWeightMax = 20.0,
+          qtree = qtree,
+          rng = rng,
+          period = random(50.0, 80.0, rng),
+          amplitude = random(1.5, 1.90, rng)
+        )
+      )
 
       if (screenshots.captureEveryFrame) {
         seed = random(0.0, Int.MAX_VALUE.toDouble()).toInt()

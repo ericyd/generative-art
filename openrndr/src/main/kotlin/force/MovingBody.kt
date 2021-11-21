@@ -1,9 +1,7 @@
 package force
 
 import org.openrndr.math.Vector2
-import org.openrndr.shape.Circle
 import util.QuadTreeNode
-import util.intersects
 import kotlin.math.sqrt
 
 /**

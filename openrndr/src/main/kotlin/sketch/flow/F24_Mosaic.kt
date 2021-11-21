@@ -24,13 +24,10 @@
  */
 package sketch.flow
 
-import extensions.CustomScreenshots
 import org.openrndr.application
 import org.openrndr.color.ColorRGBa
-import org.openrndr.color.hsla
 import org.openrndr.draw.Drawer
 import org.openrndr.extensions.Screenshots
-import org.openrndr.extra.noise.gaussian
 import org.openrndr.extra.noise.random
 import org.openrndr.extra.noise.simplex
 import org.openrndr.extras.color.palettes.ColorSequence
@@ -40,18 +37,11 @@ import org.openrndr.math.Vector2
 import org.openrndr.math.clamp
 import org.openrndr.math.map
 import org.openrndr.shape.Rectangle
-import util.quantize
 import util.rotatePoint
 import util.timestamp
-import java.util.*
-import kotlin.math.E
 import kotlin.math.PI
-import kotlin.math.absoluteValue
 import kotlin.math.cos
 import kotlin.math.hypot
-import kotlin.math.log
-import kotlin.math.log10
-import kotlin.math.max
 import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.random.Random
@@ -181,22 +171,26 @@ fun main() = application {
       // COLORS
       // Wow this ended up being way more work that I expected
       //
-      val spectrum1 = generateSpectrum(listOf(
-        ColorRGBa.fromHex("dfe2e0"), // off-white
-        ColorRGBa.fromHex("67341e"), // brown
-        ColorRGBa.fromHex("e07024"), // light orange
-        ColorRGBa.fromHex("4f6459"), // gray-green
-        ColorRGBa.fromHex("cce2dd"), // light minty
-        ColorRGBa.fromHex("3e5468"), // gray-blue
-        ColorRGBa.fromHex("cad7ed"), // light-blue
-      ))
+      val spectrum1 = generateSpectrum(
+        listOf(
+          ColorRGBa.fromHex("dfe2e0"), // off-white
+          ColorRGBa.fromHex("67341e"), // brown
+          ColorRGBa.fromHex("e07024"), // light orange
+          ColorRGBa.fromHex("4f6459"), // gray-green
+          ColorRGBa.fromHex("cce2dd"), // light minty
+          ColorRGBa.fromHex("3e5468"), // gray-blue
+          ColorRGBa.fromHex("cad7ed"), // light-blue
+        )
+      )
 
-      val spectrum2 = generateSpectrum(listOf(
-        ColorRGBa.fromHex("b4cec8"), // light minty (modified from cce2dd)
-        ColorRGBa.fromHex("394856"), // gray-blue (modified from 3e5468)
-        ColorRGBa.fromHex("9eadc6"), // light-blue (modified from cad7ed)
-        ColorRGBa.fromHex("605880"), // purple-y
-      ))
+      val spectrum2 = generateSpectrum(
+        listOf(
+          ColorRGBa.fromHex("b4cec8"), // light minty (modified from cce2dd)
+          ColorRGBa.fromHex("394856"), // gray-blue (modified from 3e5468)
+          ColorRGBa.fromHex("9eadc6"), // light-blue (modified from cad7ed)
+          ColorRGBa.fromHex("605880"), // purple-y
+        )
+      )
 
       val spectrumChance = random(0.0, 1.0, rng)
       val spectrumCenter = if (spectrumChance < 0.25) {
@@ -290,7 +284,7 @@ fun main() = application {
             val radius = r * collisionDistance + circleOffset
             val cursor = Vector2(cos(angle), sin(angle)) * radius + params.center
 
-            val rotationAngle = if(random(0.0, 1.0, rng) < 0.5) PI / 100.0 else -PI / 100.0
+            val rotationAngle = if (random(0.0, 1.0, rng) < 0.5) PI / 100.0 else -PI / 100.0
             val flowFieldFn = { v: Vector2 ->
               rotatePoint(v, rotationAngle, about = params.center) - v
             }

@@ -1,6 +1,12 @@
 title: Bubbles
 imageSeries:
     # /c_scale,w_500
+  - src: https://res.cloudinary.com/ericyd/image/upload//v1640290244/2021-12-23T12.09.36-seed-210677875_i8xgaw.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1640290244/2021-12-23T12.09.36-seed-210677875_i8xgaw.jpg
+
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1640290421/2021-12-23T12.09.58-seed-135756951_lp6ad8.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1640290421/2021-12-23T12.09.58-seed-135756951_lp6ad8.jpg
+
   - src: https://res.cloudinary.com/ericyd/image/upload/v1637533336/2021-11-21T16.11.33-seed-844922680_klnhfo.jpg
     srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1637533336/2021-11-21T16.11.33-seed-844922680_klnhfo.jpg
 
@@ -17,5 +23,6 @@ description: >
 sourceCodeLinks:
   - https://github.com/ericyd/generative-art/blob/dc2f51a096230c43cbe9bcbcfbb1bb9a7857836c/openrndr/src/main/kotlin/sketch/S36_Bubbles.kt
   - https://github.com/ericyd/generative-art/blob/99082d9363ea89aa5a3800050961cf0e070268d1/openrndr/src/main/kotlin/sketch/S37_Bubbles2.kt
+  - https://github.com/ericyd/generative-art/blob/a1544eaf599a7b09492b886038ea5b18430b6cfc/openrndr/src/main/kotlin/sketch/S38_Bubbles3.kt
 
 createdAt: 2021-11-03

@@ -23,7 +23,8 @@ build
 out
 .idea
 .gradle
-lib
+# I don't know why this is here, but I want to put my JS stuff in `lib` so commenting out for now
+#lib
 
 # Generated from OpenRNDR `Screenshots` extension
 screenshots

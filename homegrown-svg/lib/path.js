@@ -17,7 +17,7 @@
 //   absolute negative x and y values are interpreted as negative coordinates;
 //   relative negative x values move to the left, and relative negative y values move upwards.
 
-import { randomRange } from './util.js'
+import { random } from './util.js'
 
 /**
  * C
@@ -50,8 +50,8 @@ function point(x, y) {
 
 function randomPoint(xMin, xMax, yMin, yMax) {
   return point(
-    randomRange(xMin, xMax),
-    randomRange(yMin, yMax)
+    random(xMin, xMax),
+    random(yMin, yMax)
   )
 }
 

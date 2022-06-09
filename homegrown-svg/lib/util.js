@@ -3,6 +3,6 @@
 
 export const array = n => new Array(n).fill(0).map((_zero, i) => i)
 
-export function randomRange(min, max) {
+export function random(min, max) {
   return min + Math.random() * (max - min)
 }

@@ -1,6 +1,6 @@
 import { svg, tag } from "../lib/tag.js";
 import { array } from "../lib/util.js";
-import { d } from "../lib/path.js";
+import { randomPoint, smoothBezier, move } from "../lib/path.js";
 
 export function draw() {
   const root = svg({
@@ -20,4 +20,18 @@ export function draw() {
   );
 
   return root.withChildren(children).draw();
+}
+
+function d() {
+  const start = randomPoint(0, 100, 0, 100)
+  return [
+    move(start),
+    smoothBezier(randomPoint(20, 80, 20, 80), randomPoint(20, 80, 20, 80)),
+    smoothBezier(randomPoint(20, 80, 20, 80), randomPoint(20, 80, 20, 80)),
+    smoothBezier(randomPoint(20, 80, 20, 80), randomPoint(20, 80, 20, 80)),
+    smoothBezier(randomPoint(20, 80, 20, 80), randomPoint(20, 80, 20, 80)),
+    smoothBezier(randomPoint(20, 80, 20, 80), randomPoint(20, 80, 20, 80)),
+    smoothBezier(randomPoint(20, 80, 20, 80), randomPoint(20, 80, 20, 80)),
+    smoothBezier(randomPoint(20, 80, 20, 80), randomPoint(20, 80, 20, 80)),
+  ].join(' ')
 }

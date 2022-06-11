@@ -1,6 +1,6 @@
-const yaml = require('yaml')
-const fs = require('fs')
-const path = require('path')
+import yaml from 'yaml'
+import fs from 'fs'
+import path from 'path'
 
 const imageFiles = fs.readdirSync('./docs-source').filter(f => f.match(/.*\.yml/))
 const json = imageFiles.map(filename => {

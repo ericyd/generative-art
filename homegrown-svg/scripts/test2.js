@@ -6,7 +6,7 @@ import { rngFactory } from "../lib/random.js";
 export function draw() {
   const root = svg({
     fill: "#000000",
-    stroke: "#fffffff",
+    stroke: "#ffffff",
     style: "background: #000000",
     height: "100%",
     width: "100%",
@@ -18,7 +18,11 @@ export function draw() {
 
   const seed = Date.now().toString();
   console.log({ seed });
-  window.location.hash = seed;
+  try {
+    window.location.hash = seed;
+  } catch (e) {
+    // window is probably not defined, no biggie
+  }
   const rng = rngFactory(seed);
 
   const children = array(10).map((i) =>

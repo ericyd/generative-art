@@ -2,6 +2,7 @@
   "name": "generative-art",
   "version": "1.0.0",
   "description": "Built with [Nannou][], [Processing][], and [OpenRNDR][]",
+  "type": "module",
   "main": "index.js",
   "directories": {
     "doc": "docs"

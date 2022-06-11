@@ -29,6 +29,8 @@ export function svg(attrs = {}, children = []) {
       ...attrs,
       viewBox: attrs.viewBox ?? "0 0 100 100",
       preserveAspectRatio: attrs.preserveAspectRatio ?? "xMidYMid meet",
+      xmlns: "http://www.w3.org/2000/svg",
+      "xmlns:xlink": "http://www.w3.org/1999/xlink"
     },
     children
   );

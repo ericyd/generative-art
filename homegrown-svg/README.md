@@ -17,3 +17,4 @@ open localhost:8080
 # Future considerations
 
 * Use [resvg](https://github.com/RazrFalcon/resvg/blob/master/examples/minimal.rs) to render the final output. Not sure how to efficiently generate PNGs otherwise
+* use [librsvg](https://www.npmjs.com/package/librsvg) npm package to render

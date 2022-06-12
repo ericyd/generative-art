@@ -44,3 +44,7 @@ export function rngFactory(seed) {
   // Four 32-bit component hashes provide the seed for sfc32.
   return sfc32(seed[0], seed[1], seed[2], seed[3]);
 }
+
+export function random(min, max, rng = Math.random) {
+  return min + rng() * (max - min);
+}

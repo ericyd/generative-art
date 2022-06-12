@@ -34,10 +34,17 @@ import { random } from "./util.js";
 /**
  * @typedef PathBuilder
  * @type {object}
+ * @property {() => Point} cursor get the current point
  * @property {(endPoint: Point, coordinateType: CoordinateType) => void} move lift up pen and move to point
  * @property {() => void} close close the path back to the start point
+ * @property {(endPoint: Point, coodinateType: CoordinateType) => void} line straight line to point
  * @property {(controlPoint1: Point, controlPoint2: Point, endPoint: Point, coordinateType: CoordinateType) => void} cubicBezier
  * @property {(controlPoint: Point, endPoint: Point, coordinateType: CoordinateType) => void} smoothBezier
+ */
+
+/**
+ * @typedef Radians
+ * @type {number}
  */
 
 /**
@@ -155,12 +162,24 @@ export function randomPoint(xMin, xMax, yMin, yMax, rng) {
  * @returns string
  */
 export function pathBuilder(drawingCallback) {
+  // dang, this doesn't work when passing to the callback.
+  // I guess I'll have to lean on `relative` movements instead of a `cursor` concept :\
   let cursor = { x: 0, y: 0 };
   const path = [];
+
+  const newCursor = (coordinateType, cursor, endPoint) => coordinateType === "absolute"
+  ? endPoint
+  : point(cursor.x + endPoint.x, cursor.y + endPoint.y);
+
   const pathBuilder = {
+    cursor: () => cursor,
     move: (endPoint, coordinateType) => {
       path.push(move(endPoint, coordinateType));
-      cursor = endPoint;
+      cursor = newCursor(coordinateType, cursor, endPoint)
+    },
+    line: (endPoint, coordinateType) => {
+      path.push(line(endPoint, coordinateType));
+      cursor = newCursor(coordinateType, cursor, endPoint)
     },
     close: () => {
       path.push(close());
@@ -169,13 +188,13 @@ export function pathBuilder(drawingCallback) {
       path.push(
         cubicBezier(controlPoint1, controlPoint2, endPoint, coordinateType)
       );
-      cursor = endPoint;
+      cursor = newCursor(coordinateType, cursor, endPoint)
     },
     smoothBezier: (controlPoint, endPoint, coordinateType) => {
       path.push(smoothBezier(controlPoint, endPoint, coordinateType));
-      cursor = endPoint;
+      cursor = newCursor(coordinateType, cursor, endPoint)
     },
   };
-  drawingCallback(pathBuilder, cursor);
+  drawingCallback(pathBuilder);
   return path.join(" ");
 }

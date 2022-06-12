@@ -1,4 +1,5 @@
 // definitely do not like this... need a better way to write to file
-import { write } from './scripts/layers-with-shadow.js'
+import { draw } from "./scripts/layers-with-shadow.js";
+import { writeFileSync } from "fs";
 
-write()
+writeFileSync(`output-${Date.now()}.svg`, draw());

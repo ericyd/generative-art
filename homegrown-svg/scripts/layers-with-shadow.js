@@ -2,15 +2,16 @@ import { svg, tag } from "../lib/tag.js";
 import { array } from "../lib/util.js";
 import { pathBuilder, randomPoint } from "../lib/path.js";
 import { rngFactory } from "../lib/random.js";
-import { writeFileSync } from 'fs'
 
 export function draw() {
   const root = svg({
     fill: "#000000",
     stroke: "#ffffff",
     style: "background: #000000",
-    height: "2000px",
-    width: "2000px",
+    height: '100%',
+    width: '100%',
+    // height: "2000px",
+    // width: "2000px",
   });
 
   const path = tag("path", { fill: "none", "stroke-width": "1.1" });
@@ -63,6 +64,3 @@ export function draw() {
   return root.withChildren(children).draw();
 }
 
-export function write() {
-  writeFileSync(`output-${Date.now()}.svg`, draw())
-}

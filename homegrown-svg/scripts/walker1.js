@@ -71,7 +71,7 @@ export function draw() {
     // filter: "url(#demo4)",
   });
 
-  const baseColor = { r: 196, g: 120, b: 47 };
+  const baseColor = { h: 29, s: 61, l: 48 };
   const colors = ["#fff", "#faf", "#fb4", "#4ff"];
 
   const seed = Date.now().toString();

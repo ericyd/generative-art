@@ -1,6 +1,6 @@
 import { svg, tag } from "../lib/tag.js";
 import { array } from "../lib/util.js";
-import { pathBuilder, randomPoint, smoothBezier } from "../lib/path.js";
+import { pathBuilder, randomPoint } from "../lib/path.js";
 import { rngFactory } from "../lib/random.js";
 
 export function draw() {

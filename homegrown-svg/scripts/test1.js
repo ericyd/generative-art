@@ -25,13 +25,13 @@ export function draw() {
 function d() {
   const start = randomPoint(0, 100, 0, 100)
   return [
-    move(start),
-    smoothBezier(randomPoint(20, 80, 20, 80), randomPoint(20, 80, 20, 80)),
-    smoothBezier(randomPoint(20, 80, 20, 80), randomPoint(20, 80, 20, 80)),
-    smoothBezier(randomPoint(20, 80, 20, 80), randomPoint(20, 80, 20, 80)),
-    smoothBezier(randomPoint(20, 80, 20, 80), randomPoint(20, 80, 20, 80)),
-    smoothBezier(randomPoint(20, 80, 20, 80), randomPoint(20, 80, 20, 80)),
-    smoothBezier(randomPoint(20, 80, 20, 80), randomPoint(20, 80, 20, 80)),
-    smoothBezier(randomPoint(20, 80, 20, 80), randomPoint(20, 80, 20, 80)),
+    move(start).toString(),
+    smoothBezier(randomPoint(20, 80, 20, 80), randomPoint(20, 80, 20, 80)).toString(),
+    smoothBezier(randomPoint(20, 80, 20, 80), randomPoint(20, 80, 20, 80)).toString(),
+    smoothBezier(randomPoint(20, 80, 20, 80), randomPoint(20, 80, 20, 80)).toString(),
+    smoothBezier(randomPoint(20, 80, 20, 80), randomPoint(20, 80, 20, 80)).toString(),
+    smoothBezier(randomPoint(20, 80, 20, 80), randomPoint(20, 80, 20, 80)).toString(),
+    smoothBezier(randomPoint(20, 80, 20, 80), randomPoint(20, 80, 20, 80)).toString(),
+    smoothBezier(randomPoint(20, 80, 20, 80), randomPoint(20, 80, 20, 80)).toString(),
   ].join(' ')
 }

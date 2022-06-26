@@ -1,6 +1,28 @@
 // resources: https://observablehq.com/@makio135/utilities
 
+import { point } from "./path.js";
+
+/**
+ * @param {number} n length of array
+ * @returns {number[]}
+ */
 export const array = (n) => new Array(n).fill(0).map((_zero, i) => i);
+
+/**
+ * @param {number} min 
+ * @param {number} max 
+ * @param {number} step 
+ * @returns {number[]}
+ */
+export const range = (min, max, step = 1) => new Array((max - min) / step).fill(0).map((_, i) => min + i * step);
+
+/**
+ * @param {number} min 
+ * @param {number} max 
+ * @param {number} step 
+ * @returns {[number[], number]}
+ */
+export const rangeWithIndex = (min, max, step = 1) => new Array((max - min) / step).fill(0).map((_, i) => ([min + i * step, i]));
 
 // should deprecate this
 export { random } from "./random.js";
@@ -60,3 +82,21 @@ export const clamp = (min, max, x) => Math.max(min, Math.min(max, x));
  */
 export const quantize = (quantum, value) =>
   Math.round(value / quantum) * quantum;
+
+
+/**
+ * @param {number} xMin 
+ * @param {number} xMax 
+ * @param {number} yMin 
+ * @param {number} yMax 
+ * @param {number} xStep 
+ * @param {number} yStep 
+ * @returns {Point}
+ */
+export function* grid(xMin, xMax, yMin, yMax, xStep = 1, yStep = 1) {  
+  for (const x of range(xMin, xMax, xStep)) {
+    for (const y of range(yMin, yMax, yStep)) {
+      yield point(x, y)
+    }
+  }
+}

@@ -104,7 +104,7 @@ export function draw() {
     r: 15,
   });
   const blackCircle = circle.withAttrs({
-    fill: "hsla(0, 0%, 0%, 0.5)",
+    fill: hsla(0, 0, 0, 0.5)
   });
 
   const path = tag("path", {
@@ -112,7 +112,7 @@ export function draw() {
     "stroke-width": "2.1",
     "stroke-linecap": "round",
     "stroke-linejoin": "round",
-    style: "filter: drop-shadow(1px 1px 0.5px hsla(0, 0%, 40%, 0.5));",
+    style: `filter: drop-shadow(1px 1px 0.5px ${hsla(0, 0, 40, 0.5)});`,
   });
 
   const baseColor = { h: 260, s: 25, l: 8 };

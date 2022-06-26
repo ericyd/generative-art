@@ -2,7 +2,7 @@ import { svg, tag } from "../lib/tag.js";
 import { array, degToRad, map, quantize } from "../lib/util.js";
 import { pathBuilder, point } from "../lib/path.js";
 import { jitter, random, rngFactory, shuffle } from "../lib/random.js";
-import { hsl } from "../lib/color.js";
+import { hsl, hsla } from "../lib/color.js";
 
 export function draw() {
   const w = 100;
@@ -178,7 +178,7 @@ export function draw() {
     tag("polygon", {
       points: `${w * 3/7},${h * 4/7} ${w / 2},${h * 3/7} ${w * 4/7},${h * 4/7}`,
       style: "transform: translateY(3px)",
-      fill: "hsla(343, 98%, 19%, 0.70)",
+      fill: hsla(343, 98, 19, 0.70),
       stroke: "none",
       filter: "url(#glow-only)",
       // style: "box-shadow: 0px 0px 10px 10px #fff;"

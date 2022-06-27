@@ -1,35 +1,45 @@
-import { svg, tag } from "../lib/tag.js";
-import { array, grid, map, range, rangeWithIndex } from "../lib/util.js";
+import { Defs, Rect, svg, tag } from "../lib/tag.js";
+import { array, grid, map, observe, range, rangeWithIndex } from "../lib/util.js";
 import { point, pathBuilder, randomPoint } from "../lib/path.js";
 import { random, rngFactory } from "../lib/random.js";
+import { ColorHex } from "../lib/color.js";
+import { glowOnly } from "../lib/filters/glow-only.js";
+import { vec2 } from "../lib/Vector2.js";
 
 export function draw() {
   const w = 100;
   const h = 100;
-  const root = svg({
-    fill: "#000000",
-    stroke: "#ffffff",
-    style: "background: #000000",
-    height: "100%",
-    viewBox: `0 0 ${w} ${h}`,
-    // height: "2000px",
-    // width: "2000px",
-  });
+  const root = svg(
+    {
+      fill: ColorHex.black,
+      height: "100%",
+      viewBox: `0 0 ${w} ${h}`,
+      // height: "2000px",
+      // width: "2000px",
+    },
+    [
+      Defs(glowOnly),
+      Rect({
+        x: 0,
+        y: 0,
+        width: w,
+        height: h,
+        fill: ColorHex.black,
+        stroke: ColorHex.black,
+      }),
+    ]
+  );
 
   const path = tag("path", {
     fill: "none",
     "stroke-width": "1.1",
     'stroke-linecap': 'round',
-    'stroke-linejoin': 'round'
+    'stroke-linejoin': 'round',
+    stroke: ColorHex.white
   });
 
   const seed = Date.now().toString();
-  console.log({ seed });
-  try {
-    window.location.hash = seed;
-  } catch (e) {
-    // window is probably not defined, no biggie
-  }
+  observe(seed)
   const rng = rngFactory(seed);
 
   const children = [];
@@ -47,18 +57,18 @@ export function draw() {
   while (yi < ys.length) {
     while (xi < xs.length) {
       if (random(0, 1, rng) < map(0, ys.length - 1, 0.0, 0.3, yi) && xi < xs.length - 1) {
-        let pt = point(xs[xi], ys[yi]);
+        let pt = vec2(xs[xi], ys[yi]);
         const segment1 = path.withAttrs({
           d: pathBuilder((d) => {
             d.move(pt, "absolute");
-            d.line(point(pt.x + xStep, pt.y + yStep));
+            d.line(vec2(pt.x + xStep, pt.y + yStep));
           }),
         });
-        pt = point(xs[xi + 1], ys[yi]);
+        pt = vec2(xs[xi + 1], ys[yi]);
         const segment2 = path.withAttrs({
           d: pathBuilder((d) => {
             d.move(pt, "absolute");
-            d.line(point(pt.x - xStep, pt.y + yStep));
+            d.line(vec2(pt.x - xStep, pt.y + yStep));
           }),
           // This odd drop-shadow is to avoid artifacts where the segment appears to "shadow itself".
           // Change the offset-x from "-1px" to "1px" to see the ugly artifacts
@@ -67,11 +77,11 @@ export function draw() {
         children.push(segment1, segment2);
         xi += 2;
       } else {
-        const pt = point(xs[xi], ys[yi]);
+        const pt = vec2(xs[xi], ys[yi]);
         const segment = path.withAttrs({
           d: pathBuilder((d) => {
             d.move(pt, "absolute");
-            d.line(point(pt.x, pt.y + yStep));
+            d.line(vec2(pt.x, pt.y + yStep));
           }),
         });
         children.push(segment);
@@ -80,10 +90,6 @@ export function draw() {
     }
     xi = 0;
     yi++;
-  }
-  for (const [y, yi] of rangeWithIndex(yMin, yMax, yStep)) {
-    for (const [x, xi] of rangeWithIndex(xMin, xMax, xStep)) {
-    }
   }
 
   return root.withChildren(children).draw();

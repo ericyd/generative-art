@@ -1,5 +1,6 @@
-import { svg, tag } from "../lib/tag.js";
-import { array, degToRad, map, quantize } from "../lib/util.js";
+import { svg, tag, Defs, Rect, Filter, Circle, Path } from "../lib/tag.js";
+import { glowOnly } from "../lib/filters/glow-only.js";
+import { array, degToRad, map, observe, quantize } from "../lib/util.js";
 import { pathBuilder, point } from "../lib/path.js";
 import { jitter, random, rngFactory, shuffle } from "../lib/random.js";
 import { hsl, hsla } from "../lib/color.js";
@@ -17,7 +18,7 @@ export function draw() {
       // width: "2000px",
     },
     [
-      tag("defs", {}, [
+      Defs(
         tag(
           "filter",
           {
@@ -47,33 +48,9 @@ export function draw() {
           ]
         ),
 
-        // same as #glow but does not blend with source graphic
-        tag(
-          "filter",
-          {
-            id: "glow-only",
-            filterUnits: "userSpaceOnUse",
-            primitiveUnits: "userSpaceOnUse",
-          },
-          [
-            tag("feMorphology", {
-              id: "morphology",
-              operator: "dilate",
-              radius: "4.5",
-              in: "SourceGraphic",
-              result: "thicken",
-            }),
-            tag("feGaussianBlur", {
-              id: "gaussian",
-              stdDeviation: "4.5",
-              in: "thicken",
-              result: "coloredBlur",
-            }),
-          ]
-        ),
+        glowOnly,
 
-        tag(
-          "filter",
+        Filter(
           {
             id: "blur",
             filterUnits: "userSpaceOnUse",
@@ -87,9 +64,9 @@ export function draw() {
               result: "coloredBlur",
             }),
           ]
-        ),
-      ]),
-      tag("rect", {
+        )
+      ),
+      Rect({
         x: 0,
         y: 0,
         width: w,
@@ -100,14 +77,14 @@ export function draw() {
     ]
   );
 
-  const circle = tag("circle", {
+  const circle = Circle({
     r: 15,
   });
   const blackCircle = circle.withAttrs({
-    fill: hsla(0, 0, 0, 0.5)
+    fill: hsla(0, 0, 0, 0.5),
   });
 
-  const path = tag("path", {
+  const path = Path({
     fill: "none",
     "stroke-width": "2.1",
     "stroke-linecap": "round",
@@ -119,16 +96,11 @@ export function draw() {
 
   // const seed = 1656037905577;
   const seed = Date.now().toString();
-  console.log({ seed });
-  try {
-    window.location.hash = seed;
-  } catch (e) {
-    // window is probably not defined, no biggie
-  }
+  observe(seed);
   const rng = rngFactory(seed);
 
   const nChildren = 300;
-  const children = []
+  const children = [];
   const paths = shuffle(array(nChildren), rng).map((i) => {
     const startAngle = degToRad(map(0, nChildren - 1, 0, 360, i));
     const startPoint = point(
@@ -168,18 +140,43 @@ export function draw() {
 
   // children.push(...paths);
 
-  const cy = h/2
+  const cy = h / 2;
   children.push(
-    circle.withAttrs({cx: w*2/8, cy, filter: 'url(#glow-only)', fill: 'hsl(222, 50%, 49%)'}),
-    blackCircle.withAttrs({cx: w*2/8, cy}),
-    circle.withAttrs({cx: w*3/8, cy, filter: 'url(#glow-only)', fill: 'hsl(34, 47%, 51%)'}),
-    blackCircle.withAttrs({cx: w*3/8, cy}),
-    circle.withAttrs({cx: w*4/8, cy, filter: 'url(#glow-only)', fill: 'hsl(90, 36%, 47%)'}),
-    blackCircle.withAttrs({cx: w*4/8, cy}),
-    circle.withAttrs({cx: w*5/8, cy, filter: 'url(#glow-only)', fill: 'hsl(273, 24%, 48%)'}),
-    blackCircle.withAttrs({cx: w*5/8, cy}),
-    circle.withAttrs({cx: w*6/8, cy, filter: 'url(#glow-only)', fill: 'hsl(342, 61%, 46%)'}),
-    blackCircle.withAttrs({cx: w*6/8, cy}),
+    circle.withAttrs({
+      cx: (w * 2) / 8,
+      cy,
+      filter: "url(#glow-only)",
+      fill: "hsl(222, 50%, 49%)",
+    }),
+    blackCircle.withAttrs({ cx: (w * 2) / 8, cy }),
+    circle.withAttrs({
+      cx: (w * 3) / 8,
+      cy,
+      filter: "url(#glow-only)",
+      fill: "hsl(34, 47%, 51%)",
+    }),
+    blackCircle.withAttrs({ cx: (w * 3) / 8, cy }),
+    circle.withAttrs({
+      cx: (w * 4) / 8,
+      cy,
+      filter: "url(#glow-only)",
+      fill: "hsl(90, 36%, 47%)",
+    }),
+    blackCircle.withAttrs({ cx: (w * 4) / 8, cy }),
+    circle.withAttrs({
+      cx: (w * 5) / 8,
+      cy,
+      filter: "url(#glow-only)",
+      fill: "hsl(273, 24%, 48%)",
+    }),
+    blackCircle.withAttrs({ cx: (w * 5) / 8, cy }),
+    circle.withAttrs({
+      cx: (w * 6) / 8,
+      cy,
+      filter: "url(#glow-only)",
+      fill: "hsl(342, 61%, 46%)",
+    }),
+    blackCircle.withAttrs({ cx: (w * 6) / 8, cy })
   );
 
   return root.withChildren(children).draw();

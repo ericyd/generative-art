@@ -18,6 +18,7 @@
 //   relative negative x values move to the left, and relative negative y values move upwards.
 
 import { random } from "./util.js";
+import { vec2, Vector2 } from "./Vector2.js";
 
 /**
  * @typedef Point
@@ -51,10 +52,10 @@ export class PathInstruction {
   /**
    *
    * @param {'l' | 'L' | 'm' | 'M' | 'c' | 'C' | 's' | 'S'} commandType
-   * @param {Point[]} points
+   * @param {Vector2[]} points
    */
   constructor(commandType, points) {
-    this.endPoint = points?.[0]
+    this.endPoint = points?.[0] ?? vec2(0, 0);
     this.points = points;
     this.commandType = commandType;
   }
@@ -74,7 +75,9 @@ export class PathInstruction {
  * @returns {PathInstruction}
  */
 export function move(endPoint, coordinateType = "absolute") {
-  return new PathInstruction(coordinateType === "absolute" ? "M" : "m", [endPoint]);
+  return new PathInstruction(coordinateType === "absolute" ? "M" : "m", [
+    endPoint,
+  ]);
 }
 
 /**
@@ -84,7 +87,9 @@ export function move(endPoint, coordinateType = "absolute") {
  * @returns {PathInstruction}
  */
 export function line(endPoint, coordinateType = "absolute") {
-  return new PathInstruction (coordinateType === "absolute" ? "L" : "l", [endPoint])
+  return new PathInstruction(coordinateType === "absolute" ? "L" : "l", [
+    endPoint,
+  ]);
 }
 
 /**
@@ -104,7 +109,11 @@ export function cubicBezier(
   endPoint,
   coordinateType = "absolute"
 ) {
-  return new PathInstruction(coordinateType === "absolute" ? "C" : "c", [controlPoint1, controlPoint2, endPoint])
+  return new PathInstruction(coordinateType === "absolute" ? "C" : "c", [
+    controlPoint1,
+    controlPoint2,
+    endPoint,
+  ]);
 }
 
 /**
@@ -122,11 +131,14 @@ export function smoothBezier(
   endPoint,
   coordinateType = "absolute"
 ) {
-  return new PathInstruction(coordinateType === "absolute" ? "S" : "s", [controlPoint, endPoint])
+  return new PathInstruction(coordinateType === "absolute" ? "S" : "s", [
+    controlPoint,
+    endPoint,
+  ]);
 }
 
 export function close() {
-  return new PathInstruction('Z', []);
+  return new PathInstruction("Z", []);
 }
 
 // TODO
@@ -134,17 +146,17 @@ export function close() {
 // Elliptical Arc Curve: A, a
 
 /**
- *
+ * @deprecated use vec2
  * @param {number} x
  * @param {number} y
- * @returns {Point}
+ * @returns {Vector2}
  */
 export function point(x, y) {
-  return { x, y };
+  return vec2(x, y);
 }
 
 /**
- *
+ * @deprecated use Vector2.random
  * @param {number} xMin
  * @param {number} xMax
  * @param {number} yMin
@@ -152,7 +164,7 @@ export function point(x, y) {
  * @returns {Point}
  */
 export function randomPoint(xMin, xMax, yMin, yMax, rng) {
-  return point(random(xMin, xMax, rng), random(yMin, yMax, rng));
+  return Vector2.random(xMin, xMax, yMin, yMax, rng);
 }
 
 /**
@@ -197,5 +209,5 @@ export function pathBuilder(drawingCallback) {
   };
   drawingCallback(pathBuilder);
   // with pathInstructions
-  return path.map(p => p.toString()).join(" ");
+  return path.map((p) => p.toString()).join(" ");
 }

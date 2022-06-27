@@ -61,6 +61,10 @@ export function random(min, max, rng = Math.random) {
   return min + rng() * (max - min);
 }
 
+export function randomInt(min, max, rng = Math.random) {
+  return Math.floor(random(min, max, rng))
+}
+
 export function jitter(amount, value, rng) {
   return random(value - amount, value + amount, rng);
 }

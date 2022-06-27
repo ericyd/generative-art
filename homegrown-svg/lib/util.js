@@ -100,3 +100,12 @@ export function* grid(xMin, xMax, yMin, yMax, xStep = 1, yStep = 1) {
     }
   }
 }
+
+export function observe(value, name = 'seed') {
+  console.log({ [name]: value });
+  try {
+    window.location.hash = `${name}=${value}`;
+  } catch (e) {
+    // window is probably not defined, no biggie
+  }
+}

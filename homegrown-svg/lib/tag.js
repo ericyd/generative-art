@@ -1,8 +1,8 @@
 /**
  *
  * @param tagName
- * @param attrs
- * @param children
+ * @param {object} attrs
+ * @param {tag[]} children
  */
 export function tag(tagName, attrs = {}, children = []) {
   const formatAttrs = () =>
@@ -22,6 +22,22 @@ export function tag(tagName, attrs = {}, children = []) {
   };
 }
 
+/**
+ * @param {string} tagName
+ * @returns function which returns a tag
+ */
+export function namedTag(tagName) {
+  /**
+   * @param {object} attrs
+   * @param {tag[]} children
+   */
+  return (attrs = {}, children = []) => tag(tagName, attrs, children)
+}
+
+/**
+ * @param {object} attrs
+ * @param {tag[]} children
+ */
 export function svg(attrs = {}, children = []) {
   return tag(
     "svg",
@@ -34,4 +50,14 @@ export function svg(attrs = {}, children = []) {
     },
     children
   );
+}
+
+export const Circle = namedTag('circle')
+export const Rect = namedTag('rect')
+export const Filter = namedTag('filter')
+export const Path = namedTag('path')
+
+// defs don't need attrs
+export function Defs(...children) {
+  return tag('defs', {}, children)
 }

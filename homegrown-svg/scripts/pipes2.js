@@ -39,10 +39,10 @@ export function draw() {
     hsl(342, 61, 46),
   ];
   const basePathColor = hsl(220, 10, 70);
-  const topToBottom = linearGradientDirection(w/2, w/2, 0, h);
+  const topToBottom = linearGradientDirection(w / 2, w / 2, 0, h);
   const linearGradients = colors.map((c, i) =>
     LinearGradient({ id: `linear-gradient-${i}`, ...topToBottom }, [
-      linearGradientStop(20, hsl(c.h, c.s *4/8, c.l)),
+      linearGradientStop(20, hsl(c.h, (c.s * 4) / 8, c.l)),
       linearGradientStop(80, basePathColor),
     ])
   );
@@ -70,7 +70,7 @@ export function draw() {
 
   const path = Path({
     fill: "none",
-    "stroke-width": "0.35",
+    "stroke-width": "0.65",
     "stroke-linecap": "round",
     "stroke-linejoin": "round",
   });
@@ -129,26 +129,32 @@ export function draw() {
         ];
         i++;
 
-        // // cross 2 non-adjacent
-        // // this is interesting, but not sure its the look I want
-        // } else if (random(0, 1, rng) < chanceOfCrossing && i < pathBuilders.length - 2) {
-        //   // Cubic bezier
-        //   const next1 = vec2(xStep * 2, yStep)
-        //   const ctrl1a = vec2(0, yStep)
-        //   const ctrl1b = vec2(xStep * 2, 0)
-        //   pathBuilders[i].push(cubicBezier(ctrl1a, ctrl1b, next1, "relative"));
+      // // cross 2 non-adjacent
+      // // this is interesting, but not sure its the look I want
+      // } else if (
+      //   random(0, 1, rng) < chanceOfCrossing / 4 &&
+      //   i < pathBuilders.length - 2
+      // ) {
+      //   // Cubic bezier
+      //   const next1 = vec2(xStep * 2, yStep);
+      //   const ctrl1a = vec2(0, yStep);
+      //   const ctrl1b = vec2(xStep * 2, 0);
+      //   pathBuilders[i].push(cubicBezier(ctrl1a, ctrl1b, next1, "relative"));
 
-        //   const next2 = vec2(-xStep * 2, yStep)
-        //   const ctrl2a = vec2(0, yStep)
-        //   const ctrl2b = vec2(-xStep * 2, 0)
-        //   pathBuilders[i + 2].push(
-        //     cubicBezier(ctrl2a, ctrl2b, next2, "relative")
-        //   );
+      //   const next2 = vec2(-xStep * 2, yStep);
+      //   const ctrl2a = vec2(0, yStep);
+      //   const ctrl2b = vec2(-xStep * 2, 0);
+      //   pathBuilders[i + 2].push(
+      //     cubicBezier(ctrl2a, ctrl2b, next2, "relative")
+      //   );
 
-        //   // swap pathBuilders to preserve ordering
-        //   [pathBuilders[i], pathBuilders[i+2]] = [pathBuilders[i+2], pathBuilders[i]]
-        //   i++;
-        //   i++;
+      //   // swap pathBuilders to preserve ordering
+      //   [pathBuilders[i], pathBuilders[i + 2]] = [
+      //     pathBuilders[i + 2],
+      //     pathBuilders[i],
+      //   ];
+      //   i++;
+      //   i++;
       } else {
         pathBuilders[i].push(line(vec2(0, yStep), "relative"));
       }
@@ -161,7 +167,11 @@ export function draw() {
   const children = shuffle(pathBuilders).map((d) =>
     path.withAttrs({
       d,
-      stroke: `url(#linear-gradient-${randomInt(0, linearGradients.length, rng)})`,
+      stroke: `url(#linear-gradient-${randomInt(
+        0,
+        linearGradients.length,
+        rng
+      )})`,
       style: `filter: drop-shadow(0.5px 0.5px 1px ${hsl(220, 0, 0)});`,
     })
   );

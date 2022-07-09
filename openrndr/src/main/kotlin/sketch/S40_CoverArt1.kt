@@ -9,10 +9,10 @@ import org.openrndr.draw.TransformTarget
 import org.openrndr.draw.isolatedWithTarget
 import org.openrndr.draw.renderTarget
 import org.openrndr.extra.noise.random
+import org.openrndr.extra.shadestyles.RadialGradient
 import org.openrndr.extras.color.palettes.ColorSequence
 import org.openrndr.extras.color.palettes.colorSequence
 import org.openrndr.math.Vector2
-import org.openrndr.math.map
 import org.openrndr.shape.Circle
 import org.openrndr.shape.Rectangle
 import org.openrndr.shape.Segment
@@ -27,6 +27,7 @@ import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.hypot
+import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.random.Random
 
@@ -37,7 +38,7 @@ fun main() = application {
   }
 
   program {
-    val scaleAmount = 1
+    val scaleAmount = 2
     fun scale(v: Double): Double { return v * scaleAmount.toDouble() }
     fun scale(v: Int): Int { return v * scaleAmount }
     val w = scale(width)
@@ -103,12 +104,10 @@ fun main() = application {
       }
     }
 
-    data class ContourWithEdge(val contour: ShapeContour, val edge: Segment)
-
     data class ContourWithEdges(val contour: ShapeContour, val edges: List<Segment>)
 
     /**
-     * try this
+     *  TODO: Add clarity to this algorithm description
      *  1. draw first edge through circle
      *  2. Estimate a "triangle" based on
      *    a. the edge (points 1 and 2)
@@ -117,7 +116,7 @@ fun main() = application {
      *    - not exactly sure how this will look for such a large thing
      *  4. Repeat for next segment
      */
-    fun subdivide_v3(dividable: ContourWithEdges, maxDepth: Int, currentDepth: Int, baseFidelity: Int = 100, rng: Random = Random.Default): List<ContourWithEdges> {
+    fun subdivide(dividable: ContourWithEdges, rng: Random = Random.Default): List<ContourWithEdges> {
       val (contour, edges) = dividable
 
       when (edges.size) {
@@ -204,41 +203,6 @@ fun main() = application {
       }
     }
 
-    fun subdivide_v2(dividable: ContourWithEdge, maxDepth: Int, currentDepth: Int, baseFidelity: Int = 100, rng: Random = Random.Default): List<ContourWithEdge> {
-      val (contour, edge) = dividable
-      // this could use some tuning
-      if (contour.length < 20.0) {
-        return listOf(dividable)
-      }
-
-      val fidelity = map(0.0, maxDepth - 1.0, baseFidelity.toDouble(), baseFidelity * 0.5, currentDepth.toDouble()).toInt()
-      // split the contour into points
-      val points = contour.equidistantPositions(fidelity)
-      // val contourMidpointIndex = points.size / 2 // BORING!
-      // val edgeMidpoint = (edge.start + edge.end) / 2.0 // BORING!
-
-      val randMin = map(0.0, maxDepth - 1.0, 0.3, 0.5, currentDepth.toDouble())
-
-      // split the list of points in "half"
-      val contourMidpointIndex = (fidelity * random(randMin, 1.0 - randMin, rng)).toInt()
-      // split the edge segment in "half"
-      val edgeSplitPosition = random(randMin, 1.0 - randMin, rng)
-      val edgeMidpointA = edge.position(edgeSplitPosition)
-      val edgeGap = map(0.0, maxDepth - 1.0, 0.01, 0.05, currentDepth.toDouble())
-      val edgeMidpointB = edge.position(edgeSplitPosition - edgeGap)
-
-      // join together the first half of the contour points with the edge piece
-      val pointsListA = listOf(edgeMidpointA) + points.subList(0, contourMidpointIndex)
-      val edgeA = Segment(points[contourMidpointIndex], edgeMidpointA, corner = true)
-      val contourA = ShapeContour.fromPoints(pointsListA, closed = false)
-
-      val pointsListB = points.subList(contourMidpointIndex, points.size) + listOf(edgeMidpointB)
-      val edgeB = Segment(edgeMidpointB, points[contourMidpointIndex], corner = true)
-      val contourB = ShapeContour.fromPoints(pointsListB, closed = false)
-
-      return listOf(ContourWithEdge(contourA, edgeA), ContourWithEdge(contourB, edgeB))
-    }
-
     fun splitInTwo(contour: ShapeContour, fidelity: Int = 100, rng: Random = Random.Default): List<ContourWithEdges> {
       // get list of evenly-spaced points around the contour
       val points = contour.equidistantPositions(fidelity)
@@ -267,32 +231,31 @@ fun main() = application {
       return listOf(ContourWithEdges(contourA, listOf(edgeA)), ContourWithEdges(contourB, listOf(edgeB)))
     }
 
-    fun explode(contour: ShapeContour, rng: Random = Random.Default): ShapeContour {
+    /**
+     * Shifts a ShapeContour by a vector amount.
+     * The vector amount is based on
+     * 1. how far it is from the center of the circle
+     * 2. its current position (i.e. it moves outwards w.r.t. to the center of the circle)
+     */
+    fun explode(contour: ShapeContour, maxRadius: Double, rng: Random = Random.Default): ShapeContour {
       val contourCenter = contour.bounds.center
-      // wow this improves things SOOOOOOO much. What i need is an exponential interp or something. Maybe squaredDistanceTo
-      if (contourCenter.distanceTo(center) < w * 0.1) {
-        return contour
-      }
-      val explodeBasis = map(w * 0.1, w * 0.3, 0.0, w * 0.1, contourCenter.distanceTo(center))
-      val explodeStrength = random(-explodeBasis, explodeBasis, rng)
-      val explodeDirection = atan2(contourCenter.y - center.y, contourCenter.x - center.x) + random(-PI * 0.1, PI * 0.1, rng)
+      // strange variable name, but idea is that the value scales in a cubic way not linearly. If it were linear scaling it would just be contourCenter.distanceTo(center) / maxRadius
+      val cubicInterpPercentage = contourCenter.distanceTo(center).pow(3) / maxRadius.pow(3)
+      val explodeJitter = w * 0.05 * cubicInterpPercentage
+      val explodeStrength = random(-explodeJitter, explodeJitter, rng)
+      val directionJitter =  PI * 0.1 * cubicInterpPercentage
+      val explodeDirection = atan2(contourCenter.y - center.y, contourCenter.x - center.x) + random(-directionJitter, directionJitter, rng)
       val explodeVec = Vector2(cos(explodeDirection), sin(explodeDirection)) * explodeStrength
       val segments = contour.segments.map { Segment(it.start + explodeVec, it.end + explodeVec) }
       return ShapeContour.fromSegments(segments, closed = true)
     }
 
-    fun subdivideUntil(dividable: ContourWithEdges, fidelity: Int = 100, rng: Random = Random.Default, maxDepth: Int = 5, currentDepth: Int = 0): List<ContourWithEdges> {
+    fun subdivideUntil(dividable: ContourWithEdges, rng: Random = Random.Default, maxDepth: Int = 5, currentDepth: Int = 0): List<ContourWithEdges> {
       if (currentDepth > maxDepth) {
-        return listOf()
+        return listOf(dividable)
       }
-      return subdivide_v3(dividable, maxDepth, currentDepth, fidelity, rng)
-        .flatMap {
-          if (currentDepth == maxDepth) {
-            listOf(it)
-          } else {
-            subdivideUntil(it, fidelity, rng, maxDepth, currentDepth + 1)
-          }
-        }
+      return subdivide(dividable, rng)
+        .flatMap { subdivideUntil(it, rng, maxDepth, currentDepth + 1) }
     }
 
     extend {
@@ -330,7 +293,9 @@ fun main() = application {
         drawer.stroke = ColorRGBa.WHITE
         drawer.strokeWeight = scale(0.5)
 
-        // Background "walker" pattern
+        /**
+         * Background "walker" pattern
+         */
         val angle = PI / 9.0
         val bounds = Rectangle(0.0, 0.0, w.toDouble(), h.toDouble())
         val existingPoints = QuadTree(bounds, 10)
@@ -338,12 +303,20 @@ fun main() = application {
         val velocity = scale(random(6.0, 7.0, rng))
         val padding = velocity - scale(1.0)
         val jitter = { n: Double -> random(n - scale(1.0), n + scale(1.0), rng) }
-        /*
-        */
-        grid(0, w, 0, h, velocity.toInt() + padding.toInt()) { i: Int, j: Int ->
-          // start at center to avoid biasing towards a corner
-          val x = if (i % 2 == 0) { w / 2.0 + i / 2.0 } else { w / 2.0 - i / 2.0 }
-          val y = if (j % 2 == 0) { h / 2.0 + j / 2.0 } else { h / 2.0 - j / 2.0 }
+        val stepSize = velocity.toInt() + padding.toInt()
+        grid(0, w, 0, h, stepSize) { i: Int, j: Int ->
+          // return@grid // comment me out to actually draw the grid!
+          // start at center and build outwards, alternating between NE/SE/SW/NW quadrants.
+          // This avoids biasing towards a corner
+          val x = if ((i / stepSize) % 2 == 0) { center.x + i / 2.0 } else { center.x - i / 2.0 }
+          val y = if ((j / stepSize) % 2 == 0) { center.y + j / 2.0 } else { center.y - j / 2.0 }
+          // bummer... I need a more sophisticated way to do this... iIndex/jIndex or something silly like that. I wonder if I can divide by stepSize somehow :\
+          // val (x, y) = if (flip) {
+          //   Pair(center.x + i / 2.0, center.y + j / 2.0)
+          // } else {
+          //   Pair(center.x - i / 2.0, center.y - j / 2.0)
+          // }
+          // flip = !flip
           if (j == 0) println("$i of $w")
           val start = Vector2(jitter(x), jitter(y))
           val gradient = gradients[random(0.0, gradients.size.toDouble(), rng).toInt()]
@@ -351,20 +324,28 @@ fun main() = application {
           walker.walkNoOverlap(scale(random(500.0, 1000.0, rng).toInt()), padding, existingPoints, bounds, drawer, gradient)
         }
 
-        /*
-        */
-        val baseContour = Circle(w / 2.0, h / 2.0, w * 0.18).contour
+        /**
+         * Black circle in middle
+         */
+        val radius = w * 0.18
+        val baseContour = Circle(center, radius).contour
         drawer.stroke = null
         drawer.fill = ColorRGBa.BLACK
         drawer.contour(baseContour)
 
-        val fidelity = 200
+        /**
+         * Center "shatter" pattern
+         */
+        val fidelity = 500
         val maxDepth = 9
+        // TODO: need to decide if I still like this
+        // It results in two halves that have very different subdivision density
+        // I wonder if I would prefer to start with an edge straight through the middle (to allow subdividing the start)
+        // and then just subdivide from there.
         val (edgedContourA, edgedContourB) = splitInTwo(baseContour, fidelity, rng)
-        val contours = subdivideUntil(edgedContourA, fidelity, rng, maxDepth) +
-          subdivideUntil(edgedContourB, fidelity, rng, maxDepth)
+        val contours = subdivideUntil(edgedContourA, rng, maxDepth) +
+          subdivideUntil(edgedContourB, rng, maxDepth)
         val mappedContours = contours
-          // .map { it.contour.close }
           .map {
             when (it.edges.size) {
               1 -> {
@@ -388,37 +369,26 @@ fun main() = application {
               }
             }
           }
-          .map { explode(it, rng) }
+          .map { explode(it, radius, rng) }
         drawer.strokeWeight = scale(0.5)
         drawer.shadeStyle = null
         for (c in mappedContours) {
-          // drawer.fill = ColorRGBa.WHITE.opacify(random(0.15, 0.85, rng))
-
-          // drawer.fill = hsla(
-          //   random(20.0, 60.0, rng),
-          //   random(0.3, 0.4, rng),
-          //   random(0.4, 0.6, rng),
-          //   random(0.3, 0.8, rng),
-          // ).toRGBa()
-
           val baseColor = gradients[random(0.0, gradients.size - 1.0, rng).toInt()]
             .index(random(0.1, 0.3, rng))
           drawer.fill = baseColor.opacify(random(0.3, 0.8, rng))
           drawer.stroke = baseColor
-          // drawer.segments(c.edges)
-          // drawer.contour(c.contour)
           drawer.contour(c)
         }
-        // drawer.contours(contours.map { it.contour.close })
 
-        /*debugging
-        drawer.fill = ColorRGBa.ORANGE_RED.opacify(0.15)
-        val debugContour = contours[random(0.0, contours.size - 1.0, rng).toInt()]
-        drawer.stroke = ColorRGBa.GREEN
-        drawer.segments(debugContour.segments.filterIndexed { index, segment -> index % 2 == 0  })
-        drawer.stroke = ColorRGBa.RED
-        drawer.segments(debugContour.segments.filterIndexed { index, segment -> index % 2 != 0  })
-        */
+      }
+
+      /**
+       * Shadow around edges
+       */
+      drawer.isolatedWithTarget(rt) {
+        drawer.ortho(rt)
+        drawer.shadeStyle = RadialGradient(ColorRGBa.TRANSPARENT, ColorRGBa.BLACK, offset=Vector2.ZERO, length = 0.90)
+        drawer.contour(Circle(center, hypot(w*0.5, h*0.5)).contour)
       }
 
       drawer.scale(width.toDouble() / rt.width, TransformTarget.MODEL)

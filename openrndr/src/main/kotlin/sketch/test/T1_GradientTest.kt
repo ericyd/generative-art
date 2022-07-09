@@ -22,9 +22,10 @@ fun main() = application {
     val moonFade = radialGradient(
       ColorRGBa.WHITE,
       ColorRGBa.TRANSPARENT,
-      offset = Vector2(0.50),
-      rotation = PI / 4.0,
-      length = 01.25, // longer length makes the gradient shrink... right....
+      // offset = Vector2(0.50),
+      // rotation = PI / 4.0,
+      // length = 01.25, // longer length makes the gradient shrink... right....
+      exponent = 10.50
     )
 
     extend {

@@ -1,6 +1,7 @@
 package sketch
 
 import org.openrndr.application
+import org.openrndr.color.ColorHSVa
 import org.openrndr.color.ColorRGBa
 import org.openrndr.color.hsv
 import org.openrndr.draw.BufferMultisample
@@ -13,6 +14,7 @@ import org.openrndr.extra.shadestyles.RadialGradient
 import org.openrndr.extras.color.palettes.ColorSequence
 import org.openrndr.extras.color.palettes.colorSequence
 import org.openrndr.math.Vector2
+import org.openrndr.math.map
 import org.openrndr.shape.Circle
 import org.openrndr.shape.Rectangle
 import org.openrndr.shape.Segment
@@ -38,7 +40,7 @@ fun main() = application {
   }
 
   program {
-    val scaleAmount = 2
+    val scaleAmount = 3
     fun scale(v: Double): Double { return v * scaleAmount.toDouble() }
     fun scale(v: Int): Int { return v * scaleAmount }
     val w = scale(width)
@@ -54,14 +56,14 @@ fun main() = application {
     }
 
     class Walker(val start: Vector2, val baseAngle: Double, val rng: Random, val velocity: Double = 5.0) {
-      fun walkNoOverlap(length: Int, padding: Double, existingPoints: QuadTree, bounds: Rectangle, drawer: Drawer, gradient: ColorSequence): List<Vector2> {
+      fun walkNoOverlap(length: Int, padding: Double, existingPoints: QuadTree, bounds: Rectangle, drawer: Drawer, color: ColorHSVa) {
+        val baseColor = color
+          .shiftHue(random(-2.5, 2.5, rng))
+          .shade(random(0.95, 1.05, rng))
+          .saturate(random(0.95, 1.05, rng))
         var angle = genAngle(baseAngle)
         var cursor = start
         existingPoints.add(QTreeNode(cursor))
-        // it is, of course, valid to include the start point in the line.
-        // However, it seems to result in unintentional overlaps, and doesn't dramatically improve the look
-        // val list = mutableListOf(cursor)
-        val list = mutableListOf<Vector2>()
         for (i in 0 until length) {
           angle = genAngle(angle)
           val point = Vector2(
@@ -77,15 +79,14 @@ fun main() = application {
           }
 
           if (i > 1) {
-            drawer.stroke = gradient.index(point.distanceTo(center) / (hypot(w * 0.5, h * 0.5)))
+            drawer.stroke = baseColor
+              .shade(map(0.0, hypot(w * 0.5, h * 0.5), 1.1, 0.5, point.distanceTo(center)))
+              .toRGBa()
             drawer.lineSegment(cursor, point)
           }
           cursor = point
           existingPoints.add(QTreeNode(cursor))
-          // and now that we're drawing the line directly, we don't even need the list, but its easier to keep the boilerplate
-          // list.add(cursor)
         }
-        return list
       }
 
       // generate a new angle based on the previous angle
@@ -104,106 +105,146 @@ fun main() = application {
       }
     }
 
-    data class ContourWithEdges(val contour: ShapeContour, val edges: List<Segment>)
-
-    /**
-     *  TODO: Add clarity to this algorithm description
-     *  1. draw first edge through circle
-     *  2. Estimate a "triangle" based on
-     *    a. the edge (points 1 and 2)
-     *    b. the "midpoint" (randomized) of the remaining contour (point 3)
-     *  3. Proceed with "triangle subdivision"
-     *    - not exactly sure how this will look for such a large thing
-     *  4. Repeat for next segment
-     */
-    fun subdivide(dividable: ContourWithEdges, rng: Random = Random.Default): List<ContourWithEdges> {
-      val (contour, edges) = dividable
-
-      when (edges.size) {
-        1 -> {
-          // create "pseudo triangle" by combining the edge with the midpoint of the contour
-          val edgeA = edges[0]
-          // val edgeAEndCloseToContourStart = edgeA.end.distanceTo(contour.position(0.0)) < 10.0
-          val contourMidpointT = random(0.4, 0.6, rng)
-          val edgeB = Segment(edgeA.end, contour.position(contourMidpointT))
-          val edgeC = Segment(contour.position(contourMidpointT), edgeA.start)
-
-          val edgeMidpointTBase = random(0.4, 0.6, rng)
-          if (edgeA.length > edgeB.length && edgeA.length > edgeC.length) { // edgeA is longest
-            val edgeMidpointT = edgeMidpointTBase
-            val divider = Segment(edgeA.position(edgeMidpointT), edgeB.end)
-            val contourA = contour.sub(0.0, contourMidpointT)
-            val contourB = contour.sub(contourMidpointT, 1.0)
-            return listOf(ContourWithEdges(contourA, listOf(edgeA.sub(edgeMidpointT, 1.0), divider)), ContourWithEdges(contourB, listOf(divider, edgeB.sub(edgeMidpointT, 1.0))))
-          } else if (edgeB.length > edgeA.length && edgeB.length > edgeC.length) { // edgeB is longest
-            val edgeMidpointT = edgeMidpointTBase * contourMidpointT
-            val divider = Segment(contour.position(edgeMidpointT), edgeA.start)
-            val contourA = contour.sub(0.0, edgeMidpointT)
-            val contourB = contour.sub(edgeMidpointT, 1.0)
-            return listOf(ContourWithEdges(contourA, listOf(divider, edgeA)), ContourWithEdges(contourB, listOf(divider)))
-          } else { // edgeC is longest (or math error)
-            val edgeMidpointT = 1.0 - (edgeMidpointTBase * contourMidpointT)
-            val divider = Segment(contour.position(edgeMidpointT), edgeA.end)
-            val contourA = contour.sub(0.0, edgeMidpointT)
-            val contourB = contour.sub(edgeMidpointT, 1.0)
-            return listOf(ContourWithEdges(contourA, listOf(divider)), ContourWithEdges(contourB, listOf(divider, edgeA)))
+    class ContourWithVertices(val contour: ShapeContour = ShapeContour.EMPTY, val vertices: List<Vector2> = listOf()) {
+      fun toClosedShapeContour(): ShapeContour {
+        val points = when (this.vertices.size) {
+          0 -> {
+            val vertexA = this.contour.position(0.0)
+            val vertexB = this.contour.position(1.0)
+            val vertexC = this.contour.position(0.5)
+            listOf(vertexA, vertexB, vertexC)
+          }
+          1 -> {
+            val vertexA = this.contour.position(0.0)
+            val vertexB = this.contour.position(1.0)
+            val vertexC = this.vertices[0]
+            listOf(vertexA, vertexB, vertexC)
+          }
+          else -> {
+            val vertexA = this.vertices[0]
+            val vertexB = this.vertices[1]
+            val vertexC = this.vertices[2]
+            listOf(vertexA, vertexB, vertexC)
           }
         }
-        2 -> {
-          // "pseudo triangle" has to be the contour combined with 2 edges (B and C) which meet at vertexBC
-          val edgeA = contour
-          val edgeAStart = contour.position(0.0)
-          val edgeAEnd = contour.position(1.0)
-          val pointsBC = listOf(edges[0].start, edges[0].end, edges[1].start, edges[1].end)
-          val vertexBC = pointsBC.first { it.distanceTo(edgeAStart) > 1.0 && it.distanceTo(edgeAEnd) > 1.0 }
-          val edgeB = Segment(edgeAEnd, vertexBC)
-          val edgeC = Segment(vertexBC, edgeAStart)
+        return ShapeContour.fromPoints(points, closed = true)
+      }
 
-          val edgeMidpointT = random(0.4, 0.6, rng)
-          if (edgeA.length > edgeB.length && edgeA.length > edgeC.length) { // edgeA (contour) is longest
-            val divider = Segment(contour.position(edgeMidpointT), vertexBC)
-            val contourA = contour.sub(0.0, edgeMidpointT)
-            val contourB = contour.sub(edgeMidpointT, 1.0)
-            return listOf(ContourWithEdges(contourA, listOf(edgeC, divider)), ContourWithEdges(contourB, listOf(divider, edgeB)))
-          } else if (edgeB.length > edgeA.length && edgeB.length > edgeC.length) { // edgeB is longest
-            val divider = Segment(edgeB.position(edgeMidpointT), edgeAStart)
-            val contourA = ShapeContour.EMPTY
-            val contourB = contour
-            return listOf(ContourWithEdges(contourA, listOf(edgeB.sub(edgeMidpointT, 1.0), edgeC, divider)), ContourWithEdges(contourB, listOf(edgeB.sub(0.0, edgeMidpointT), divider)))
-          } else { // edgeC is longest (or math error)
-            val divider = Segment(edgeC.position(edgeMidpointT), edgeAEnd)
-            val contourA = ShapeContour.EMPTY
-            val contourB = contour
-            return listOf(ContourWithEdges(contourA, listOf(edgeC.sub(0.0, edgeMidpointT), divider, edgeB)), ContourWithEdges(contourB, listOf(divider, edgeC.sub(edgeMidpointT, 1.0))))
+      /**
+       *  Triangle subdivision of arbitrary ShapeContours.
+       *  Assumes that the ShapeContour is not closed.
+       *  The algorithm could run with a closed ShapeContour but it might not produce good results.
+       *
+       *  Three scenarios, each with discrete algorithm:
+       *  A. ShapeContour only, no known vertices
+       *    1. Consider start of ShapeContour as vertexA
+       *    2. Consider end of ShapeContour as vertexB
+       *    3. Take a point in the middle of the ShapeContour (with some randomization) as vertexC
+       *    4. Split the ShapeContour based on which edge is the longest
+       *    5. Return the two ShapeContours matched with the midpoint from step 3. On subsequent subdivisions, this data will fall into scenario B (below)
+       *  B. ShapeContour with 1 known vertex
+       *    1. Consider start of ShapeContour as vertexA
+       *    2. Consider end of ShapeContour as vertexB
+       *    3. The known vertex is vertexC
+       *    4. If the contour is the longest section
+       *      a. get the midpoint (with some randomization)
+       *      b. split the ShapeContour at the quasi-midpoint
+       *      c. return each ShapeContour split with vertexC. These will both fall into scenario B again on subsequent subdivisions
+       *    5. If either edge BC or edge CA is longest
+       *      a. get the midpoint (with some randomization)
+       *      b. Return one triangle (3 known vertices) from the new midpoint and 2 other vertices
+       *      c. Return the full ShapeContour along with the midpoint as the known vertex
+       *  C. No ShapeContour, but 3 known vertices
+       *    1. Find the longest edge
+       *    2. Split the longest edge (with some randomization)
+       *    3. Return 2 new triangles using the new vertex
+       */
+      fun subdivide(rng: Random = Random.Default): List<ContourWithVertices> {
+        val contour = this.contour
+        val vertices = this.vertices
+
+        when (vertices.size) {
+          0 -> {
+            val vertexA = contour.position(0.0)
+            val vertexB = contour.position(1.0)
+            val contourMidpointT = random(0.4, 0.6, rng)
+            val vertexC = contour.position(contourMidpointT)
+
+            val lengthAB = vertexA.distanceTo(vertexB)
+            val lengthBC = vertexB.distanceTo(vertexC)
+            val lengthCA = vertexC.distanceTo(vertexA)
+
+            val edgeMidpointT = random(0.4, 0.6, rng)
+            val newVertex = vertexA.mix(vertexB, edgeMidpointT)
+            return if (lengthAB > lengthBC && lengthAB > lengthCA) {
+              val contourA = contour.sub(0.0, contourMidpointT)
+              val contourB = contour.sub(contourMidpointT, 1.0)
+              listOf(ContourWithVertices(contourA, listOf(newVertex)), ContourWithVertices(contourB, listOf(newVertex)))
+            } else if (lengthBC > lengthAB && lengthBC > lengthCA) {
+              // midpoint is between *start* of contour and "contourMidpoint" aka vertexC
+              val contourSplitpointT = edgeMidpointT * contourMidpointT
+              val contourA = contour.sub(0.0, contourSplitpointT)
+              val contourB = contour.sub(contourSplitpointT, 1.0)
+              listOf(ContourWithVertices(contourA, listOf(newVertex)), ContourWithVertices(contourB, listOf(newVertex)))
+            } else {
+              // midpoint is between *end* of contour and "contourMidpoint" aka vertexC
+              val contourSplitpointT = 1.0 - (edgeMidpointT * contourMidpointT)
+              val contourA = contour.sub(0.0, contourSplitpointT)
+              val contourB = contour.sub(contourSplitpointT, 1.0)
+              listOf(ContourWithVertices(contourA, listOf(newVertex)), ContourWithVertices(contourB, listOf(newVertex)))
+            }
           }
-        }
-        // this *should* only get here with 3 edges (we treat it as always having 3 edges, so if there are more for some reason they will just be dropped)
-        else -> {
-          // triangle is made up one one known edge (edgeA) and the vertex of the other two edges
-          // we don't know exactly where that vertex is b/c edgeB or edgeC could be flipped,
-          // so we have to find the point that is furthest from both edges
-          val edgeA = edges[0]
-          val pointsBC = listOf(edges[1].start, edges[1].end, edges[2].start, edges[2].end)
-          val vertexBC = pointsBC.first { it.distanceTo(edgeA.start) > 1.0 && it.distanceTo(edgeA.end) > 1.0 }
-          val edgeB = Segment(edgeA.end, vertexBC)
-          val edgeC = Segment(vertexBC, edgeA.start)
+          1 -> {
+            val vertexA = contour.position(0.0)
+            val vertexB = contour.position(1.0)
+            val vertexC = vertices[0]
 
-          val edgeMidpointT = random(0.4, 0.6, rng)
-          if (edgeA.length > edgeB.length && edgeA.length > edgeC.length) { // edgeA is longest
-            val divider = Segment(edgeA.position(edgeMidpointT), edgeB.end)
-            return listOf(ContourWithEdges(ShapeContour.EMPTY, listOf(edgeA.sub(edgeMidpointT, 1.0), edgeB, divider)), ContourWithEdges(ShapeContour.EMPTY, listOf(divider, edgeC, edgeA.sub(0.0, edgeMidpointT))))
-          } else if (edgeB.length > edgeA.length && edgeB.length > edgeC.length) { // edgeB is longest
-            val divider = Segment(edgeB.position(edgeMidpointT), edgeA.start)
-            return listOf(ContourWithEdges(ShapeContour.EMPTY, listOf(edgeB.sub(edgeMidpointT, 1.0), edgeC, divider)), ContourWithEdges(ShapeContour.EMPTY, listOf(divider, edgeA, edgeB.sub(0.0, edgeMidpointT))))
-          } else { // edgeC is longest (or math error)
-            val divider = Segment(edgeC.position(edgeMidpointT), edgeB.start)
-            return listOf(ContourWithEdges(ShapeContour.EMPTY, listOf(edgeC.sub(edgeMidpointT, 1.0), edgeA, divider)), ContourWithEdges(ShapeContour.EMPTY, listOf(divider, edgeB, edgeC.sub(0.0, edgeMidpointT))))
+            val lengthAB = vertexA.distanceTo(vertexB)
+            val lengthBC = vertexB.distanceTo(vertexC)
+            val lengthCA = vertexC.distanceTo(vertexA)
+
+            val edgeMidpointT = random(0.4, 0.6, rng)
+            return if (lengthAB > lengthBC && lengthAB > lengthCA) { // contour is longest
+              val contourA = contour.sub(0.0, edgeMidpointT)
+              val contourB = contour.sub(edgeMidpointT, 1.0)
+              listOf(ContourWithVertices(contourA, listOf(vertexC)), ContourWithVertices(contourB, listOf(vertexC)))
+            } else if (lengthBC > lengthAB && lengthBC > lengthCA) {
+              val newVertex = vertexB.mix(vertexC, edgeMidpointT)
+              listOf(ContourWithVertices(vertices = listOf(newVertex, vertexC, vertexA)), ContourWithVertices(contour, listOf(newVertex)))
+            } else {
+              val newVertex = vertexC.mix(vertexA, edgeMidpointT)
+              listOf(ContourWithVertices(vertices = listOf(newVertex, vertexB, vertexC)), ContourWithVertices(contour, listOf(newVertex)))
+            }
+          }
+          3 -> {
+            val vertexA = vertices[0]
+            val vertexB = vertices[1]
+            val vertexC = vertices[2]
+
+            val lengthAB = vertexA.distanceTo(vertexB)
+            val lengthBC = vertexB.distanceTo(vertexC)
+            val lengthCA = vertexC.distanceTo(vertexA)
+
+            val edgeMidpointT = random(0.4, 0.6, rng)
+            return if (lengthAB > lengthBC && lengthAB > lengthCA) { // AB is longest
+              val newVertex = vertexA.mix(vertexB, edgeMidpointT)
+              listOf(ContourWithVertices(vertices = listOf(newVertex, vertexA, vertexC)), ContourWithVertices(vertices = listOf(newVertex, vertexB, vertexC)))
+            } else if (lengthBC > lengthAB && lengthBC > lengthCA) { // BC is longest
+              val newVertex = vertexB.mix(vertexC, edgeMidpointT)
+              listOf(ContourWithVertices(vertices = listOf(newVertex, vertexA, vertexB)), ContourWithVertices(vertices = listOf(newVertex, vertexA, vertexC)))
+            } else { // CA is longest
+              val newVertex = vertexC.mix(vertexA, edgeMidpointT)
+              listOf(ContourWithVertices(vertices = listOf(newVertex, vertexB, vertexC)), ContourWithVertices(vertices = listOf(newVertex, vertexA, vertexB)))
+            }
+          }
+          else -> {
+            throw Error("Found ${vertices.size} vertices! Only 0, 1, or 3 allowed")
           }
         }
       }
     }
 
-    fun splitInTwo(contour: ShapeContour, fidelity: Int = 100, rng: Random = Random.Default): List<ContourWithEdges> {
+    fun splitInTwo(contour: ShapeContour, fidelity: Int = 100, rng: Random = Random.Default): List<ContourWithVertices> {
       // get list of evenly-spaced points around the contour
       val points = contour.equidistantPositions(fidelity)
 
@@ -220,15 +261,14 @@ fun main() = application {
       val (start, end) = listOf(startPointIndex, endPointIndex).sorted()
 
       val pointsListA = points.subList(start, end)
-      val edgeA = Segment(pointsListA.last(), pointsListA.first(), corner = true)
+      // val edgeA = Segment(pointsListA.last(), pointsListA.first(), corner = true)
       val contourA = ShapeContour.fromPoints(pointsListA, closed = false)
 
       val pointsListB = points.subList(end, fidelity) + points.subList(0, start)
-      // val edgeB = Segment(pointsListB.first(), pointsListB.last(), corner = true)
-      val edgeB = Segment(pointsListB.last(), pointsListB.first(), corner = true)
+      // val edgeB = Segment(pointsListB.last(), pointsListB.first(), corner = true)
       val contourB = ShapeContour.fromPoints(pointsListB, closed = false)
 
-      return listOf(ContourWithEdges(contourA, listOf(edgeA)), ContourWithEdges(contourB, listOf(edgeB)))
+      return listOf(ContourWithVertices(contourA), ContourWithVertices(contourB))
     }
 
     /**
@@ -250,11 +290,11 @@ fun main() = application {
       return ShapeContour.fromSegments(segments, closed = true)
     }
 
-    fun subdivideUntil(dividable: ContourWithEdges, rng: Random = Random.Default, maxDepth: Int = 5, currentDepth: Int = 0): List<ContourWithEdges> {
+    fun subdivideUntil(dividable: ContourWithVertices, rng: Random = Random.Default, maxDepth: Int = 5, currentDepth: Int = 0): List<ContourWithVertices> {
       if (currentDepth > maxDepth) {
         return listOf(dividable)
       }
-      return subdivide(dividable, rng)
+      return dividable.subdivide(rng)
         .flatMap { subdivideUntil(it, rng, maxDepth, currentDepth + 1) }
     }
 
@@ -262,28 +302,12 @@ fun main() = application {
       // get that rng
       val rng = Random(seed.toLong())
 
-      // TODO: is this cooler with different colors... or just black and white?
-      val gradients = listOf(
-        colorSequence(
-          0.0 to ColorRGBa.WHITE,
-          1.0 to ColorRGBa.BLACK,
-        ),
-        colorSequence(
-          0.0 to hsv(267.0, 0.18, 0.94),
-          1.0 to hsv(225.0, 0.68, 0.44)
-        ),
-        colorSequence(
-          0.0 to hsv(49.0, 0.35, 0.96),
-          1.0 to hsv(32.0, 1.0, 0.48)
-        ),
-        colorSequence(
-          0.0 to hsv(random(215.0, 230.0, rng), random(0.5, 0.7, rng), random(0.6, 0.95, rng)),
-          1.0 to hsv(random(215.0, 230.0, rng), random(0.2, 0.4, rng), random(0.15, 0.3, rng))
-        ),
-        colorSequence(
-          0.0 to hsv(random(20.0, 35.0, rng), random(0.7, 0.95, rng), random(0.6, 0.95, rng)),
-          1.0 to hsv(random(20.0, 35.0, rng), random(0.3, 0.65, rng), random(0.25, 0.45, rng))
-        )
+      val walkerColors = listOf(
+        ColorRGBa.fromHex("D6E5DB").toHSVa(),
+        ColorRGBa.fromHex("9A78C9").toHSVa(),
+        ColorRGBa.fromHex("EAB95E").toHSVa(),
+        ColorRGBa.fromHex("6985C7").toHSVa(),
+        ColorRGBa.fromHex("CE8B67").toHSVa(),
       )
 
       // Render to the render target, then scale and draw to screen
@@ -300,86 +324,82 @@ fun main() = application {
         val bounds = Rectangle(0.0, 0.0, w.toDouble(), h.toDouble())
         val existingPoints = QuadTree(bounds, 10)
         // lower is better around 6.0 -- for final "cut", should reduce this
-        val velocity = scale(random(6.0, 7.0, rng))
+        val velocity = scale(random(3.0, 4.0, rng))
         val padding = velocity - scale(1.0)
         val jitter = { n: Double -> random(n - scale(1.0), n + scale(1.0), rng) }
         val stepSize = velocity.toInt() + padding.toInt()
         grid(0, w, 0, h, stepSize) { i: Int, j: Int ->
-          // return@grid // comment me out to actually draw the grid!
+          // return@grid // uncomment to skip walker pattern, or comment out to draw the pattern
           // start at center and build outwards, alternating between NE/SE/SW/NW quadrants.
           // This avoids biasing towards a corner
-          val x = if ((i / stepSize) % 2 == 0) { center.x + i / 2.0 } else { center.x - i / 2.0 }
-          val y = if ((j / stepSize) % 2 == 0) { center.y + j / 2.0 } else { center.y - j / 2.0 }
-          // bummer... I need a more sophisticated way to do this... iIndex/jIndex or something silly like that. I wonder if I can divide by stepSize somehow :\
-          // val (x, y) = if (flip) {
-          //   Pair(center.x + i / 2.0, center.y + j / 2.0)
-          // } else {
-          //   Pair(center.x - i / 2.0, center.y - j / 2.0)
-          // }
-          // flip = !flip
+          val xOffset = if ((i / stepSize) % 2 == 0) { i / 2.0 } else { i / -2.0 }
+          val x = center.x + xOffset
+          val yOffset = if ((j / stepSize) % 2 == 0) { j / 2.0 } else { j / -2.0 }
+          val y = center.y + yOffset
           if (j == 0) println("$i of $w")
           val start = Vector2(jitter(x), jitter(y))
-          val gradient = gradients[random(0.0, gradients.size.toDouble(), rng).toInt()]
           val walker = Walker(start, angle, rng, velocity)
-          walker.walkNoOverlap(scale(random(500.0, 1000.0, rng).toInt()), padding, existingPoints, bounds, drawer, gradient)
+          val baseColor = walkerColors[random(0.0, walkerColors.size.toDouble(), rng).toInt()]
+          walker.walkNoOverlap(
+            scale(random(250.0, 500.0, rng).toInt()),
+            padding,
+            existingPoints,
+            bounds,
+            drawer,
+            baseColor
+          )
         }
+      }
 
-        /**
-         * Black circle in middle
-         */
-        val radius = w * 0.18
+      /**
+       * Black circle in middle
+       */
+      val radius = w * 0.18
+      drawer.isolatedWithTarget(rt) {
+        drawer.ortho(rt)
+        drawer.shadeStyle = RadialGradient(ColorRGBa.BLACK, ColorRGBa.TRANSPARENT, exponent = 7.0)
+        drawer.circle(Circle(center, radius))
+      }
+
+      /**
+       * Center "shatter" pattern
+       */
+      drawer.isolatedWithTarget(rt) {
+        drawer.ortho(rt)
+
         val baseContour = Circle(center, radius).contour
-        drawer.stroke = null
-        drawer.fill = ColorRGBa.BLACK
-        drawer.contour(baseContour)
-
-        /**
-         * Center "shatter" pattern
-         */
         val fidelity = 500
         val maxDepth = 9
         // TODO: need to decide if I still like this
         // It results in two halves that have very different subdivision density
         // I wonder if I would prefer to start with an edge straight through the middle (to allow subdividing the start)
         // and then just subdivide from there.
-        val (edgedContourA, edgedContourB) = splitInTwo(baseContour, fidelity, rng)
-        val contours = subdivideUntil(edgedContourA, rng, maxDepth) +
-          subdivideUntil(edgedContourB, rng, maxDepth)
+        val contoursWithVertices = splitInTwo(baseContour, fidelity, rng)
+        val contours = contoursWithVertices.flatMap { subdivideUntil(it, rng, maxDepth) }
         val mappedContours = contours
-          .map {
-            when (it.edges.size) {
-              1 -> {
-                val startPoint = it.edges[0].start
-                val endPoint = it.edges[0].end
-                val vertexBC = it.contour.position(0.5)
-                ShapeContour.fromPoints(listOf(startPoint, endPoint, vertexBC), closed = true)
-              }
-              2 -> {
-                val startPoint = it.contour.position(0.0)
-                val endPoint = it.contour.position(1.0)
-                val pointsBC = listOf(it.edges[0].start, it.edges[0].end, it.edges[1].start, it.edges[1].end)
-                val vertexBC = pointsBC.first { it.distanceTo(startPoint) > 1.0 && it.distanceTo(endPoint) > 1.0 }
-                ShapeContour.fromPoints(listOf(startPoint, endPoint, vertexBC), closed = true)
-              }
-              else -> {
-                val edgeA = it.edges[0]
-                val pointsBC = listOf(it.edges[1].start, it.edges[1].end, it.edges[2].start, it.edges[2].end)
-                val vertexBC = pointsBC.first { it.distanceTo(edgeA.start) > 1.0 && it.distanceTo(edgeA.end) > 1.0 }
-                ShapeContour.fromPoints(listOf(edgeA.start, edgeA.end, vertexBC), closed = true)
-              }
-            }
-          }
+          .map { it.toClosedShapeContour() }
           .map { explode(it, radius, rng) }
+
+        // val shatterGradient = colorSequence(
+        //   0.0 to ColorRGBa.fromHex("CD623F"),
+        //   0.25 to ColorRGBa.fromHex("E89851"),
+        //   0.5 to ColorRGBa.fromHex("AC4632"),
+        //   0.75 to ColorRGBa.fromHex("759CB6"),
+        //   1.0 to ColorRGBa.fromHex("AF702C"),
+        // )
         drawer.strokeWeight = scale(0.5)
         drawer.shadeStyle = null
         for (c in mappedContours) {
-          val baseColor = gradients[random(0.0, gradients.size - 1.0, rng).toInt()]
-            .index(random(0.1, 0.3, rng))
+          // val baseColor = shatterGradient.index(random(0.0, 1.0, rng))
+          val baseColor = walkerColors[random(0.0, walkerColors.size.toDouble(), rng).toInt()]
+            .shiftHue(random(-5.0, 5.0, rng))
+            .shade(random(0.8, 1.0, rng))
+            .saturate(random(0.9, 1.1, rng))
+            .toRGBa()
           drawer.fill = baseColor.opacify(random(0.3, 0.8, rng))
           drawer.stroke = baseColor
           drawer.contour(c)
         }
-
       }
 
       /**
@@ -387,14 +407,14 @@ fun main() = application {
        */
       drawer.isolatedWithTarget(rt) {
         drawer.ortho(rt)
-        drawer.shadeStyle = RadialGradient(ColorRGBa.TRANSPARENT, ColorRGBa.BLACK, offset=Vector2.ZERO, length = 0.90)
-        drawer.contour(Circle(center, hypot(w*0.5, h*0.5)).contour)
+        drawer.shadeStyle = RadialGradient(ColorRGBa.TRANSPARENT, ColorRGBa.BLACK, offset=Vector2.ZERO, length = 0.85)
+        drawer.circle(Circle(center, hypot(w * 0.5, h * 0.5)))
       }
 
       drawer.scale(width.toDouble() / rt.width, TransformTarget.MODEL)
       drawer.image(rt.colorBuffer(0))
 
-      // Change to `true` to capture screenshot
+      // `true` == capture screenshot
       if (true) {
         val targetFile = File("screenshots/$progName/${timestamp()}-seed-$seed.jpg")
         targetFile.parentFile?.let { file ->

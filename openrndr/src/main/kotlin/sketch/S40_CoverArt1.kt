@@ -33,6 +33,10 @@ import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.random.Random
 
+enum class RedOrWhiteShatter {
+  RED, WHITE
+}
+
 fun main() = application {
   configure {
     width = 1000
@@ -49,6 +53,40 @@ fun main() = application {
     val progName = this.name.ifBlank { this.window.title.ifBlank { "my-amazing-drawing" } }
     var seed = random(0.0, Int.MAX_VALUE.toDouble()).toInt()
     println("seed = $seed")
+
+    data class Options(
+      val redOrWhiteShatter: RedOrWhiteShatter,
+      val includeWalkerPattern: Boolean,
+      val shatterCircleRadius: Double
+    )
+
+    // seed: 994614339
+    val options = Options(
+      redOrWhiteShatter = RedOrWhiteShatter.RED,
+      includeWalkerPattern = true,
+      shatterCircleRadius = w * 0.2
+    )
+
+    // seed: 1103377413
+    // val options = Options(
+    //   redOrWhiteShatter = RedOrWhiteShatter.WHITE,
+    //   includeWalkerPattern = true,
+    //   shatterCircleRadius = w * 0.2
+    // )
+
+    // seed: 1043584980
+    // val options = Options(
+    //   redOrWhiteShatter = RedOrWhiteShatter.RED,
+    //   includeWalkerPattern = false,
+    //   shatterCircleRadius = w * 0.35
+    // )
+
+    // seed: 1712074106
+    // val options = Options(
+    //   redOrWhiteShatter = RedOrWhiteShatter.WHITE,
+    //   includeWalkerPattern = false,
+    //   shatterCircleRadius = w * 0.35
+    // )
 
     val rt = renderTarget(w, h, multisample = BufferMultisample.Disabled) {
       colorBuffer()
@@ -294,6 +332,10 @@ fun main() = application {
       if (currentDepth > maxDepth) {
         return listOf(dividable)
       }
+      val chanceOfSpontaneousStopping = map(0.0, maxDepth - 1.0, -0.2, 0.2, currentDepth.toDouble())
+      if (random(0.0, 1.0, rng) < chanceOfSpontaneousStopping) {
+        return listOf(dividable)
+      }
       return dividable.subdivide(rng)
         .flatMap { subdivideUntil(it, rng, maxDepth, currentDepth + 1) }
     }
@@ -329,7 +371,9 @@ fun main() = application {
         val jitter = { n: Double -> random(n - scale(1.0), n + scale(1.0), rng) }
         val stepSize = velocity.toInt() + padding.toInt()
         grid(0, w, 0, h, stepSize) { i: Int, j: Int ->
-          // return@grid // uncomment to skip walker pattern, or comment out to draw the pattern
+          if (!options.includeWalkerPattern) {
+            return@grid
+          }
           // start at center and build outwards, alternating between NE/SE/SW/NW quadrants.
           // This avoids biasing towards a corner
           val xOffset = if ((i / stepSize) % 2 == 0) { i / 2.0 } else { i / -2.0 }
@@ -354,11 +398,10 @@ fun main() = application {
       /**
        * Black circle in middle
        */
-      val radius = w * 0.18
       drawer.isolatedWithTarget(rt) {
         drawer.ortho(rt)
         drawer.shadeStyle = RadialGradient(ColorRGBa.BLACK, ColorRGBa.TRANSPARENT, exponent = 7.0)
-        drawer.circle(Circle(center, radius))
+        drawer.circle(Circle(center, options.shatterCircleRadius))
       }
 
       /**
@@ -367,7 +410,7 @@ fun main() = application {
       drawer.isolatedWithTarget(rt) {
         drawer.ortho(rt)
 
-        val baseContour = Circle(center, radius).contour
+        val baseContour = Circle(center, options.shatterCircleRadius).contour
         val fidelity = 500
         val maxDepth = 9
         // TODO: need to decide if I still like this
@@ -378,26 +421,33 @@ fun main() = application {
         val contours = contoursWithVertices.flatMap { subdivideUntil(it, rng, maxDepth) }
         val mappedContours = contours
           .map { it.toClosedShapeContour() }
-          .map { explode(it, radius, rng) }
+          .map { explode(it, options.shatterCircleRadius, rng) }
 
-        // val shatterGradient = colorSequence(
-        //   0.0 to ColorRGBa.fromHex("CD623F"),
-        //   0.25 to ColorRGBa.fromHex("E89851"),
-        //   0.5 to ColorRGBa.fromHex("AC4632"),
-        //   0.75 to ColorRGBa.fromHex("759CB6"),
-        //   1.0 to ColorRGBa.fromHex("AF702C"),
-        // )
+        val shatterFillGradient = colorSequence(
+          0.0 to ColorRGBa.BLACK,
+          0.8 to ColorRGBa.BLACK,
+          1.0 to ColorRGBa.WHITE,
+        )
+        val shatterStrokeGradientRed = colorSequence(
+          0.0 to ColorRGBa.fromHex("3E2123"),
+          0.33 to ColorRGBa.fromHex("6D2925"),
+          0.66 to ColorRGBa.fromHex("995B31"),
+          1.0 to ColorRGBa.fromHex("CE965A"),
+        )
+        val shatterStrokeGradientWhite = colorSequence(
+          0.0 to ColorRGBa.WHITE,
+          0.8 to ColorRGBa.WHITE,
+          1.0 to ColorRGBa.BLACK,
+        )
         drawer.strokeWeight = scale(0.5)
         drawer.shadeStyle = null
         for (c in mappedContours) {
-          // val baseColor = shatterGradient.index(random(0.0, 1.0, rng))
-          val baseColor = walkerColors[random(0.0, walkerColors.size.toDouble(), rng).toInt()]
-            .shiftHue(random(-5.0, 5.0, rng))
-            .shade(random(0.8, 1.0, rng))
-            .saturate(random(0.9, 1.1, rng))
-            .toRGBa()
-          drawer.fill = baseColor.opacify(random(0.3, 0.8, rng))
-          drawer.stroke = baseColor
+          drawer.fill = shatterFillGradient.index(random(0.0, 1.0, rng)).opacify(random(0.3, 0.8, rng))
+          drawer.stroke = if (options.redOrWhiteShatter == RedOrWhiteShatter.RED) {
+            shatterStrokeGradientRed.index(random(0.0, 1.0, rng)).opacify(random(0.7, 1.0, rng))
+          } else {
+            shatterStrokeGradientWhite.index(random(0.0, 1.0, rng)).opacify(random(0.7, 1.0, rng))
+          }
           drawer.contour(c)
         }
       }

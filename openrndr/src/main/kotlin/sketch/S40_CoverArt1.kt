@@ -57,14 +57,16 @@ fun main() = application {
     data class Options(
       val redOrWhiteShatter: RedOrWhiteShatter,
       val includeWalkerPattern: Boolean,
-      val shatterCircleRadius: Double
+      val shatterCircleRadius: Double,
+      val useShatterStrokeForWalkerGradient: Boolean
     )
 
     // seed: 994614339
     val options = Options(
       redOrWhiteShatter = RedOrWhiteShatter.RED,
       includeWalkerPattern = true,
-      shatterCircleRadius = w * 0.2
+      shatterCircleRadius = w * 0.2,
+      useShatterStrokeForWalkerGradient = true
     )
 
     // seed: 1103377413
@@ -72,6 +74,7 @@ fun main() = application {
     //   redOrWhiteShatter = RedOrWhiteShatter.WHITE,
     //   includeWalkerPattern = true,
     //   shatterCircleRadius = w * 0.2
+    //   useShatterStrokeForWalkerGradient = false
     // )
 
     // seed: 1043584980
@@ -79,6 +82,7 @@ fun main() = application {
     //   redOrWhiteShatter = RedOrWhiteShatter.RED,
     //   includeWalkerPattern = false,
     //   shatterCircleRadius = w * 0.35
+    //   useShatterStrokeForWalkerGradient = false
     // )
 
     // seed: 1712074106
@@ -86,6 +90,7 @@ fun main() = application {
     //   redOrWhiteShatter = RedOrWhiteShatter.WHITE,
     //   includeWalkerPattern = false,
     //   shatterCircleRadius = w * 0.35
+    //   useShatterStrokeForWalkerGradient = false
     // )
 
     val rt = renderTarget(w, h, multisample = BufferMultisample.Disabled) {
@@ -352,6 +357,18 @@ fun main() = application {
         ColorRGBa.fromHex("CE8B67").toHSVa(),
       )
 
+      val shatterStrokeGradientRed = colorSequence(
+        0.0 to ColorRGBa.fromHex("3E2123"),
+        0.33 to ColorRGBa.fromHex("6D2925"),
+        0.66 to ColorRGBa.fromHex("995B31"),
+        1.0 to ColorRGBa.fromHex("CE965A"),
+      )
+      val shatterStrokeGradientWhite = colorSequence(
+        0.0 to ColorRGBa.WHITE,
+        0.8 to ColorRGBa.WHITE,
+        1.0 to ColorRGBa.BLACK,
+      )
+
       // Render to the render target, then scale and draw to screen
       drawer.isolatedWithTarget(rt) {
         drawer.ortho(rt)
@@ -383,7 +400,15 @@ fun main() = application {
           if (j == 0) println("$i of $w")
           val start = Vector2(jitter(x), jitter(y))
           val walker = Walker(start, angle, rng, velocity)
-          val baseColor = walkerColors[random(0.0, walkerColors.size.toDouble(), rng).toInt()]
+          val baseColor = if (options.useShatterStrokeForWalkerGradient) {
+            if (options.redOrWhiteShatter == RedOrWhiteShatter.RED) {
+              shatterStrokeGradientRed.index(random(0.0, 1.0, rng)).toHSVa()
+            } else {
+              shatterStrokeGradientWhite.index(random(0.0, 1.0, rng)).toHSVa()
+            }
+          } else {
+            walkerColors[random(0.0, walkerColors.size.toDouble(), rng).toInt()]
+          }
           walker.walkNoOverlap(
             scale(random(250.0, 500.0, rng).toInt()),
             padding,
@@ -427,17 +452,6 @@ fun main() = application {
           0.0 to ColorRGBa.BLACK,
           0.8 to ColorRGBa.BLACK,
           1.0 to ColorRGBa.WHITE,
-        )
-        val shatterStrokeGradientRed = colorSequence(
-          0.0 to ColorRGBa.fromHex("3E2123"),
-          0.33 to ColorRGBa.fromHex("6D2925"),
-          0.66 to ColorRGBa.fromHex("995B31"),
-          1.0 to ColorRGBa.fromHex("CE965A"),
-        )
-        val shatterStrokeGradientWhite = colorSequence(
-          0.0 to ColorRGBa.WHITE,
-          0.8 to ColorRGBa.WHITE,
-          1.0 to ColorRGBa.BLACK,
         )
         drawer.strokeWeight = scale(0.5)
         drawer.shadeStyle = null

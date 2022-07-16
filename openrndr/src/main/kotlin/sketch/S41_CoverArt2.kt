@@ -33,6 +33,10 @@ import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.random.Random
 
+enum class RedOrWhiteShatter {
+  RED, WHITE
+}
+
 fun main() = application {
   configure {
     width = 1000
@@ -47,73 +51,29 @@ fun main() = application {
     val h = scale(height)
     val center = Vector2(w / 2.0, h / 2.0)
     val progName = this.name.ifBlank { this.window.title.ifBlank { "my-amazing-drawing" } }
-    var seed = random(0.0, Int.MAX_VALUE.toDouble()).toInt()
+    var seed = 756004940//random(0.0, Int.MAX_VALUE.toDouble()).toInt()
     println("seed = $seed")
 
     data class Options(
-      val includeWalkerPattern: Boolean,
+      val redOrWhiteShatter: RedOrWhiteShatter,
       val shatterCircleRadius: Double,
     )
 
+    // seed: 1043584980
     val options = Options(
-      includeWalkerPattern = true,
-      shatterCircleRadius = w * 0.23,
+      redOrWhiteShatter = RedOrWhiteShatter.RED,
+      shatterCircleRadius = w * 0.35
     )
+
+    // seed: 1712074106
+    // val options = Options(
+    //   redOrWhiteShatter = RedOrWhiteShatter.WHITE,
+    //   shatterCircleRadius = w * 0.35
+    // )
 
     val rt = renderTarget(w, h, multisample = BufferMultisample.Disabled) {
       colorBuffer()
       depthBuffer()
-    }
-
-    class Walker(val start: Vector2, val baseAngle: Double, val rng: Random, val velocity: Double = 5.0, val avoid: Circle) {
-      fun walkNoOverlap(length: Int, padding: Double, existingPoints: QuadTree, bounds: Rectangle, drawer: Drawer, color: ColorHSVa) {
-        if (avoid.contains(start)) {
-          return
-        }
-        val baseColor = color
-          .shiftHue(random(-2.5, 2.5, rng))
-        var angle = genAngle(baseAngle)
-        var cursor = start
-        existingPoints.add(QTreeNode(cursor))
-        for (i in 0 until length) {
-          angle = genAngle(angle)
-          val point = Vector2(
-            cursor.x + cos(angle) * velocity,
-            cursor.y + sin(angle) * velocity
-          )
-
-          val nearPointsOverlap = existingPoints
-            .query<QuadTreeNode>(Rectangle.fromCenter(point, velocity * 2.0, velocity * 2.0))
-            .any { it.position.distanceTo(point) < padding }
-          if (nearPointsOverlap || !bounds.contains(point) || avoid.contains(point)) {
-            continue
-          }
-
-          if (i > 1) {
-            drawer.stroke = baseColor
-              // .shade(map(0.0, hypot(w * 0.5, h * 0.5), 1.2, 0.6, point.distanceTo(center)))
-              .toRGBa()
-            drawer.lineSegment(cursor, point)
-          }
-          cursor = point
-          existingPoints.add(QTreeNode(cursor))
-        }
-      }
-
-      // generate a new angle based on the previous angle
-      private fun genAngle(previousAngle: Double): Double {
-        // encourage straight lines
-        if (random(0.0, 1.0, rng) < 0.8) {
-          return previousAngle
-        }
-        val chance = random(0.0, 1.0, rng)
-        return if (chance < 1.0 / 6.0) { PI * 3.0 / 2.0 }
-        else if (chance >= 1.0 / 6.0 && chance < 2.0 / 6.0) { PI / 2.0 }
-        else if (chance >= 2.0 / 6.0 && chance < 3.0 / 6.0) { baseAngle }
-        else if (chance >= 3.0 / 6.0 && chance < 4.0 / 6.0) { PI - baseAngle }
-        else if (chance >= 4.0 / 6.0 && chance < 5.0 / 6.0) { PI + baseAngle }
-        else { PI * 2.0 - baseAngle }
-      }
     }
 
     class ContourWithVertices(val contour: ShapeContour = ShapeContour.EMPTY, val vertices: List<Vector2> = listOf()) {
@@ -275,11 +235,9 @@ fun main() = application {
 
       // add 1 to "close" the gap (the range is half-open, i.e. end-exclusive), then subtract any gap
       val pointsListA = points.subList(start, end + 1 - gapSize)
-      // val edgeA = Segment(pointsListA.last(), pointsListA.first(), corner = true)
       val contourA = ShapeContour.fromPoints(pointsListA, closed = false)
 
       val pointsListB = points.subList(end, fidelity + 1 - gapSize) + points.subList(0, start + 1 - gapSize)
-      // val edgeB = Segment(pointsListB.last(), pointsListB.first(), corner = true)
       val contourB = ShapeContour.fromPoints(pointsListB, closed = false)
 
       return listOf(ContourWithVertices(contourA), ContourWithVertices(contourB))
@@ -295,7 +253,7 @@ fun main() = application {
       val contourCenter = contour.bounds.center
       // strange variable name, but idea is that the value scales in a cubic way not linearly. If it were linear scaling it would just be contourCenter.distanceTo(center) / maxRadius
       val cubicInterpPercentage = contourCenter.distanceTo(center).pow(3) / maxRadius.pow(3)
-      val explodeJitter = w * 0.05 * cubicInterpPercentage
+      val explodeJitter = w * 0.08 * cubicInterpPercentage
       val explodeStrength = random(-explodeJitter, explodeJitter, rng)
       val directionJitter =  PI * 0.1 * cubicInterpPercentage
       val explodeDirection = atan2(contourCenter.y - center.y, contourCenter.x - center.x) + random(-directionJitter, directionJitter, rng)
@@ -320,82 +278,45 @@ fun main() = application {
       // get that rng
       val rng = Random(seed.toLong())
 
-      // this looks nice but isn't used currently
-      // val walkerColors = listOf(
-      //   ColorRGBa.fromHex("D6E5DB").toHSVa(),
-      //   ColorRGBa.fromHex("9A78C9").toHSVa(),
-      //   ColorRGBa.fromHex("EAB95E").toHSVa(),
-      //   ColorRGBa.fromHex("6985C7").toHSVa(),
-      //   ColorRGBa.fromHex("CE8B67").toHSVa(),
-      // )
+      val shatterStrokeGradientRed = colorSequence(
+        // 0.0 to ColorRGBa.fromHex("69262A"),
+        // 0.33 to ColorRGBa.fromHex("9B2D27"),
+        // 0.66 to ColorRGBa.fromHex("C66B2F"),
+        // 1.0 to ColorRGBa.fromHex("E3BE72"),
 
-      val shatterStrokeGradient = colorSequence(
-        // 0.0 to ColorRGBa.fromHex("702E32"),
-        // 0.33 to ColorRGBa.fromHex("A2352F"),
-        // 0.66 to ColorRGBa.fromHex("C9743B"),
-        // 1.0 to ColorRGBa.fromHex("E4C381"),
+        // 0.0 to ColorRGBa.fromHex("A5343C"),
+        // 0.33 to ColorRGBa.fromHex("CE433C"),
+        // 0.66 to ColorRGBa.fromHex("EE8B49"),
+        // 1.0 to ColorRGBa.fromHex("FFDB94"),
 
-        // 0.0 to ColorRGBa.fromHex("9A2E35"),
-        // 0.33 to ColorRGBa.fromHex("C93B34"),
-        // 0.66 to ColorRGBa.fromHex("E5823F"),
-        // 1.0 to ColorRGBa.fromHex("FFD98D"),
-
-        0.0 to ColorRGBa.fromHex("A5343C"),
-        0.33 to ColorRGBa.fromHex("CE433C"),
-        0.66 to ColorRGBa.fromHex("EE8B49"),
-        1.0 to ColorRGBa.fromHex("FFDB94"),
+        0.0 to ColorRGBa.fromHex("9A2E35"),
+        0.33 to ColorRGBa.fromHex("C93B34"),
+        0.66 to ColorRGBa.fromHex("E5823F"),
+        1.0 to ColorRGBa.fromHex("FFD98D"),
       )
-
-      // Render to the render target, then scale and draw to screen
-      drawer.isolatedWithTarget(rt) {
-        drawer.ortho(rt)
-        drawer.clear(ColorRGBa.BLACK)
-        drawer.stroke = ColorRGBa.WHITE
-        drawer.strokeWeight = scale(1.05)
-
-        /**
-         * Background "walker" pattern
-         */
-        val angle = PI / 9.0
-        val bounds = Rectangle(0.0, 0.0, w.toDouble(), h.toDouble())
-        val existingPoints = QuadTree(bounds, 10)
-        val velocity = scale(3.629) // scale(random(3.0, 4.0, rng))
-        val padding = scale(2.629) // velocity - scale(1.0)
-        val stepSize = scale(5) // velocity.toInt() + padding.toInt()
-        val jitter = { n: Double -> random(n - scale(1.0), n + scale(1.0), rng) }
-
-        grid(0, w, 0, h, stepSize) { i: Int, j: Int ->
-          if (!options.includeWalkerPattern) {
-            return@grid
-          }
-          // start at center and build outwards, alternating between NE/SE/SW/NW quadrants.
-          // This avoids biasing towards a corner
-          val xOffset = if ((i / stepSize) % 2 == 0) { i / 2.0 } else { i / -2.0 }
-          val x = center.x + xOffset
-          val yOffset = if ((j / stepSize) % 2 == 0) { j / 2.0 } else { j / -2.0 }
-          val y = center.y + yOffset
-          if (j == 0) println("$i of $w")
-          val start = Vector2(jitter(x), jitter(y))
-          val walker = Walker(start, angle, rng, velocity, Circle(center, options.shatterCircleRadius * 1.2))
-          val baseColor = shatterStrokeGradient.index(random(0.0, 1.0, rng)).toHSVa()
-          walker.walkNoOverlap(
-            scale(random(250.0, 500.0, rng).toInt()),
-            padding,
-            existingPoints,
-            bounds,
-            drawer,
-            baseColor
-          )
-        }
+      val shatterStrokeGradientWhite = colorSequence(
+        0.0 to ColorRGBa.WHITE,
+        0.8 to ColorRGBa.WHITE,
+        1.0 to ColorRGBa.BLACK,
+      )
+      val shatterStrokeGradient = if (options.redOrWhiteShatter == RedOrWhiteShatter.RED) {
+        shatterStrokeGradientRed
+      } else {
+        shatterStrokeGradientWhite
       }
 
       /**
-       * Black circle in middle
+       * Background glow
        */
       drawer.isolatedWithTarget(rt) {
         drawer.ortho(rt)
-        drawer.shadeStyle = RadialGradient(ColorRGBa.BLACK, ColorRGBa.TRANSPARENT, exponent = 7.0)
-        drawer.circle(Circle(center, options.shatterCircleRadius))
+        drawer.clear(ColorRGBa.BLACK)
+        val glowColor = shatterStrokeGradient.index(random(0.15, 0.4, rng))
+        drawer.shadeStyle = RadialGradient(glowColor, ColorRGBa.TRANSPARENT, offset=Vector2.ZERO,
+          // length = 0.80
+          length = 1.05
+        )
+        drawer.circle(Circle(center, hypot(w * 0.5, h * 0.5)))
       }
 
       /**
@@ -414,35 +335,21 @@ fun main() = application {
           .map { explode(it, options.shatterCircleRadius, rng) }
 
         val shatterFillGradient = colorSequence(
-          0.00 to ColorRGBa.BLACK,
-          0.79 to ColorRGBa.BLACK,
-          // 0.80 to ColorRGBa.fromHex("69262A"),
-          0.9 to ColorRGBa.fromHex("9B2D27"),
-          // 0.90 to ColorRGBa.fromHex("C66B2F"),
-          // 0.95 to ColorRGBa.fromHex("E3BE72"),
-          1.00 to ColorRGBa.WHITE,
+          0.0 to ColorRGBa.BLACK,
+          0.5 to ColorRGBa.BLACK,
+          0.8 to ColorRGBa.fromHex("65292D"),
+          0.85 to ColorRGBa.fromHex("96312C"),
+          0.9 to ColorRGBa.fromHex("C06C35"),
+          0.95 to ColorRGBa.fromHex("DFBC77"),
+          1.0 to ColorRGBa.WHITE,
         )
         drawer.strokeWeight = scale(1.05)
         drawer.shadeStyle = null
         for (c in mappedContours) {
-          drawer.fill = shatterFillGradient.index(random(0.0, 1.0, rng)).shade(0.9).opacify(random(0.3, 0.6, rng))
-          drawer.stroke = shatterStrokeGradient.index(random(0.0, 1.0, rng)).shade(0.8).opacify(random(0.7, 1.0, rng))
+          drawer.fill = shatterFillGradient.index(random(0.0, 1.0, rng)).opacify(random(0.3, 0.7, rng))
+          drawer.stroke = shatterStrokeGradient.index(random(0.0, 1.0, rng)).opacify(random(0.8, 1.0, rng))
           drawer.contour(c)
         }
-      }
-
-      /**
-       * Shadow around edges
-       */
-      drawer.isolatedWithTarget(rt) {
-        drawer.ortho(rt)
-        drawer.shadeStyle = RadialGradient(ColorRGBa.TRANSPARENT, ColorRGBa.BLACK, offset=Vector2.ZERO,
-          // length = 0.70, exponent = 2.5
-          // length = 0.850, exponent = 3.5
-          // length = 0.99, exponent = 4.5
-          length = 1.05, exponent = 2.5
-        )
-        drawer.circle(Circle(center, hypot(w * 0.5, h * 0.5)))
       }
 
       drawer.scale(width.toDouble() / rt.width, TransformTarget.MODEL)

@@ -1,5 +1,10 @@
 # links
 
+## 2022-07-17
+
+* [Option A](https://res.cloudinary.com/ericyd/image/upload/v1658083069/cover-art/2022-07-16T17.26.29-seed-2101263377_zhc7ep.jpg)
+* [Option B](https://res.cloudinary.com/ericyd/image/upload/v1658083052/cover-art/2022-07-17T13.19.57-seed-453168708_xpo56o.jpg)
+
 ## 2022-07-09
 
 **Before you click any links**: The below images are design samples, but keep in mind that there is nearly infinite variation available for each design. We can tweak things in any way you'd like!  

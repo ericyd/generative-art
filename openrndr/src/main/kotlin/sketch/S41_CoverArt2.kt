@@ -5,6 +5,9 @@ import org.openrndr.color.ColorHSVa
 import org.openrndr.color.ColorRGBa
 import org.openrndr.color.hsv
 import org.openrndr.draw.BufferMultisample
+import org.openrndr.draw.ColorFormat
+import org.openrndr.draw.ColorType
+import org.openrndr.draw.DepthFormat
 import org.openrndr.draw.Drawer
 import org.openrndr.draw.TransformTarget
 import org.openrndr.draw.isolatedWithTarget
@@ -51,18 +54,20 @@ fun main() = application {
     val h = scale(height)
     val center = Vector2(w / 2.0, h / 2.0)
     val progName = this.name.ifBlank { this.window.title.ifBlank { "my-amazing-drawing" } }
-    var seed = 756004940//random(0.0, Int.MAX_VALUE.toDouble()).toInt()
+    var seed = random(0.0, Int.MAX_VALUE.toDouble()).toInt()
     println("seed = $seed")
 
     data class Options(
       val redOrWhiteShatter: RedOrWhiteShatter,
       val shatterCircleRadius: Double,
+      val maxDepth: Int
     )
 
     // seed: 1043584980
     val options = Options(
       redOrWhiteShatter = RedOrWhiteShatter.RED,
-      shatterCircleRadius = w * 0.35
+      shatterCircleRadius = w * 0.35,
+      maxDepth = 10
     )
 
     // seed: 1712074106
@@ -71,7 +76,7 @@ fun main() = application {
     //   shatterCircleRadius = w * 0.35
     // )
 
-    val rt = renderTarget(w, h, multisample = BufferMultisample.Disabled) {
+    val rt = renderTarget(w, h) {
       colorBuffer()
       depthBuffer()
     }
@@ -266,7 +271,7 @@ fun main() = application {
       if (currentDepth > maxDepth) {
         return listOf(dividable)
       }
-      val chanceOfSpontaneousStopping = map(0.0, maxDepth - 1.0, -0.2, 0.2, currentDepth.toDouble())
+      val chanceOfSpontaneousStopping = map(0.0, maxDepth - 1.0, -0.1, 0.2, currentDepth.toDouble())
       if (random(0.0, 1.0, rng) < chanceOfSpontaneousStopping) {
         return listOf(dividable)
       }
@@ -311,10 +316,17 @@ fun main() = application {
       drawer.isolatedWithTarget(rt) {
         drawer.ortho(rt)
         drawer.clear(ColorRGBa.BLACK)
-        val glowColor = shatterStrokeGradient.index(random(0.15, 0.4, rng))
-        drawer.shadeStyle = RadialGradient(glowColor, ColorRGBa.TRANSPARENT, offset=Vector2.ZERO,
+        val glowColor = shatterStrokeGradient.index(random(0.15, 0.4, rng)).opacify(0.9)
+        drawer.stroke = null
+        drawer.shadeStyle = RadialGradient(
+          glowColor,
+          // ColorRGBa.TRANSPARENT,
           // length = 0.80
-          length = 1.05
+          // length = 1.05,
+          ColorRGBa.BLACK,
+          length = 0.95,
+          exponent = 0.35,
+          offset = Vector2.ZERO,
         )
         drawer.circle(Circle(center, hypot(w * 0.5, h * 0.5)))
       }
@@ -327,9 +339,8 @@ fun main() = application {
 
         val baseContour = Circle(center, options.shatterCircleRadius).contour
         val fidelity = 500
-        val maxDepth = 9
         val contoursWithVertices = splitInTwo(baseContour, fidelity, rng)
-        val contours = contoursWithVertices.flatMap { subdivideUntil(it, rng, maxDepth) }
+        val contours = contoursWithVertices.flatMap { subdivideUntil(it, rng, options.maxDepth) }
         val mappedContours = contours
           .map { it.toClosedShapeContour() }
           .map { explode(it, options.shatterCircleRadius, rng) }
@@ -357,7 +368,9 @@ fun main() = application {
 
       // `true` == capture screenshot
       if (true) {
-        val targetFile = File("screenshots/$progName/${timestamp()}-seed-$seed.jpg")
+        val fileName = "screenshots/$progName/${timestamp()}-seed-$seed.jpg"
+        val targetFile = File(fileName)
+        // println("saving to $fileName")
         targetFile.parentFile?.let { file ->
           if (!file.exists()) {
             file.mkdirs()

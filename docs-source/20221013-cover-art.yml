@@ -1,0 +1,76 @@
+title: Cover art
+imageSeries:
+  # /c_scale,w_500
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1643861095/cover-art/2022-02-02T22.04.19-seed-744326361_ihb7yg.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1643861095/cover-art/2022-02-02T22.04.19-seed-744326361_ihb7yg.png
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1657422267/cover-art/2022-07-09T21.56.38-seed-730497349_i390ra.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1657422267/cover-art/2022-07-09T21.56.38-seed-730497349_i390ra.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1662926159/cover-art/2022-09-11T14.49.12-seed-63543322_rfn0xn.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1662926159/cover-art/2022-09-11T14.49.12-seed-63543322_rfn0xn.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1662926223/cover-art/2022-09-11T14.56.15-seed-1964774448_cp6yum.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1662926223/cover-art/2022-09-11T14.56.15-seed-1964774448_cp6yum.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1662842633/cover-art/2022-09-10T13.29.30-seed-1895753403_inyvti.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1662842633/cover-art/2022-09-10T13.29.30-seed-1895753403_inyvti.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1662842636/cover-art/2022-09-10T13.22.14-seed-1596820416_k3rgh1.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1662842636/cover-art/2022-09-10T13.22.14-seed-1596820416_k3rgh1.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1662842637/cover-art/2022-09-10T13.05.48-seed-29170497_sm8xav.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1662842637/cover-art/2022-09-10T13.05.48-seed-29170497_sm8xav.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1662842633/cover-art/2022-09-10T13.27.12-seed-1747422393_cheaed.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1662842633/cover-art/2022-09-10T13.27.12-seed-1747422393_cheaed.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1662842633/cover-art/2022-09-10T13.31.58-seed-1685202751_pevgek.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1662842633/cover-art/2022-09-10T13.31.58-seed-1685202751_pevgek.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1662842632/cover-art/2022-09-10T13.37.32-seed-507489117_e2yg7y.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1662842632/cover-art/2022-09-10T13.37.32-seed-507489117_e2yg7y.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1662842650/cover-art/2022-09-10T15.12.05-seed-276193972_vjjpbg.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1662842650/cover-art/2022-09-10T15.12.05-seed-276193972_vjjpbg.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1662842652/cover-art/2022-09-10T14.00.39-seed-1776529404_jjm88b.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1662842652/cover-art/2022-09-10T14.00.39-seed-1776529404_jjm88b.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1662842650/cover-art/2022-09-10T15.21.23-seed-809523421_uroydw.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1662842650/cover-art/2022-09-10T15.21.23-seed-809523421_uroydw.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1662842654/cover-art/2022-09-10T15.35.28-seed-1597302592_pgxdkp.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1662842654/cover-art/2022-09-10T15.35.28-seed-1597302592_pgxdkp.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1662842649/cover-art/2022-09-10T15.27.35-seed-1958469190_mqiyw1.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1662842649/cover-art/2022-09-10T15.27.35-seed-1958469190_mqiyw1.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1662842651/cover-art/2022-09-10T15.40.12-seed-1026312326_ssixpe.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1662842651/cover-art/2022-09-10T15.40.12-seed-1026312326_ssixpe.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1658083069/cover-art/2022-07-16T17.26.29-seed-2101263377_zhc7ep.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1658083069/cover-art/2022-07-16T17.26.29-seed-2101263377_zhc7ep.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1658083052/cover-art/2022-07-17T13.19.57-seed-453168708_xpo56o.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1658083052/cover-art/2022-07-17T13.19.57-seed-453168708_xpo56o.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1657422265/cover-art/2022-07-09T21.52.03-seed-1043584980_k59axj.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1657422265/cover-art/2022-07-09T21.52.03-seed-1043584980_k59axj.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1657422266/cover-art/2022-07-09T21.56.40-seed-1712074106_ooxxbr.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1657422266/cover-art/2022-07-09T21.56.40-seed-1712074106_ooxxbr.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1656039799/cover-art/Screen_Shot_2022-06-23_at_10.01.41_PM_et7ugl.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1656039799/cover-art/Screen_Shot_2022-06-23_at_10.01.41_PM_et7ugl.png
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1656039797/cover-art/Screen_Shot_2022-06-23_at_10.00.34_PM_tmxbq7.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1656039797/cover-art/Screen_Shot_2022-06-23_at_10.00.34_PM_tmxbq7.png
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1643861093/cover-art/2022-02-02T22.02.33-seed-184332687_bozanp.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1643861093/cover-art/2022-02-02T22.02.33-seed-184332687_bozanp.png
+
+description: >
+  This was my first-ever collaboration! My friend Derek (
+  <a href="https://soundcloud.com/fistofthewhitelotus">SoundCloud: White Lotus Society</a>, 
+  <a href="https://www.instagram.com/white.lotus.society/">Instagram: @white.lotus.society</a>,
+  <a href="https://www.instagram.com/state_of_no_mind/">Instagram (personal): @state_of_no_mind</a>)
+  asked me if I'd be interested in making cover art for a new music project he's working on. I jumped at the chance
+  and was so happy I did. It was a really fun project and we explored lots of different designs and ideas together.
+  These are not in any particular order, but I wanted to share some of the pieces I made along the way.
+
+sourceCodeLinks:
+  - https://github.com/ericyd/generative-art/blob/2f0eb46ed9d16b90e9f0d370834942e63680cd16/openrndr/src/main/kotlin/sketch/S40_CoverArt1.kt
+  - https://github.com/ericyd/generative-art/blob/2f0eb46ed9d16b90e9f0d370834942e63680cd16/openrndr/src/main/kotlin/sketch/S40_CoverArt1_blue.kt
+  - https://github.com/ericyd/generative-art/blob/2f0eb46ed9d16b90e9f0d370834942e63680cd16/openrndr/src/main/kotlin/sketch/S40_CoverArt1_galaxy.kt
+  - https://github.com/ericyd/generative-art/blob/2f0eb46ed9d16b90e9f0d370834942e63680cd16/openrndr/src/main/kotlin/sketch/S40_CoverArt1_green.kt
+  - https://github.com/ericyd/generative-art/blob/2f0eb46ed9d16b90e9f0d370834942e63680cd16/openrndr/src/main/kotlin/sketch/S40_CoverArt1_green_hexagon.kt
+  - https://github.com/ericyd/generative-art/blob/2f0eb46ed9d16b90e9f0d370834942e63680cd16/openrndr/src/main/kotlin/sketch/S40_CoverArt1_red.kt
+  - https://github.com/ericyd/generative-art/blob/2f0eb46ed9d16b90e9f0d370834942e63680cd16/openrndr/src/main/kotlin/sketch/S40_CoverArt1_yellow.kt
+  - https://github.com/ericyd/generative-art/blob/2f0eb46ed9d16b90e9f0d370834942e63680cd16/openrndr/src/main/kotlin/sketch/S41_CoverArt2.kt
+  - https://github.com/ericyd/generative-art/blob/2f0eb46ed9d16b90e9f0d370834942e63680cd16/openrndr/src/main/kotlin/sketch/S41_CoverArt2_blue.kt
+  - https://github.com/ericyd/generative-art/blob/2f0eb46ed9d16b90e9f0d370834942e63680cd16/openrndr/src/main/kotlin/sketch/S41_CoverArt2_galaxy.kt
+  - https://github.com/ericyd/generative-art/blob/2f0eb46ed9d16b90e9f0d370834942e63680cd16/openrndr/src/main/kotlin/sketch/S41_CoverArt2_green.kt
+  - https://github.com/ericyd/generative-art/blob/2f0eb46ed9d16b90e9f0d370834942e63680cd16/openrndr/src/main/kotlin/sketch/S41_CoverArt2_red.kt
+  - https://github.com/ericyd/generative-art/blob/2f0eb46ed9d16b90e9f0d370834942e63680cd16/openrndr/src/main/kotlin/sketch/S41_CoverArt2_yellow.kt
+  - https://github.com/ericyd/generative-art/blob/2f0eb46ed9d16b90e9f0d370834942e63680cd16/openrndr/src/main/kotlin/sketch/S42_CoverArt3_galaxy.kt
+
+createdAt: 2022-10-13

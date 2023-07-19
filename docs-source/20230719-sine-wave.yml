@@ -1,0 +1,17 @@
+title: Sine wave
+imageSeries:
+  # /c_scale,w_500
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1689807561/art/2023-07-19T17.54.03-seed-1484414236_obwaan.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1689807561/art/2023-07-19T17.54.03-seed-1484414236_obwaan.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1689807568/art/2023-07-19T17.54.04-seed-1464772856_jkvtbh.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1689807568/art/2023-07-19T17.54.04-seed-1464772856_jkvtbh.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1689807569/art/2023-07-19T17.54.04-seed-1284016802_hqzkn1.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1689807569/art/2023-07-19T17.54.04-seed-1284016802_hqzkn1.jpg
+
+description: >
+  Wow! First art in about a year! Feels good :)
+
+sourceCodeLinks:
+  - https://github.com/ericyd/generative-art/blob/1810a0e29dbdd46cfb60382e513256a732404c88/openrndr/src/main/kotlin/sketch/S43_SineWave.kt
+  
+createdAt: 2023-07-19

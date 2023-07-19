@@ -275,8 +275,13 @@ task("sketch", JavaExec::class) {
   classpath = sourceSets["main"].runtimeClasspath
   if (project.hasProperty("title")) {
     var programMain = title
+    // this is to make the simple script in run.json work
+    programMain = programMain.replace(Regex(".kt$"), "")
+    programMain = programMain.split(Regex("/")).last()
+    println("programMain = $programMain")
+
     if (!Regex("Kt$").containsMatchIn(title)) {
-      programMain = title + "Kt"
+      programMain = programMain + "Kt"
     }
     main = "sketch." + programMain
   } else {

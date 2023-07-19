@@ -3,7 +3,7 @@
         {
             // https://www.jetbrains.com/help/fleet/java-run-configs.html#gradle
             "type": "gradle",
-            "name": "Gradle configuration",
+            "name": "Sketch",
             "tasks": ["sketch"],
             "args": [ "-Ptitle=$FILE$", ],
             "dependsOn": [],

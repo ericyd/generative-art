@@ -28,7 +28,9 @@ fun main() = application {
   program {
     val progName = this.name.ifBlank { this.window.title.ifBlank { "my-amazing-drawing" } }
     // Seed is the basis for all our randomization, because it is used to create a seeded RNG (Random(seed))
-    var seed = random(0.0, Int.MAX_VALUE.toDouble()).toInt()
+//    var seed = random(0.0, Int.MAX_VALUE.toDouble()).toInt()
+    // this is the one I like!
+    var seed = 52716722
     println("seed = $seed")
 
     val screenshots = extend(Screenshots()) {
@@ -88,7 +90,6 @@ fun main() = application {
       if (screenshots.captureEveryFrame) {
         seed = random(0.0, Int.MAX_VALUE.toDouble()).toInt()
         screenshots.name = "screenshots/$progName/${timestamp()}-seed-$seed.jpg"
-        print("xCount: $xCount, yCount: $yCount")
       }
     }
   }

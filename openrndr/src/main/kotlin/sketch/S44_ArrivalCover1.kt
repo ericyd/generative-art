@@ -1,22 +1,14 @@
-/**
- * Create new works here, then move to parent package when complete
- */
 package sketch
 
 import org.openrndr.application
 import org.openrndr.color.ColorRGBa
-import org.openrndr.draw.LineCap
 import org.openrndr.extensions.Screenshots
 import org.openrndr.extra.noise.random
 import org.openrndr.extras.color.palettes.ColorSequence
-import org.openrndr.math.Vector2
 import org.openrndr.math.clamp
 import org.openrndr.math.map
 import util.grid
 import util.timestamp
-import kotlin.math.PI
-import kotlin.math.hypot
-import kotlin.math.sin
 import kotlin.random.Random
 
 fun main() = application {

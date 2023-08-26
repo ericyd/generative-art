@@ -1,0 +1,23 @@
+title: Arrival EP
+imageSeries:
+  # /c_scale,w_500
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1693074812/2023-08-26T12.11.30-seed-1417538202_yljhpt.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1693074812/2023-08-26T12.11.30-seed-1417538202_yljhpt.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1693074839/2023-08-22T18.10.13-seed-1417538202_mydtxf.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1693074839/2023-08-22T18.10.13-seed-1417538202_mydtxf.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1693074839/2023-08-22T18.10.16-seed-357640208_cccamm.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1693074839/2023-08-22T18.10.16-seed-357640208_cccamm.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1693074840/2023-08-23T20.36.30-seed-1417538202_oga90z.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1693074840/2023-08-23T20.36.30-seed-1417538202_oga90z.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1693074865/2023-08-18T17.04.07-seed-52716722_fn5m0f.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1693074865/2023-08-18T17.04.07-seed-52716722_fn5m0f.jpg
+
+description: >
+  Cover art for my "Arrival" EP!!!
+
+sourceCodeLinks:
+  - https://github.com/ericyd/generative-art/blob/3d45711230273aa6fd0fe102355b700718c4fd64/openrndr/src/main/kotlin/sketch/S46_ArrivalCover3.kt
+  - https://github.com/ericyd/generative-art/blob/3d45711230273aa6fd0fe102355b700718c4fd64/openrndr/src/main/kotlin/sketch/S45_ArrivalCover2.kt
+  - https://github.com/ericyd/generative-art/blob/3d45711230273aa6fd0fe102355b700718c4fd64/openrndr/src/main/kotlin/sketch/S44_ArrivalCover1.kt
+
+createdAt: 2023-08-26

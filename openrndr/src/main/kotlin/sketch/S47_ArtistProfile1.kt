@@ -3,15 +3,17 @@ package sketch
 import org.openrndr.application
 import org.openrndr.color.ColorRGBa
 import org.openrndr.draw.LineCap
-import org.openrndr.shape.contour
 import org.openrndr.extensions.Screenshots
-import org.openrndr.extra.noise.gaussian
 import org.openrndr.extra.noise.random
 import org.openrndr.extra.color.palettes.ColorSequence
+import org.openrndr.extra.shapes.toRounded
 import org.openrndr.math.*
-import org.openrndr.math.transforms.scale
+import org.openrndr.math.transforms.rotateZ
+import org.openrndr.math.transforms.translate
+import org.openrndr.shape.Rectangle
 import util.timestamp
 import kotlin.math.PI
+import kotlin.math.abs
 import kotlin.math.sin
 import kotlin.math.cos
 import kotlin.random.Random
@@ -30,7 +32,7 @@ fun main() = application {
 
     val screenshots = extend(Screenshots()) {
       quitAfterScreenshot = false
-      scale = 6.0
+      contentScale = 6.0
       captureEveryFrame = true
       name = "screenshots/$progName/${timestamp()}-seed-$seed.jpg"
     }
@@ -58,13 +60,17 @@ fun main() = application {
       val strokeWeight = width * 0.003
       
       val tileHeight = 10.0
-      val tileWidth = 55.0
+      val baseTileWidth = 55.0
       
       val majorOffsetX = random(width * 0.1, width * 0.9, rng)
       val minorWaveAmplitude = random(0.1, 0.25, rng)
       val minorScaleFactor = random(1.1, 5.0, rng)
       val lineHeight = height * 0.75
-      fun sine(x: Double): Double {
+      fun sine(rawX: Double): Double {
+//        hm, this ends breaking things if this is too large, because the angles get too extreme
+//        for the contouring algorithm to work correctly.
+//        But I want more waves... Might need to re-think the contouring algorithm
+        val x = rawX / width.toDouble() * PI * 1.2
         val majorWave = sin(x + majorOffsetX)
         val minorWave = minorWaveAmplitude * sin(x * minorScaleFactor + majorOffsetX)
         val scaleFactor = (2.0 + minorWaveAmplitude * 2.0)
@@ -74,59 +80,43 @@ fun main() = application {
       val stepSize = 8
       drawer.strokeWeight = stepSize / 4.0
       drawer.lineCap = LineCap.ROUND
-      val x = { i: Int -> map(0.0, width.toDouble(), 0.0, PI, i.toDouble()) }
 
-      for (i in 0..width step tileWidth.toInt()) {
-        drawer.stroke = spectrum.index(random(0.0, 1.0, rng))
-//        drawer.lineSegment(Vector2(i.toDouble(), 0.0), Vector2(i.toDouble(), sine(x(i))))
-        // calculate the derivative at this point
-        // d/dx sin(x) == cos(x), but our sine is more complex so need to approximate it
-        val ddx = sin(x(i)) - sin(x(i-1))
-        
-//        val rect = Rectangle()
-//        
-//        val point0 = Vector2(cos(angle), sin(angle)) * outerRadius + center
-//        val probabilityCutoff = clamp(map(height * 0.55, height * 1.25, 1.0, 0.0, point0.x+point0.y), 0.0, 1.0)
-//        if (true /*TODO: random(0.0, 1.02, rng) > probabilityCutoff*/) {
-//          // this is pretty ugly/imperative, basically just draw 4 versions of the same contour, but the first 3 are offset/opacified and the final one is not
-//          for (i in 0..4) {
-//            val offset = if (i == 3) { Vector2.ZERO } else { Vector2.gaussian(Vector2.ZERO, Vector2(6.0), rng) }
-//            val fill = spectrum.index(map(-PI, PI, 0.0, 1.0, angle))
-//            val c = contour {
-//              moveTo(point0)
-//
-//              val point1 = Vector2(cos(angle + tileAngularWidth), sin(angle + tileAngularWidth)) * outerRadius + center + offset
-//              arcTo(
-//                crx = outerRadius,
-//                cry = outerRadius,
-//                angle = Math.toDegrees(tileAngularWidth),
-//                largeArcFlag = false,
-//                sweepFlag = true,
-//                end = point1
-//              )
-//
-//              val point2 = Vector2(cos(angle + tileAngularWidth), sin(angle + tileAngularWidth)) * innerRadius + center + offset
-//              lineTo(point2)
-//
-//              val point3 = Vector2(cos(angle), sin(angle)) * innerRadius + center + offset
-//              arcTo(
-//                crx = innerRadius,
-//                cry = innerRadius,
-//                angle = Math.toDegrees(tileAngularWidth),
-//                largeArcFlag = false,
-//                sweepFlag = false,
-//                end = point3
-//              )
-//
-//              close()
-//            }
-//            drawer.fill = if (i == 3) { fill } else { fill.opacify(random(0.1, 0.4, rng)) }
-//            drawer.stroke = bg.opacify(0.8)
-//            drawer.strokeWeight = if (i == 3) { strokeWeight } else { 0.0 } 
-//            drawer.contour(c)
-//          }
-//        }
+      for (y in -height until height * 2 step tileHeight.toInt()) {
+        var x = -baseTileWidth
+        while (x < width.toDouble()) {
+          println("(x, y): ($x, $y)")
+          // calculate the derivative at this point
+          // d/dx sin(x) == cos(x), but our sine is more complex so need to approximate it
+          val epsilon = 1.0
+          val ddx = sine(x + epsilon * 0.5) - sine(x - epsilon * 0.5)
+          val angle = map(-0.9999, 0.99999, -90.0, 90.0, ddx)
+          val radians = map(-90.0, 90.0, -PI / 2.0, PI / 2.0, angle) // is there a utility for this?
+          val tileWidth = map(0.0, 90.0, baseTileWidth * 0.2, baseTileWidth * 0.999, abs(angle))
+//          val effectiveHeight = sin(radians) * tileWidth
+          val effectiveWidth = cos(radians) * tileWidth
+          x += effectiveWidth
+
+          val rect = Rectangle(0.0, 0.0, tileWidth, tileHeight)
+          val spectrumShift = (y.toDouble() / height) * width * 0.65
+          val fill = spectrum.index(map(0.0, width * 1.65, 0.0, 1.0, x + spectrumShift))
+          drawer.fill = fill
+          drawer.stroke = bg.opacify(0.5)
+          val effectiveY = sine(x) + y.toDouble()
+          val probabilityCutoff = clamp(
+            map(height * 0.20, height * 0.90, 1.0, 0.0, effectiveY),
+            0.0,
+            1.0
+          )
+          if (random(0.0, 1.0, rng) < probabilityCutoff) {
+            drawer.contour(
+              rect.toRounded(tileHeight).contour
+                .transform(Matrix44.rotateZ(angle))
+                .transform(Matrix44.translate(x, effectiveY, 0.0))
+            )
+          }
+        }
       }
+
 
       if (screenshots.captureEveryFrame) {
         seed = random(0.0, Int.MAX_VALUE.toDouble()).toInt()

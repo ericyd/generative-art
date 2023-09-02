@@ -10,7 +10,7 @@ import org.openrndr.draw.TransformTarget
 import org.openrndr.draw.isolatedWithTarget
 import org.openrndr.draw.renderTarget
 import org.openrndr.extra.noise.random
-import org.openrndr.extras.color.presets.ORANGE_RED
+import org.openrndr.extra.color.presets.ORANGE_RED
 import org.openrndr.math.Vector2
 import org.openrndr.math.map
 import org.openrndr.shape.Circle

@@ -36,9 +36,9 @@ import org.openrndr.extra.noise.perlin
 import org.openrndr.extra.noise.perlinHermite
 import org.openrndr.extra.noise.random
 import org.openrndr.extra.noise.simplex
-import org.openrndr.extras.color.palettes.ColorSequence
-import org.openrndr.extras.color.palettes.colorSequence
-import org.openrndr.extras.color.presets.WHITE_SMOKE
+import org.openrndr.extra.color.palettes.ColorSequence
+import org.openrndr.extra.color.palettes.colorSequence
+import org.openrndr.extra.color.presets.WHITE_SMOKE
 import org.openrndr.math.Vector2
 import org.openrndr.math.Vector3
 import org.openrndr.math.clamp
@@ -314,7 +314,7 @@ fun main() = application {
 
             if (random(0.0, 1.0, rng) < 0.1) {
               val lightened = color.toHSLa().shade(random(0.5, 2.5, rng))
-              color = lightened.invoke(l = clamp(lightened.l, color.luminance, 0.9)).toRGBa()
+              color = lightened.copy(l = clamp(lightened.l, color.luminance, 0.9)).toRGBa()
             }
             FlowLine(cursor, lineLength, flowFieldFn1, color, bounds, rng)
           } else {
@@ -325,7 +325,7 @@ fun main() = application {
 
             if (random(0.0, 1.0, rng) < 0.1) {
               val lightened = color.toHSLa().shade(random(0.5, 2.5, rng))
-              color = lightened.invoke(l = clamp(lightened.l, color.luminance, 0.9)).toRGBa()
+              color = lightened.copy(l = clamp(lightened.l, color.luminance, 0.9)).toRGBa()
             }
             FlowLine(cursor, lineLength, flowFieldFn2, color, bounds, rng)
           }

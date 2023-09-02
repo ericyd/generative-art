@@ -15,8 +15,8 @@ import org.openrndr.extra.noise.random
 import org.openrndr.extra.noise.simplex
 import org.openrndr.extra.shadestyles.LinearGradient
 import org.openrndr.extra.shadestyles.RadialGradient
-import org.openrndr.extras.color.presets.LIGHT_SLATE_GRAY
-import org.openrndr.extras.color.presets.WHITE_SMOKE
+import org.openrndr.extra.color.presets.LIGHT_SLATE_GRAY
+import org.openrndr.extra.color.presets.WHITE_SMOKE
 import org.openrndr.math.Vector2
 import org.openrndr.math.map
 import org.openrndr.shape.Rectangle

@@ -21,7 +21,7 @@ wip/
 application.log
 build
 out
-.idea
+.idea/*
 .gradle
 # I don't know why this is here, but I want to put my JS stuff in `lib` so commenting out for now
 #lib

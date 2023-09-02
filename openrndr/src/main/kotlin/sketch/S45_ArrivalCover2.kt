@@ -5,7 +5,7 @@ import org.openrndr.color.ColorRGBa
 import org.openrndr.shape.contour
 import org.openrndr.extensions.Screenshots
 import org.openrndr.extra.noise.random
-import org.openrndr.extras.color.palettes.ColorSequence
+import org.openrndr.extra.color.palettes.ColorSequence
 import org.openrndr.math.Vector2
 import org.openrndr.math.clamp
 import org.openrndr.math.map

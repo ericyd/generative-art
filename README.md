@@ -15,7 +15,20 @@ Did you follow a link from Instagram or elsewhere and get a 404???
 
 Then I wanted to explore shaders and didn't like how low-level I had to get with Nannou. So I explored [Processing][] (the classic). It's aight, but something about it didn't sing to me. I wanted something else. Also, I like Kotlin and when I learned about [OpenRNDR][] it seemed like a cool framework to explore.
 
-I always wanted a single repo for my art, not spread out by language or framework. I had to reorganize code that was once very distinctly a [Rust][]-only project into a format that could logically support multiple frameworks and languages. Obviously this is a weird way to structure a repo, but for creative coding purposes I think it's suitable. So now I have art separated by framework. Any files at the top level are there because they have to be (I'm looking at you [Gradle][] 🙄), but the actual art code is nested. The downside of this was effectively a "breaking change" to the organization of the repo, and many links attached to my [Instagram][] posts will not work. Questions or comments? Reach out with an issue in this repo or on my [Instagram][]!  
+I always wanted a single repo for my art, not spread out by language or framework. I had to reorganize code that was once very distinctly a [Rust][]-only project into a format that could logically support multiple frameworks and languages. Obviously this is a weird way to structure a repo, but for creative coding purposes I think it's suitable. So now I have art separated by framework. Any files at the top level are there because they have to be (I'm looking at you [Gradle][] 🙄), but the actual art code is nested. The downside of this was effectively a "breaking change" to the organization of the repo, and many links attached to my [Instagram][] posts will not work. Questions or comments? Reach out with an issue in this repo or on my [Instagram][]!
+
+## OpenRNDR (Kotlin) sketches ([/openrndr](./openrndr))
+
+OpenRNDR is my favorite generative art framework. But, I know nothing about JVM development.
+If this repo gets messed up, best bet is to copy the [openrndr-template](https://github.com/openrndr/openrndr-template) and just start fresh.
+I don't know anything about Gradle and I don't want to.
+
+The only way this will work is if you download IntelliJ Community Edition (or Ultimate if you're fancy) and let it do all the work for you.
+I have no idea what commands to run to set up the repo manually, nor do I care to find out.
+
+### Running a sketch
+
+As recommended by the [OpenRNDR][] project, IntelliJ CE makes it much easier. I mean, heck, they built Kotlin so why wouldn't they have first-class Kotlin support?? If you're using IntelliJ, you can run any sketch with the "Run" icon next to the `main()` function in the sketch.
 
 ## Nannou (Rust) sketches ([/nannou](./nannou))
 
@@ -58,30 +71,6 @@ I personally like the Processing CLI because I dislike the Processing editor, so
 
 ```
 processing-java --sketch=`pwd`/processing/sketch_name --run
-```
-
-## OpenRNDR (Kotlin) sketches ([/openrndr](./openrndr))
-
-Honestly, Rust can be such a pain in the ass. Kotlin is just much more flexible and I got to a point where I wanted that flexibility for my creative coding. I also like that OpenRNDR exposes the shader API at a high level (at least this appears to be the case, I haven't used this functionality yet at time of writing). We'll see if I stick with it, but it looks like a nice, intuitive framework right now.
-
-### Running a sketch
-
-As recommended by the [OpenRNDR][] project, IntelliJ CE makes it much easier. I mean, heck, they built Kotlin so why wouldn't they have first-class Kotlin support?? If you're using IntelliJ, you can run any sketch with the "Run" icon next to the `main()` function in the sketch.
-
-If you'd like to run via command line, you totally can!
-
-```bash
-# title argument can end in "Kt" or not, your choice
-# Do not include `sketch` in the title, but do include any other packages
-./gradlew sketch -Ptitle=flow.MySketch
-```
-
-### Formatting
-
-I ❤️ auto-formatting
-
-```bash
-./gradlew ktlintFormat
 ```
 
 ----

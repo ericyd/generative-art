@@ -9,13 +9,7 @@ import org.openrndr.application
 import org.openrndr.color.ColorRGBa
 import org.openrndr.extra.noise.random
 import org.openrndr.math.Vector2
-import org.openrndr.shape.LineSegment
-import org.openrndr.shape.Rectangle
-import org.openrndr.shape.Segment
-import org.openrndr.shape.SegmentPoint
-import org.openrndr.shape.ShapeContour
-import org.openrndr.shape.compound
-import org.openrndr.shape.contour
+import org.openrndr.shape.*
 import util.timestamp
 import java.util.Collections.rotate
 import java.util.Optional
@@ -359,16 +353,18 @@ fun main() = application {
       drawer.contours(leaves)
 
       // val leafCircles = leaf1.segments.map { it.start }
-      var leafCircles = leaf1.clockwise.triangulation.map { it.x1 }
-      drawer.circles(leafCircles, 5.0)
-
-      drawer.stroke = ColorRGBa.GREEN
-      leafCircles = leaf1.clockwise.triangulation.map { it.x2 }
-      drawer.circles(leafCircles, 5.0)
-
-      drawer.stroke = ColorRGBa.PINK
-      leafCircles = leaf1.clockwise.triangulation.map { it.x3 }
-      drawer.circles(leafCircles, 5.0)
+//      this is probably going to be pretty broken after openrndr 0.4.3 update
+//      making changes to get it to compile but not really expending much
+//      var leafCircles = leaf1.clockwise.triangulation.map { it.x1 }
+//      drawer.circles(leafCircles, 5.0)
+//
+//      drawer.stroke = ColorRGBa.GREEN
+//      leafCircles = leaf1.clockwise.triangulation.map { it.x2 }
+//      drawer.circles(leafCircles, 5.0)
+//
+//      drawer.stroke = ColorRGBa.PINK
+//      leafCircles = leaf1.clockwise.triangulation.map { it.x3 }
+//      drawer.circles(leafCircles, 5.0)
 
       // drawer.lineSegments(hatches)
 

@@ -9,10 +9,11 @@ import org.openrndr.draw.TransformTarget
 import org.openrndr.draw.isolatedWithTarget
 import org.openrndr.draw.renderTarget
 import org.openrndr.extra.noise.random
-import org.openrndr.extras.color.palettes.ColorSequence
+import org.openrndr.extra.color.palettes.ColorSequence
 import org.openrndr.math.Vector2
 import org.openrndr.shape.Rectangle
 import org.openrndr.shape.ShapeContour
+import org.openrndr.shape.contains
 import shape.Hexagon
 import util.QTreeNode
 import util.QuadTree

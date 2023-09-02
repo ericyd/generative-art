@@ -18,7 +18,7 @@ import org.openrndr.draw.isolated
 import org.openrndr.draw.renderTarget
 import org.openrndr.extra.noise.random
 import org.openrndr.extra.noise.simplex
-import org.openrndr.extras.color.presets.GHOST_WHITE
+import org.openrndr.extra.color.presets.GHOST_WHITE
 import org.openrndr.math.Vector2
 import org.openrndr.math.map
 import org.openrndr.shape.Rectangle

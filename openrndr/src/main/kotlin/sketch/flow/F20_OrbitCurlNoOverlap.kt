@@ -12,8 +12,8 @@ import org.openrndr.application
 import org.openrndr.color.ColorRGBa
 import org.openrndr.extra.noise.perlinHermite
 import org.openrndr.extra.noise.random
-import org.openrndr.extras.color.palettes.colorSequence
-import org.openrndr.extras.color.presets.GHOST_WHITE
+import org.openrndr.extra.color.palettes.colorSequence
+import org.openrndr.extra.color.presets.GHOST_WHITE
 import org.openrndr.math.Vector2
 import org.openrndr.math.map
 import org.openrndr.shape.contour

@@ -6,7 +6,7 @@ import org.openrndr.shape.contour
 import org.openrndr.extensions.Screenshots
 import org.openrndr.extra.noise.gaussian
 import org.openrndr.extra.noise.random
-import org.openrndr.extras.color.palettes.ColorSequence
+import org.openrndr.extra.color.palettes.ColorSequence
 import org.openrndr.math.*
 import org.openrndr.math.transforms.rotate
 import org.openrndr.math.transforms.rotateZ

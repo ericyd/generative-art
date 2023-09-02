@@ -14,7 +14,7 @@ import org.openrndr.color.hsla
 import org.openrndr.extra.noise.perlin
 import org.openrndr.extra.noise.random
 import org.openrndr.extra.noise.simplex
-import org.openrndr.extras.color.palettes.colorSequence
+import org.openrndr.extra.color.palettes.colorSequence
 import org.openrndr.math.Vector2
 import org.openrndr.math.map
 import shape.SimplexBlob

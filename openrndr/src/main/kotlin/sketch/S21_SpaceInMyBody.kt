@@ -13,13 +13,10 @@ import org.openrndr.draw.renderTarget
 import org.openrndr.extra.noise.gaussian
 import org.openrndr.extra.noise.random
 import org.openrndr.extra.noise.simplex
-import org.openrndr.extras.color.palettes.colorSequence
+import org.openrndr.extra.color.palettes.colorSequence
 import org.openrndr.math.Vector2
 import org.openrndr.math.map
-import org.openrndr.shape.Circle
-import org.openrndr.shape.Rectangle
-import org.openrndr.shape.ShapeContour
-import org.openrndr.shape.contour
+import org.openrndr.shape.*
 import shape.SimplexBlob
 import util.RadialConcentrationGradient
 import util.packCirclesOnGradient

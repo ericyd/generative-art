@@ -6,7 +6,7 @@ import org.openrndr.draw.Drawer
 import org.openrndr.extensions.Screenshots
 import org.openrndr.extra.noise.gaussian
 import org.openrndr.extra.noise.random
-import org.openrndr.extras.color.palettes.ColorSequence
+import org.openrndr.extra.color.palettes.ColorSequence
 import org.openrndr.math.Vector2
 import org.openrndr.math.map
 import org.openrndr.shape.Rectangle

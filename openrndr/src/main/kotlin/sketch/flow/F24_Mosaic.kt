@@ -30,9 +30,9 @@ import org.openrndr.draw.Drawer
 import org.openrndr.extensions.Screenshots
 import org.openrndr.extra.noise.random
 import org.openrndr.extra.noise.simplex
-import org.openrndr.extras.color.palettes.ColorSequence
-import org.openrndr.extras.color.palettes.colorSequence
-import org.openrndr.extras.color.presets.WHITE_SMOKE
+import org.openrndr.extra.color.palettes.ColorSequence
+import org.openrndr.extra.color.palettes.colorSequence
+import org.openrndr.extra.color.presets.WHITE_SMOKE
 import org.openrndr.math.Vector2
 import org.openrndr.math.clamp
 import org.openrndr.math.map
@@ -245,7 +245,9 @@ fun main() = application {
 
         if (random(0.0, 1.0, rng) < 0.1) {
           val lightened = color.toHSLa().shade(random(0.5, 2.5, rng))
-          lightened.invoke(l = clamp(lightened.l, color.luminance, 0.9)).toRGBa()
+//          not sure if this is equivalent; changed in openrndr 0.4.3 update
+//          lightened.invoke(l = clamp(lightened.l, color.luminance, 0.9)).toRGBa()
+          lightened.copy(l = clamp(lightened.l, color.luminance, 0.9)).toRGBa()
         } else {
           color
         }
@@ -259,7 +261,7 @@ fun main() = application {
 
         if (random(0.0, 1.0, rng) < 0.1) {
           val lightened = color.toHSLa().shade(random(0.5, 2.5, rng))
-          lightened.invoke(l = clamp(lightened.l, color.luminance, 0.9)).toRGBa()
+          lightened.copy(l = clamp(lightened.l, color.luminance, 0.9)).toRGBa()
         } else {
           color
         }

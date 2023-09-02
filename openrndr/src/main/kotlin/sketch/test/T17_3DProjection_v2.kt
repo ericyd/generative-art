@@ -14,10 +14,10 @@ import org.openrndr.draw.BufferMultisample
 import org.openrndr.draw.TransformTarget
 import org.openrndr.draw.isolatedWithTarget
 import org.openrndr.draw.renderTarget
-import org.openrndr.extras.color.presets.ANTIQUE_WHITE
-import org.openrndr.extras.color.presets.BLUE_STEEL
-import org.openrndr.extras.color.presets.FOREST_GREEN
-import org.openrndr.extras.color.presets.ORANGE_RED
+import org.openrndr.extra.color.presets.ANTIQUE_WHITE
+import org.openrndr.extra.color.presets.BLUE_STEEL
+import org.openrndr.extra.color.presets.FOREST_GREEN
+import org.openrndr.extra.color.presets.ORANGE_RED
 import org.openrndr.math.Matrix44
 import org.openrndr.math.Vector2
 import org.openrndr.math.Vector3

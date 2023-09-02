@@ -14,8 +14,8 @@ import org.openrndr.draw.isolatedWithTarget
 import org.openrndr.draw.renderTarget
 import org.openrndr.extra.noise.random
 import org.openrndr.extra.shadestyles.RadialGradient
-import org.openrndr.extras.color.palettes.ColorSequence
-import org.openrndr.extras.color.palettes.colorSequence
+import org.openrndr.extra.color.palettes.ColorSequence
+import org.openrndr.extra.color.palettes.colorSequence
 import org.openrndr.math.Vector2
 import org.openrndr.math.map
 import org.openrndr.shape.Circle

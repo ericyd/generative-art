@@ -8,7 +8,7 @@ import org.openrndr.color.ColorRGBa
 import org.openrndr.color.hsl
 import org.openrndr.draw.isolated
 import org.openrndr.extensions.Screenshots
-import org.openrndr.extra.filterextension.extend
+//import org.openrndr.extra.filterextension.extend
 import org.openrndr.extra.fx.dither.ADither
 import org.openrndr.extra.noise.random
 import org.openrndr.extra.noise.simplex
@@ -40,7 +40,8 @@ fun main() = application {
       name = "screenshots/$progName/${timestamp()}-seed-$seed.png"
     }
 
-    extend(ADither())
+//    lost in ORX 4.3.0 update
+//    extend(ADither())
 
     val scale = 3
     backgroundColor = ColorRGBa.WHITE

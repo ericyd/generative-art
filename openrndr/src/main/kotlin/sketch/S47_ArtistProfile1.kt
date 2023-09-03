@@ -39,7 +39,7 @@ fun main() = application {
 
     val bg = ColorRGBa.BLACK
     backgroundColor = bg
-    var colors = listOf(
+    val colors = listOf(
       "23214A",
       "94EF86",
       "F3ED76",
@@ -54,13 +54,12 @@ fun main() = application {
 
     extend {
       val rng = Random(seed)
-      val spectrum = ColorSequence(colors.mapIndexed { index, hex ->
+      val spectrum = ColorSequence(colors.shuffled(rng).mapIndexed { index, hex ->
         Pair(map(0.0, colors.size - 1.0, 0.0, 1.0, index.toDouble()), ColorRGBa.fromHex(hex))
       })
-      val strokeWeight = width * 0.003
       
-      val tileHeight = 10.0
-      val baseTileWidth = 55.0
+      val tileHeight = 6.0
+      val baseTileWidth = 39.0
       
       val majorOffsetX = random(width * 0.1, width * 0.9, rng)
       val minorWaveAmplitude = random(0.1, 0.25, rng)
@@ -77,8 +76,7 @@ fun main() = application {
         return ((majorWave + minorWave) / scaleFactor + 0.5) * lineHeight
       }
 
-      val stepSize = 8
-      drawer.strokeWeight = stepSize / 4.0
+      drawer.strokeWeight = 1.0
       drawer.lineCap = LineCap.ROUND
 
       for (y in -height until height * 2 step tileHeight.toInt()) {
@@ -91,12 +89,12 @@ fun main() = application {
           val ddx = sine(x + epsilon * 0.5) - sine(x - epsilon * 0.5)
           val angle = map(-0.9999, 0.99999, -90.0, 90.0, ddx)
           val radians = map(-90.0, 90.0, -PI / 2.0, PI / 2.0, angle) // is there a utility for this?
-          val tileWidth = map(0.0, 90.0, baseTileWidth * 0.2, baseTileWidth * 0.999, abs(angle))
+          val tileWidth = map(0.0, 90.0, baseTileWidth * 0.15, baseTileWidth * 0.999, abs(angle))
 //          val effectiveHeight = sin(radians) * tileWidth
           val effectiveWidth = cos(radians) * tileWidth
           x += effectiveWidth
 
-          val rect = Rectangle(0.0, 0.0, tileWidth, tileHeight)
+          val rect = Rectangle(tileWidth * -0.5, tileHeight * -0.5, tileWidth, tileHeight)
           val spectrumShift = (y.toDouble() / height) * width * 0.65
           val fill = spectrum.index(map(0.0, width * 1.65, 0.0, 1.0, x + spectrumShift))
           drawer.fill = fill
@@ -121,8 +119,6 @@ fun main() = application {
       if (screenshots.captureEveryFrame) {
         seed = random(0.0, Int.MAX_VALUE.toDouble()).toInt()
         screenshots.name = "screenshots/$progName/${timestamp()}-seed-$seed.jpg"
-        // shuffle colors after first iteration, to preserve "favorite" spectrum on first iteration
-        colors = colors.shuffled(rng)
       }
     }
   }

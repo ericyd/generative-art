@@ -1,0 +1,17 @@
+title: Wave pulse
+imageSeries:
+  # /c_scale,w_500
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1695779244/2023-09-26T20.41.57-seed-1377498836_zqbvjo.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1695779244/2023-09-26T20.41.57-seed-1377498836_zqbvjo.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1695779244/2023-09-26T20.41.56-seed-360819357_zhd7a6.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1695779244/2023-09-26T20.41.56-seed-360819357_zhd7a6.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1695779244/2023-09-26T20.41.56-seed-1108582553_k315e5.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1695779244/2023-09-26T20.41.56-seed-1108582553_k315e5.jpg
+
+description: >
+  Just a fun design!
+
+sourceCodeLinks:
+  - https://github.com/ericyd/generative-art/blob/d70848db0a55402642db6f0d03795ab3f9392c96/openrndr/src/main/kotlin/sketch/S50_PulseWave.kt
+
+createdAt: 2023-09-26

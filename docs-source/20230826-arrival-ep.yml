@@ -13,7 +13,7 @@ imageSeries:
     srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1693074865/2023-08-18T17.04.07-seed-52716722_fn5m0f.jpg
 
 description: >
-  Cover art for my "Arrival" EP!!!
+  Cover art for my <a href="https://songwhip.com/usualphase/arrival">"Arrival" EP!!!</a>
 
 sourceCodeLinks:
   - https://github.com/ericyd/generative-art/blob/3d45711230273aa6fd0fe102355b700718c4fd64/openrndr/src/main/kotlin/sketch/S46_ArrivalCover3.kt

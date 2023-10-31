@@ -164,10 +164,9 @@ fun main() = application {
     }
 
     extend {
-      // wow not sure if other seeds will be interesting but this one ROCKS
-//      seed = 1808905369
-//      seed = 1703181398
-//      seed = 1252262956
+//      seed = 1741115018
+//      seed = 651053206
+//      seed = 1594878917
       val rng = Random(seed)
       val center = Vector2(width * 0.5, height * 0.5)
       val spectrum = ColorSequence(colors.shuffled(rng).mapIndexed { index, hex ->

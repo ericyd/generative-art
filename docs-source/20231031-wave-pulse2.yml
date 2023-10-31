@@ -1,0 +1,17 @@
+title: Wave pulse 2
+imageSeries:
+  # /c_scale,w_500
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1698773702/art/2023-10-31T12.26.20-seed-1741115018_mdjr03.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1698773702/art/2023-10-31T12.26.20-seed-1741115018_mdjr03.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1698773704/art/2023-10-31T12.26.26-seed-651053206_mjsj5n.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1698773704/art/2023-10-31T12.26.26-seed-651053206_mjsj5n.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1698773702/art/2023-10-31T12.26.28-seed-1594878917_c5xlxq.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1698773702/art/2023-10-31T12.26.28-seed-1594878917_c5xlxq.jpg
+
+description: >
+  Wavy design inspired by <a href="https://www.instagram.com/traciecheng/">@traciecheng</a>!
+
+sourceCodeLinks:
+  - https://github.com/ericyd/generative-art/blob/c29f7d82acf5ab4f69cba0899958c7ab95c362ca/openrndr/src/main/kotlin/sketch/S51_PulseWave2.kt
+
+createdAt: 2023-10-31

@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/ericyd/generative-art#readme",
   "devDependencies": {
-    "yaml": "^1.10.0"
+    "yaml": "^2.2.2"
   },
   "dependencies": {
     "husky": "^4.3.8"

@@ -29,7 +29,7 @@ fun main() = application {
   }
 
   program {
-    class Oscillator(val period: Double, val amplitude: Double, val wave: (t: Double) -> Double, val phase: Double = 0.0) {
+    class Oscillator(val period: Double, val amplitude: Double, val wave: (t: Double) -> Double, var phase: Double = 0.0) {
       val frequencyModulators = mutableListOf<Oscillator>()
       val amplitudeModulators = mutableListOf<Oscillator>()
       val phaseModulators = mutableListOf<Oscillator>()
@@ -65,57 +65,54 @@ fun main() = application {
         return this
       }
 
+      // TODO: need some way to compress/limit this. Otherwise the results will be fairly unpredictable
+      // although, maybe it is better to have a compressor as a "plugin" that takes the oscillators output
+      // and returns a compressed signal
       fun output(t: Double): Double {
         return wave(t * freq(t) + phase(t)) * amp(t)
       }
     }
 
-    class OscillatorXY(val period: Double, val amplitude: Double, val wave: (t: Double) -> Double, val phase: Double = 0.0) {
-      val frequencyModulators = mutableListOf<OscillatorXY>()
-      val amplitudeModulators = mutableListOf<OscillatorXY>()
-      val phaseModulators = mutableListOf<OscillatorXY>()
+    class OscillatorXY(val osc: Oscillator) {
+      fun output(x: Double, phaseX: Double, y: Double, phaseY: Double): Double {
+        osc.phase = phaseX
+        val xOut = osc.output(x)
+        osc.phase = phaseY
+        val yOut = osc.output(y)
+        return (xOut + yOut) * 0.5
+      }
+    }
 
-      fun freq(x: Double, y: Double): Double {
-        val modulated = frequencyModulators.sumOf { it.output(x, y) }
-        val baseFrequency = 2 * PI * 1.0 / period
-        println("$modulated, $baseFrequency")
-        return baseFrequency + modulated
+    // I think it would actually be more performant to use a Triple and be a little more imperative.
+    fun contourLine(vertices: List<Vector3>, threshold: Double): LineSegment? {
+      // If all points are above or all are below, then there are no intersections
+      val below = vertices.filter { it.z < threshold }
+      val above = vertices.filter { it.z >= threshold }
+
+      // no intersections
+      if (above.isEmpty() || below.isEmpty()) {
+        return null
       }
 
-      fun amp(x: Double, y: Double): Double {
-        val modulated = amplitudeModulators.sumOf { it.output(x, y) }
-        return amplitude + modulated
-      }
+      // We have a contour line, let's find it
+      val minority = if (above.size < below.size) above.toList() else below.toList()
+      val majority = if (above.size > below.size) above.toList() else below.toList()
 
-      fun phase(x: Double, y: Double): Double {
-        val modulated = phaseModulators.sumOf { it.output(x, y) }
-        return phase + modulated
-      }
+      // the percentage of the distance along the edge at which the point crosses
+      var howFar = (threshold - majority[0].z) / (minority[0].z - majority[0].z)
+      val start = Vector2(
+        howFar * minority[0].x + (1.0 - howFar) * majority[0].x,
+        howFar * minority[0].y + (1.0 - howFar) * majority[0].y
+      )
 
-      fun modulateFrequency(osc: OscillatorXY): OscillatorXY {
-        frequencyModulators.add(osc)
-        return this
-      }
+      // the percentage of the distance along the edge at which the point crosses
+      howFar = (threshold - majority[1].z) / (minority[0].z - majority[1].z)
+      val end = Vector2(
+        howFar * minority[0].x + (1.0 - howFar) * majority[1].x,
+        howFar * minority[0].y + (1.0 - howFar) * majority[1].y
+      )
 
-      fun modulateAmplitude(osc: OscillatorXY): OscillatorXY {
-        amplitudeModulators.add(osc)
-        return this
-      }
-
-      fun modulatePhase(osc: OscillatorXY): OscillatorXY {
-        phaseModulators.add(osc)
-        return this
-      }
-
-      fun output(x: Double, y: Double): Double {
-        val effectiveFreq = freq(x, y)
-        val effectivePhase = phase(x, y)
-        return wave(x * effectiveFreq + effectivePhase) + wave(y * effectiveFreq + effectivePhase + PI / 2.0) * amp(x, y)
-      }
-
-      fun output(vec2: Vector2): Double {
-        return output(vec2.x, vec2.y)
-      }
+      return LineSegment(start, end)
     }
 
     val progName = this.name.ifBlank { this.window.title.ifBlank { "my-amazing-drawing" } }
@@ -151,35 +148,35 @@ fun main() = application {
         .modulatePhase(Oscillator(width * 0.19, 0.32, ::cos, PI* 1.2))
 
       val stepSize = 10
-//      grid(0, width, stepSize, 0, height, stepSize) { x: Double, y: Double ->
-//        drawer.contour(contour {
-//          var point = Vector2(x, y)
-//          moveTo(point)
-//          for (i in 0..30) {
-////            val angle = map(-1.0, 1.0, -PI, PI, osc.output(point.x))
-////            val output = osc.output(hypot(point.x, point.y))
-//            val output = osc.output(atan2(point.x, point.y) * 300.0)
-//            val angle = map(-1.0, 1.0, -PI, PI, output)
-////            val angle = map(-1.0, 1.0, -PI, PI, simplex(seed, point / 100.0))
-//            point = point + Vector2(sin(angle), cos(angle))
+      grid(0, width, stepSize, 0, height, stepSize) { x: Double, y: Double ->
+        drawer.contour(contour {
+          var point = Vector2(x, y)
+          moveTo(point)
+          for (i in 0..30) {
+//            val angle = map(-1.0, 1.0, -PI, PI, osc.output(point.x))
+//            val output = osc.output(hypot(point.x, point.y))
+            val output = osc.output(atan2(point.x, point.y) * 300.0)
+            val angle = map(-1.0, 1.0, -PI, PI, output)
+//            val angle = map(-1.0, 1.0, -PI, PI, simplex(seed, point / 100.0))
+            point = point + Vector2(sin(angle), cos(angle))
 //            lineTo(point)
-//          }
-//        })
-//      }
+          }
+        })
+      }
 
 
-//      grid(0, width, stepSize, 0, height, stepSize) { x: Double, y: Double ->
-////        val output = osc.output(atan2(x, y) * 300.0)
-//        val output = osc.output(hypot(x, y))
-////        val output = osc.output(x) * 0.5 + osc.output(y) * 0.5
-////        val output = simplex(seed, x / 100.0, y / 100.0)
-////        val output = simplex(seed, x / 100.0)
-////        val output = osc.output(x) * 0.5 + osc2.output(y) * 0.5
-//        val shade = map(-1.0, 1.0, 0.0, 1.0, output)
+      grid(0, width, stepSize, 0, height, stepSize) { x: Double, y: Double ->
+//        val output = osc.output(atan2(x, y) * 300.0)
+        val output = osc.output(hypot(x, y))
+//        val output = osc.output(x) * 0.5 + osc.output(y) * 0.5
+//        val output = simplex(seed, x / 100.0, y / 100.0)
+//        val output = simplex(seed, x / 100.0)
+//        val output = osc.output(x) * 0.5 + osc2.output(y) * 0.5
+        val shade = map(-1.0, 1.0, 0.0, 1.0, output)
 //        drawer.stroke = null
 //        drawer.fill = ColorRGBa.WHITE.shade(shade)
 //        drawer.rectangle(Rectangle(x, y, stepSize.toDouble(), stepSize.toDouble()))
-//      }
+      }
 
       /**
        * OK!
@@ -231,31 +228,105 @@ fun main() = application {
 //        drawer.rectangle(Rectangle(x, y, stepSize.toDouble(), stepSize.toDouble()))
       }
 
+      val oscXY = OscillatorXY(osc2)
+      /**
+       * This is a simple flow field using these two slowly-phasing oscillators
+       * as the flow field
+       */
       grid(0, width, stepSize, 0, height, stepSize) { x: Double, y: Double ->
         drawer.contour(contour {
           var point = Vector2(x, y)
           moveTo(point)
           for (i in 0..30) {
-            val phaseX = map(0.0, width.toDouble(), -PI, PI * 4.0, point.x)
-            val phaseY = map(0.0, height.toDouble(), PI * -2.34, PI * 2.43, point.y)
-            val oscX = Oscillator(width * 1.1, 1.0, ::cos, phaseY)
-              .modulateAmplitude(Oscillator(width * 0.232, 0.099, ::cos, PI * 0.248))
-              .modulateAmplitude(Oscillator(width * 0.32, 0.12, ::sin, PI * 0.3))
-              .modulateFrequency(Oscillator(width * 0.17, 0.0019, ::sin, PI * 4.9))
-              .modulatePhase(Oscillator(width * 0.19, 0.32, ::cos, PI* 1.2))
-            // this can have identical params/modulation to oscX (except phase), but trying out new things here
-            val oscY = Oscillator(width * 1.2, 1.0, ::cos, phaseX)
-              .modulateAmplitude(Oscillator(width * 0.332, 0.123, ::cos, PI * 0.448))
-              .modulateAmplitude(Oscillator(width * 0.29, 0.16, ::sin, PI * 0.5))
-              .modulateFrequency(Oscillator(width * 0.12, 0.0009, ::sin, PI * 4.59))
-              .modulatePhase(Oscillator(width * 0.28, 0.42, ::cos, PI* 1.52))
-            val output = oscX.output(point.x) * 0.5 + oscY.output(point.y) * 0.5
+            val phaseX = map(0.0, width.toDouble(), -PI, PI * 4.0, point.y)
+            val phaseY = map(0.0, height.toDouble(), PI * -2.34, PI * 2.43, point.x)
+            val output = oscXY.output(point.x, phaseX, point.y, phaseY)
             val angle = map(-1.75, 1.75, -PI, PI, output)
 //            val angle = map(-1.0, 1.0, -PI, PI, simplex(seed, point / 100.0))
             point = point + Vector2(sin(angle), cos(angle))
-            lineTo(point)
+//            lineTo(point)
           }
         })
+      }
+
+      for (yInt in -100 until (height + 100) step 10) {
+        val y = yInt.toDouble()
+        val phase = map(0.0, height.toDouble(), PI * -1.34, PI * 2.43, y)
+        drawer.contour(contour {
+          osc2.phase = phase
+          moveTo(0.0, osc2.output(0.0) * 20.0 + y)
+          for (x in 0 until width) {
+            osc2.phase = phase
+//            lineTo(x.toDouble(), osc2.output(x.toDouble()) * 20.0 + y)
+          }
+        })
+      }
+
+      val osc3 = Oscillator(width * 1.1, 1.0, ::cos, 0.8)
+        .modulateAmplitude(Oscillator(width * 0.132, 0.079, ::cos, PI * 0.248))
+        .modulateAmplitude(Oscillator(width * 0.28, 0.08, ::sin, PI * 0.3))
+        .modulateFrequency(Oscillator(width * 1.27, 0.0025, ::sin, PI * 4.9))
+        .modulatePhase(Oscillator(width * 0.22, 0.38, ::cos, PI* 1.2))
+      val osc2XY = OscillatorXY(osc3)
+      val z = { x: Double, y: Double ->
+        val phaseX = map(0.0, width.toDouble(), -PI, PI * 4.0, y)
+        val phaseY = map(0.0, height.toDouble(), PI * -2.34, PI * 2.43, x)
+        osc2XY.output(x, phaseX, y, phaseY)
+      }
+      val stepSizeDouble = stepSize.toDouble()
+      for (xInt in 0 until width step stepSize) {
+        val x = xInt.toDouble()
+        for (yInt in 0 until height step stepSize) {
+          // we are making 2 triangles out of a "square",
+          // so introduce a simple var to keep track of which direction the triangle is facing.
+          // if this looks decent, we can get a more reasonable strategy.
+          for (i in 0 until 2) {
+            val y = yInt.toDouble()
+            // I think this might be why things aren't lining up perfectly -- probably need a "z" function
+
+            val points = if (i == 0) {
+              listOf(
+                Vector3(x, y, z(x, y)),
+                Vector3(x - stepSizeDouble, y, z(x - stepSizeDouble, y)),
+                Vector3(
+                  x - stepSizeDouble,
+                  y - stepSizeDouble,
+                  z(x - stepSizeDouble, y - stepSizeDouble)
+                ),
+              )
+            } else {
+              listOf(
+                Vector3(x, y, z(x, y)),
+                Vector3(
+                  x - stepSizeDouble,
+                  y - stepSizeDouble,
+                  z(x - stepSizeDouble, y - stepSizeDouble)
+                ),
+                Vector3(x, y - stepSizeDouble, z(x, y - stepSizeDouble)),
+              )
+            }
+
+            drawer.strokeWeight = 1.0
+            for (i in 0..20) {
+              val threshold = map(0.0, 20.0, -1.0, 1.0, i.toDouble())
+              val line = contourLine(points, threshold)
+              if (line != null) {
+                drawer.lineSegment(line)
+              }
+            }
+
+            // draw the triangles
+//            drawer.strokeWeight = 0.25
+//            drawer.stroke = ColorRGBa.GRAY
+//            for (i in 0..2) {
+//              if (i == 2) {
+//                drawer.lineSegment(points[2].xy, points[0].xy)
+//              } else {
+//                drawer.lineSegment(points[i].xy, points[i + 1].xy)
+//              }
+//            }
+          }
+        }
       }
 
       // woot, basic oscillator works

@@ -4,16 +4,11 @@ package sketch
 import org.openrndr.application
 import org.openrndr.color.ColorRGBa
 import org.openrndr.draw.Drawer
-import org.openrndr.draw.LineCap
 import org.openrndr.extensions.Screenshots
 import org.openrndr.extra.noise.random
 import org.openrndr.extra.color.palettes.ColorSequence
-import org.openrndr.extra.fx.edges.Contour
 import org.openrndr.extra.noise.gaussian
-import org.openrndr.extra.shapes.toRounded
 import org.openrndr.math.*
-import org.openrndr.math.transforms.rotateZ
-import org.openrndr.math.transforms.translate
 import org.openrndr.shape.*
 import util.rotatePoint
 import util.timestamp

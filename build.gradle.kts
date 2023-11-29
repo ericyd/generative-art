@@ -169,7 +169,6 @@ tasks {
       attributes["Implementation-Version"] = project.version
     }
     minimize {
-      exclude(dependency("org.openrndr:openrndr-gl3:.*"))
       exclude(dependency("org.jetbrains.kotlin:kotlin-reflect:.*"))
       exclude(dependency("org.slf4j:slf4j-simple:.*"))
       exclude(dependency("org.apache.logging.log4j:log4j-slf4j2-impl:.*"))
@@ -267,8 +266,8 @@ class Openrndr {
 
   init {
     dependencies {
-      runtimeOnly(openrndr("gl3"))
-      runtimeOnly(openrndrNatives("gl3"))
+      implementation(openrndr("gl3"))
+      implementation(openrndrNatives("gl3"))
       implementation(openrndr("openal"))
       runtimeOnly(openrndrNatives("openal"))
       implementation(openrndr("application"))

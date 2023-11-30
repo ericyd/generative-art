@@ -19,73 +19,73 @@ val applicationMainClass = "TemplateProgramKt"
 
 /**  ## additional ORX features to be added to this project */
 val orxFeatures = setOf<String>(
-//  "orx-boofcv",
+  //  "orx-boofcv",
   "orx-camera",
-//  "orx-chataigne",
+  //  "orx-chataigne",
   "orx-color",
   "orx-compositor",
-//  "orx-compute-graph",
-//  "orx-compute-graph-nodes",
-//  "orx-dnk3",
-//  "orx-easing",
-//  "orx-expression-evaluator",
-//  "orx-file-watcher",
+  //  "orx-compute-graph",
+  //  "orx-compute-graph-nodes",
+  //  "orx-dnk3",
+  //  "orx-easing",
+  //  "orx-expression-evaluator",
+  //  "orx-file-watcher",
   "orx-fx",
-//  "orx-git-archiver",
-//  "orx-glslify",
-//  "orx-gradient-descent",
+  //  "orx-git-archiver",
+  //  "orx-glslify",
+  //  "orx-gradient-descent",
   "orx-gui",
-//  "orx-hash-grid",
+  //  "orx-hash-grid",
   "orx-image-fit",
-//  "orx-integral-image",
-//  "orx-interval-tree",
-//  "orx-jumpflood",
-//  "orx-kdtree",
-//  "orx-keyframer",
-//  "orx-kinect-v1",
-//  "orx-kotlin-parser",
-//  "orx-marching-squares",
-//  "orx-mesh-generators",
-//  "orx-midi",
-//  "orx-minim",
+  //  "orx-integral-image",
+  //  "orx-interval-tree",
+  //  "orx-jumpflood",
+  //  "orx-kdtree",
+  //  "orx-keyframer",
+  //  "orx-kinect-v1",
+  //  "orx-kotlin-parser",
+  //  "orx-marching-squares",
+  //  "orx-mesh-generators",
+  //  "orx-midi",
+  //  "orx-minim",
   "orx-no-clear",
   "orx-noise",
-//  "orx-obj-loader",
+  //  "orx-obj-loader",
   "orx-olive",
-//  "orx-osc",
-//  "orx-palette",
+  //  "orx-osc",
+  //  "orx-palette",
   "orx-panel",
-//  "orx-parameters",
-//  "orx-poisson-fill",
-//  "orx-quadtree",
-//  "orx-rabbit-control",
-//  "orx-realsense2",
-//  "orx-runway",
+  //  "orx-parameters",
+  //  "orx-poisson-fill",
+  //  "orx-quadtree",
+  //  "orx-rabbit-control",
+  //  "orx-realsense2",
+  //  "orx-runway",
   "orx-shade-styles",
-//  "orx-shader-phrases",
+  //  "orx-shader-phrases",
   "orx-shapes",
-//  "orx-syphon",
-//  "orx-temporal-blur",
-//  "orx-tensorflow",
-//  "orx-time-operators",
-//  "orx-timer",
-//  "orx-triangulation",
-//  "orx-turtle",
+  //  "orx-syphon",
+  //  "orx-temporal-blur",
+  //  "orx-tensorflow",
+  //  "orx-time-operators",
+  //  "orx-timer",
+  //  "orx-triangulation",
+  //  "orx-turtle",
   "orx-video-profiles",
   "orx-view-box",
 )
 
 /** ## additional ORML features to be added to this project */
 val ormlFeatures = setOf<String>(
-//    "orml-blazepose",
-//    "orml-dbface",
-//    "orml-facemesh",
-//    "orml-image-classifier",
-//    "orml-psenet",
-//    "orml-ssd",
-//    "orml-style-transfer",
-//    "orml-super-resolution",
-//    "orml-u2net",
+  //    "orml-blazepose",
+  //    "orml-dbface",
+  //    "orml-facemesh",
+  //    "orml-image-classifier",
+  //    "orml-psenet",
+  //    "orml-ssd",
+  //    "orml-style-transfer",
+  //    "orml-super-resolution",
+  //    "orml-u2net",
 )
 
 /** ## additional OPENRNDR features to be added to this project */
@@ -116,9 +116,9 @@ repositories {
 
 dependencies {
 
-//    implementation(libs.jsoup)
-//    implementation(libs.gson)
-//    implementation(libs.csv)
+  //    implementation(libs.jsoup)
+  implementation(libs.gson)
+  //    implementation(libs.csv)
 
   implementation(libs.kotlinx.coroutines.core)
   implementation(libs.slf4j.api)
@@ -169,6 +169,7 @@ tasks {
       attributes["Implementation-Version"] = project.version
     }
     minimize {
+      exclude(dependency("org.openrndr:openrndr-gl3:.*"))
       exclude(dependency("org.jetbrains.kotlin:kotlin-reflect:.*"))
       exclude(dependency("org.slf4j:slf4j-simple:.*"))
       exclude(dependency("org.apache.logging.log4j:log4j-slf4j2-impl:.*"))
@@ -266,8 +267,8 @@ class Openrndr {
 
   init {
     dependencies {
-      implementation(openrndr("gl3"))
-      implementation(openrndrNatives("gl3"))
+      runtimeOnly(openrndr("gl3"))
+      runtimeOnly(openrndrNatives("gl3"))
       implementation(openrndr("openal"))
       runtimeOnly(openrndrNatives("openal"))
       implementation(openrndr("application"))

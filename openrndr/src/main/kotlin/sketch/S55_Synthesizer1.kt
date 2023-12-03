@@ -71,6 +71,14 @@ fun main() = application {
       fun output(t: Double): Double {
         return wave(t * freq(t) + phase(t)) * amp(t)
       }
+
+      fun output(x: Double, y: Double): Double {
+        phase = map(0.0, period, -PI, PI * 4.0, y)
+        val xOut = output(x)
+        phase = map(0.0, period, -PI * 2.34, PI * 3.24, x)
+        val yOut = output(y)
+        return (xOut + yOut) * 0.5
+      }
     }
 
     class OscillatorXY(val osc: Oscillator) {
@@ -263,17 +271,41 @@ fun main() = application {
       }
 
       val osc3 = Oscillator(width * 1.1, 1.0, ::cos, 0.8)
-        .modulateAmplitude(Oscillator(width * 0.132, 0.079, ::cos, PI * 0.248))
-        .modulateAmplitude(Oscillator(width * 0.28, 0.08, ::sin, PI * 0.3))
-        .modulateFrequency(Oscillator(width * 1.27, 0.0025, ::sin, PI * 4.9))
-        .modulatePhase(Oscillator(width * 0.22, 0.38, ::cos, PI* 1.2))
+        .modulateAmplitude(
+          Oscillator(width * 0.132, 0.79, ::cos, PI * 0.248)
+            .modulateAmplitude(Oscillator(width * 0.3, 0.03, ::sin, PI * -0.89))
+        )
+        .modulateAmplitude(
+          Oscillator(width * 0.28, 0.8, ::sin, PI * 0.3)
+            // this is interesting. Makes me think that amplitude of modulator should be relative to the amplitude of the carrier signal, but that is not currently how it is set up
+            .modulateAmplitude(Oscillator(width * 0.48, 0.04, ::sin, PI * 1.3423))
+        )
+//        .modulateFrequency(
+//          Oscillator(width * 1.27, 0.025, ::sin, PI * 4.9)
+//            .modulateAmplitude(Oscillator(width * 0.48, 0.001, ::sin, PI * 1.93))
+//        )
+        .modulatePhase(
+          Oscillator(width * 0.22, 0.38, ::cos, PI* 1.2)
+            .modulateAmplitude(Oscillator(width * 0.22, 0.38, ::cos, PI * 2.2))
+        )
       val osc2XY = OscillatorXY(osc3)
       val z = { x: Double, y: Double ->
-        val phaseX = map(0.0, width.toDouble(), -PI, PI * 4.0, y)
-        val phaseY = map(0.0, height.toDouble(), PI * -2.34, PI * 2.43, x)
+        val phaseX = map(0.0, width.toDouble(), PI * 1.0, PI * 3.40, y)
+        val phaseY = map(0.0, height.toDouble(), PI * -3.34, -PI * -4.43, x)
         osc2XY.output(x, phaseX, y, phaseY)
+//        simplex(seed, x / 100.0, y / 100.0)
       }
       val stepSizeDouble = stepSize.toDouble()
+
+      // heatmap
+//      grid(0, width, stepSize, 0, height, stepSize) { x: Double, y: Double ->
+//        val output = z(x, y)
+//        val shade = map(-1.5, 1.5, 0.0, 1.0, output)
+//        drawer.stroke = null
+//        drawer.fill = ColorRGBa.WHITE.shade(shade)
+//        drawer.rectangle(Rectangle(x, y, stepSize.toDouble(), stepSize.toDouble()))
+//      }
+
       for (xInt in 0 until width step stepSize) {
         val x = xInt.toDouble()
         for (yInt in 0 until height step stepSize) {
@@ -308,7 +340,7 @@ fun main() = application {
 
             drawer.strokeWeight = 1.0
             for (i in 0..20) {
-              val threshold = map(0.0, 20.0, -1.0, 1.0, i.toDouble())
+              val threshold = map(0.0, 20.0, -1.5, 1.5, i.toDouble())
               val line = contourLine(points, threshold)
               if (line != null) {
                 drawer.lineSegment(line)

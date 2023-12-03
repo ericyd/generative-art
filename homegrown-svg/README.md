@@ -5,8 +5,7 @@ Some experiments with drawing SVGs using no framework no nothing (I might add so
 # How to run
 
 ```
-http-server homegrown-svg
-open localhost:8080
+node homegrown-svg/scripts/my-script.js
 ```
 
 # How to edit

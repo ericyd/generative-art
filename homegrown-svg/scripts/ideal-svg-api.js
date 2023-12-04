@@ -59,6 +59,15 @@ const canvas = svg(config, (canvas) => {
 })
 
 // capture screenshot and loop
+
+/**
+ * TODO
+ * 1. make 2 convenience methods
+ *    a. "open preview" - perhaps just `execSync(`open ${base64(svg)}`)`
+ *    b. "writeFile" which simplifies the filenaming, and console logs when a file is written 
+ * 2. consider using https://github.com/sindresorhus/uint8array-extras instead of buffer
+ * 3. structure API better and add more tag classes
+ */
 while (true) {
   const originalSeed = seed
   const filename = `screenshots/svg-${basename(process.argv[1], extname(process.argv[1]))}-seed-${seed}.svg`

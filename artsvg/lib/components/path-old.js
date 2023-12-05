@@ -17,15 +17,8 @@
 //   absolute negative x and y values are interpreted as negative coordinates;
 //   relative negative x values move to the left, and relative negative y values move upwards.
 
-import { random } from "./util.js";
-import { vec2, Vector2 } from "./vector2.js";
-
-/**
- * @typedef Point
- * @type {object}
- * @property {number} x
- * @property {number} y
- */
+import { random } from "../util.js";
+import { vec2, Vector2 } from "../vector2.js";
 
 /**
  * @typedef CoordinateType

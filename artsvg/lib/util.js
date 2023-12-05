@@ -1,6 +1,6 @@
 // resources: https://observablehq.com/@makio135/utilities
 
-import { point } from "./path.js";
+import { Vector2, vec2 } from "./vector2.js";
 
 /**
  * @param {number} n length of array
@@ -23,9 +23,6 @@ export const range = (min, max, step = 1) => new Array((max - min) / step).fill(
  * @returns {[number[], number]}
  */
 export const rangeWithIndex = (min, max, step = 1) => new Array((max - min) / step).fill(0).map((_, i) => ([min + i * step, i]));
-
-// should deprecate this
-export { random } from "./random.js";
 
 /**
  *
@@ -91,12 +88,12 @@ export const quantize = (quantum, value) =>
  * @param {number} yMax 
  * @param {number} xStep 
  * @param {number} yStep 
- * @returns {Point}
+ * @returns {Vector2}
  */
 export function* grid(xMin, xMax, yMin, yMax, xStep = 1, yStep = 1) {  
   for (const x of range(xMin, xMax, xStep)) {
     for (const y of range(yMin, yMax, yStep)) {
-      yield point(x, y)
+      yield vec2(x, y)
     }
   }
 }

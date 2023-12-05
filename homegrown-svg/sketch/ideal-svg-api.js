@@ -19,22 +19,22 @@ const config = {
 let seed = Math.floor(Math.random())
 
 const canvas = svg(config, (canvas) => {
-//  const rng = new Random(seed)
+  //  const rng = new Random(seed)
 
-//  canvas.strokeWeight = 0.5
-//  canvas.rectangle(Rectangle(x, y, width, height))
+  //  canvas.strokeWeight = 0.5
+  //  canvas.rectangle(Rectangle(x, y, width, height))
 
   // instance pattern
-//  const prebuildPath = Path.fromPoints([vec2(0.0, 1.0), vec2(1.0, 2.0)])
-//  canvas.path(prebuiltPath)
+  //  const prebuildPath = Path.fromPoints([vec2(0.0, 1.0), vec2(1.0, 2.0)])
+  //  canvas.path(prebuiltPath)
 
   // builder pattern
-//  canvas.path((path) => {
-//    path.moveTo(x, y)
-//    for (let x = 0; x < width; x++) {
-//      path.lineTo(x, canvas.height / 2)
-//    }
-//  })
+  //  canvas.path((path) => {
+  //    path.moveTo(x, y)
+  //    for (let x = 0; x < width; x++) {
+  //      path.lineTo(x, canvas.height / 2)
+  //    }
+  //  })
 
   // add circle with explicit constructor
   canvas.circle(new Circle({ x: 10, y: 10, radius: 10 }))
@@ -64,17 +64,19 @@ const canvas = svg(config, (canvas) => {
  * TODO
  * 1. make 2 convenience methods
  *    a. "open preview" - perhaps just `execSync(`open ${base64(svg)}`)`
- *    b. "writeFile" which simplifies the filenaming, and console logs when a file is written 
+ *    b. "writeFile" which simplifies the filenaming, and console logs when a file is written
  * 2. consider using https://github.com/sindresorhus/uint8array-extras instead of buffer
  * 3. structure API better and add more tag classes
  */
 while (true) {
   const originalSeed = seed
-  const filename = `screenshots/svg-${basename(process.argv[1], extname(process.argv[1]))}-seed-${seed}.svg`
+  const filename = `screenshots/svg-${basename(
+    process.argv[1],
+    extname(process.argv[1]),
+  )}-seed-${seed}.svg`
   if (true) {
-
     writeFileSync(filename, canvas.render())
-//    seed = Math.floor(random(1.0, Number.MAX_SAFE_INTEGER))
+    //    seed = Math.floor(random(1.0, Number.MAX_SAFE_INTEGER))
     console.log(`saved to ${filename}`)
     // TODO: do this only once I think???
     // execSync(`open ${filename}`)

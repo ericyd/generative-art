@@ -8,7 +8,9 @@
     "doc": "docs"
   },
   "scripts": {
-    "build": "node docs-source/build-json-payload.js"
+    "build": "node docs-source/build-json-payload.js",
+    "format": "npx @biomejs/biome format homegrown-svg/**/*.js --write",
+    "lint": "npx @biomejs/biome lint homegrown-svg/**/*.js"
   },
   "repository": {
     "type": "git",
@@ -22,6 +24,7 @@
   },
   "homepage": "https://github.com/ericyd/generative-art#readme",
   "devDependencies": {
+    "@biomejs/biome": "1.4.1",
     "yaml": "^1.10.0"
   },
   "dependencies": {

@@ -37,9 +37,10 @@ export class Path extends Tag {
    * @param {PathAttributes} attributes
    */
   constructor({ ...attributes } = {}) {
-    super('Path', {
+    super('path', {
       ...attributes,
     })
+    this.cursor = vec2(0, 0)
   }
 
   /**
@@ -48,12 +49,13 @@ export class Path extends Tag {
    * @param {CoordinateType} coordinateType
    * @returns {PathInstruction}
    */
-  move(endPoint, coordinateType = 'absolute') {
+  moveTo(endPoint, coordinateType = 'absolute') {
     this.#d.push(
       new PathInstruction(coordinateType === 'absolute' ? 'M' : 'm', [
         endPoint,
       ]),
     )
+    this.cursor = endPoint
   }
 
   /**
@@ -62,12 +64,13 @@ export class Path extends Tag {
    * @param {CoordinateType} coordinateType
    * @returns {PathInstruction}
    */
-  line(endPoint, coordinateType = 'absolute') {
+  lineTo(endPoint, coordinateType = 'absolute') {
     this.#d.push(
       new PathInstruction(coordinateType === 'absolute' ? 'L' : 'l', [
         endPoint,
       ]),
     )
+    this.cursor = endPoint
   }
 
   /**
@@ -94,6 +97,7 @@ export class Path extends Tag {
         endPoint,
       ]),
     )
+    this.cursor = endPoint
   }
 
   /**
@@ -113,6 +117,7 @@ export class Path extends Tag {
         endPoint,
       ]),
     )
+    this.cursor = endPoint
   }
 
   // TODO
@@ -121,6 +126,7 @@ export class Path extends Tag {
 
   close() {
     this.#d.push(new PathInstruction('Z', []))
+    this.cursor = this.#d[0].endPoint
   }
 
   render() {

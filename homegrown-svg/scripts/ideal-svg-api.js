@@ -6,7 +6,7 @@
 // TODO: create a convenience method for "write svg" or something like that
 import { writeFileSync } from 'node:fs'
 import { basename, extname } from 'node:path'
-import { svg, circle, Circle } from '../lib/tag.js'
+import { svg, circle, Circle } from 'artsvg'
 
 const config = {
   background: '#fff',

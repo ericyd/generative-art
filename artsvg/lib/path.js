@@ -18,7 +18,7 @@
 //   relative negative x values move to the left, and relative negative y values move upwards.
 
 import { random } from "./util.js";
-import { vec2, Vector2 } from "./Vector2.js";
+import { vec2, Vector2 } from "./vector2.js";
 
 /**
  * @typedef Point

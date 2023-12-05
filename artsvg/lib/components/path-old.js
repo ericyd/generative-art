@@ -17,8 +17,8 @@
 //   absolute negative x and y values are interpreted as negative coordinates;
 //   relative negative x values move to the left, and relative negative y values move upwards.
 
-import { random } from "../util.js";
-import { vec2, Vector2 } from "../vector2.js";
+import { random } from '../util.js'
+import { vec2, Vector2 } from '../vector2.js'
 
 /**
  * @typedef CoordinateType
@@ -48,16 +48,16 @@ export class PathInstruction {
    * @param {Vector2[]} points
    */
   constructor(commandType, points) {
-    this.endPoint = points?.[0] ?? vec2(0, 0);
-    this.points = points;
-    this.commandType = commandType;
+    this.endPoint = points?.[0] ?? vec2(0, 0)
+    this.points = points
+    this.commandType = commandType
   }
 
   toString() {
     return [
       this.commandType,
-      ...this.points.map((pt) => [pt.x, pt.y].join(" ")),
-    ].join(" ");
+      ...this.points.map((pt) => [pt.x, pt.y].join(' ')),
+    ].join(' ')
   }
 }
 
@@ -67,10 +67,10 @@ export class PathInstruction {
  * @param {CoordinateType} coordinateType
  * @returns {PathInstruction}
  */
-export function move(endPoint, coordinateType = "absolute") {
-  return new PathInstruction(coordinateType === "absolute" ? "M" : "m", [
+export function move(endPoint, coordinateType = 'absolute') {
+  return new PathInstruction(coordinateType === 'absolute' ? 'M' : 'm', [
     endPoint,
-  ]);
+  ])
 }
 
 /**
@@ -79,10 +79,10 @@ export function move(endPoint, coordinateType = "absolute") {
  * @param {CoordinateType} coordinateType
  * @returns {PathInstruction}
  */
-export function line(endPoint, coordinateType = "absolute") {
-  return new PathInstruction(coordinateType === "absolute" ? "L" : "l", [
+export function line(endPoint, coordinateType = 'absolute') {
+  return new PathInstruction(coordinateType === 'absolute' ? 'L' : 'l', [
     endPoint,
-  ]);
+  ])
 }
 
 /**
@@ -100,13 +100,13 @@ export function cubicBezier(
   controlPoint1,
   controlPoint2,
   endPoint,
-  coordinateType = "absolute"
+  coordinateType = 'absolute',
 ) {
-  return new PathInstruction(coordinateType === "absolute" ? "C" : "c", [
+  return new PathInstruction(coordinateType === 'absolute' ? 'C' : 'c', [
     controlPoint1,
     controlPoint2,
     endPoint,
-  ]);
+  ])
 }
 
 /**
@@ -122,16 +122,16 @@ export function cubicBezier(
 export function smoothBezier(
   controlPoint,
   endPoint,
-  coordinateType = "absolute"
+  coordinateType = 'absolute',
 ) {
-  return new PathInstruction(coordinateType === "absolute" ? "S" : "s", [
+  return new PathInstruction(coordinateType === 'absolute' ? 'S' : 's', [
     controlPoint,
     endPoint,
-  ]);
+  ])
 }
 
 export function close() {
-  return new PathInstruction("Z", []);
+  return new PathInstruction('Z', [])
 }
 
 // TODO
@@ -145,7 +145,7 @@ export function close() {
  * @returns {Vector2}
  */
 export function point(x, y) {
-  return vec2(x, y);
+  return vec2(x, y)
 }
 
 /**
@@ -157,7 +157,7 @@ export function point(x, y) {
  * @returns {Point}
  */
 export function randomPoint(xMin, xMax, yMin, yMax, rng) {
-  return Vector2.random(xMin, xMax, yMin, yMax, rng);
+  return Vector2.random(xMin, xMax, yMin, yMax, rng)
 }
 
 /**
@@ -168,39 +168,39 @@ export function randomPoint(xMin, xMax, yMin, yMax, rng) {
 export function pathBuilder(drawingCallback) {
   // dang, this doesn't work when passing to the callback.
   // I guess I'll have to lean on `relative` movements instead of a `cursor` concept :\
-  let cursor = { x: 0, y: 0 };
-  const path = [];
+  let cursor = { x: 0, y: 0 }
+  const path = []
 
   const newCursor = (coordinateType, cursor, endPoint) =>
-    coordinateType === "absolute"
+    coordinateType === 'absolute'
       ? endPoint
-      : point(cursor.x + endPoint.x, cursor.y + endPoint.y);
+      : point(cursor.x + endPoint.x, cursor.y + endPoint.y)
 
   const pathBuilder = {
     cursor: () => cursor,
     move: (endPoint, coordinateType) => {
-      path.push(move(endPoint, coordinateType));
-      cursor = newCursor(coordinateType, cursor, endPoint);
+      path.push(move(endPoint, coordinateType))
+      cursor = newCursor(coordinateType, cursor, endPoint)
     },
     line: (endPoint, coordinateType) => {
-      path.push(line(endPoint, coordinateType));
-      cursor = newCursor(coordinateType, cursor, endPoint);
+      path.push(line(endPoint, coordinateType))
+      cursor = newCursor(coordinateType, cursor, endPoint)
     },
     close: () => {
-      path.push(close());
+      path.push(close())
     },
     cubicBezier: (controlPoint1, controlPoint2, endPoint, coordinateType) => {
       path.push(
-        cubicBezier(controlPoint1, controlPoint2, endPoint, coordinateType)
-      );
-      cursor = newCursor(coordinateType, cursor, endPoint);
+        cubicBezier(controlPoint1, controlPoint2, endPoint, coordinateType),
+      )
+      cursor = newCursor(coordinateType, cursor, endPoint)
     },
     smoothBezier: (controlPoint, endPoint, coordinateType) => {
-      path.push(smoothBezier(controlPoint, endPoint, coordinateType));
-      cursor = newCursor(coordinateType, cursor, endPoint);
+      path.push(smoothBezier(controlPoint, endPoint, coordinateType))
+      cursor = newCursor(coordinateType, cursor, endPoint)
     },
-  };
-  drawingCallback(pathBuilder);
+  }
+  drawingCallback(pathBuilder)
   // with pathInstructions
-  return path.map((p) => p.toString()).join(" ");
+  return path.map((p) => p.toString()).join(' ')
 }

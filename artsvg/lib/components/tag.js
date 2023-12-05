@@ -16,7 +16,7 @@ export class Tag {
   setAttributes(attributes) {
     this.attributes = {
       ...this.attributes,
-      ...attributes
+      ...attributes,
     }
   }
 
@@ -29,7 +29,7 @@ export class Tag {
   }
 
   /**
-   * @protected 
+   * @protected
    * @param {(tag: Tag) => void} builder
    * TODO: not sure if this is correct typing, I want to pass a constructor
    * @param {typeof Tag} ConstructableTag
@@ -45,18 +45,17 @@ export class Tag {
   #formatAttributes() {
     return Object.entries(this.attributes)
       .map(([key, value]) => `${key}="${value}"`)
-      .join(" ");
+      .join(' ')
   }
 
   render() {
     return [
-       `<${this.tagName} ${this.#formatAttributes()}>`,
-       this.children.map((child) => child.render()).join(""),
-       `</${this.tagName}>`,
-     ].join("")
+      `<${this.tagName} ${this.#formatAttributes()}>`,
+      this.children.map((child) => child.render()).join(''),
+      `</${this.tagName}>`,
+    ].join('')
   }
 }
-
 
 /**
  * @param {(tag: Tag) => void} builder

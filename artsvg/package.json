@@ -13,9 +13,13 @@
     "lib": "lib"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "format": "npx @biomejs/biome format lib/**/*.js --write",
+    "lint": "npx @biomejs/biome lint lib/**/*.js"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@biomejs/biome": "1.4.1"
+  }
 }

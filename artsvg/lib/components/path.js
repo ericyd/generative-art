@@ -17,8 +17,8 @@
 //   absolute negative x and y values are interpreted as negative coordinates;
 //   relative negative x values move to the left, and relative negative y values move upwards.
 
-import { Tag } from "./tag.js"
-import { vec2, Vector2 } from "../vector2.js";
+import { Tag } from './tag.js'
+import { vec2, Vector2 } from '../vector2.js'
 
 /**
  * @typedef {object} PathAttributes
@@ -38,7 +38,7 @@ export class Path extends Tag {
    */
   constructor({ ...attributes } = {}) {
     super('Path', {
-      ...attributes
+      ...attributes,
     })
   }
 
@@ -48,10 +48,12 @@ export class Path extends Tag {
    * @param {CoordinateType} coordinateType
    * @returns {PathInstruction}
    */
-  move(endPoint, coordinateType = "absolute") {
-    this.#d.push(new PathInstruction(coordinateType === "absolute" ? "M" : "m", [
-      endPoint,
-    ]));
+  move(endPoint, coordinateType = 'absolute') {
+    this.#d.push(
+      new PathInstruction(coordinateType === 'absolute' ? 'M' : 'm', [
+        endPoint,
+      ]),
+    )
   }
 
   /**
@@ -60,10 +62,12 @@ export class Path extends Tag {
    * @param {CoordinateType} coordinateType
    * @returns {PathInstruction}
    */
-  line(endPoint, coordinateType = "absolute") {
-    this.#d.push(new PathInstruction(coordinateType === "absolute" ? "L" : "l", [
-      endPoint,
-    ]));
+  line(endPoint, coordinateType = 'absolute') {
+    this.#d.push(
+      new PathInstruction(coordinateType === 'absolute' ? 'L' : 'l', [
+        endPoint,
+      ]),
+    )
   }
 
   /**
@@ -81,13 +85,15 @@ export class Path extends Tag {
     controlPoint1,
     controlPoint2,
     endPoint,
-    coordinateType = "absolute"
+    coordinateType = 'absolute',
   ) {
-    this.#d.push(new PathInstruction(coordinateType === "absolute" ? "C" : "c", [
-      controlPoint1,
-      controlPoint2,
-      endPoint,
-    ]));
+    this.#d.push(
+      new PathInstruction(coordinateType === 'absolute' ? 'C' : 'c', [
+        controlPoint1,
+        controlPoint2,
+        endPoint,
+      ]),
+    )
   }
 
   /**
@@ -100,15 +106,13 @@ export class Path extends Tag {
    * @param {'absolute' | 'relative'} coordinateType
    * @returns {PathInstruction}
    */
-  smoothBezier(
-    controlPoint,
-    endPoint,
-    coordinateType = "absolute"
-  ) {
-    this.#d.push(new PathInstruction(coordinateType === "absolute" ? "S" : "s", [
-      controlPoint,
-      endPoint,
-    ]));
+  smoothBezier(controlPoint, endPoint, coordinateType = 'absolute') {
+    this.#d.push(
+      new PathInstruction(coordinateType === 'absolute' ? 'S' : 's', [
+        controlPoint,
+        endPoint,
+      ]),
+    )
   }
 
   // TODO
@@ -116,11 +120,11 @@ export class Path extends Tag {
   // Elliptical Arc Curve: A, a
 
   close() {
-    this.#d.push(new PathInstruction("Z", []));
+    this.#d.push(new PathInstruction('Z', []))
   }
 
   render() {
-    this.setAttributes({ d: this.#d.map((p) => p.render()).join(" ") })
+    this.setAttributes({ d: this.#d.map((p) => p.render()).join(' ') })
     return super.render()
   }
 }
@@ -141,9 +145,6 @@ export function path(attrsOrBuilder) {
 }
 
 //------------------------------------------------------------------------------
-
-
-
 
 /**
  * @typedef CoordinateType
@@ -173,15 +174,15 @@ class PathInstruction {
    * @param {Vector2[]} points
    */
   constructor(commandType, points) {
-    this.endPoint = points?.[0] ?? vec2(0, 0);
-    this.points = points;
-    this.commandType = commandType;
+    this.endPoint = points?.[0] ?? vec2(0, 0)
+    this.points = points
+    this.commandType = commandType
   }
 
   render() {
     return [
       this.commandType,
-      ...this.points.map((pt) => [pt.x, pt.y].join(" ")),
-    ].join(" ");
+      ...this.points.map((pt) => [pt.x, pt.y].join(' ')),
+    ].join(' ')
   }
 }

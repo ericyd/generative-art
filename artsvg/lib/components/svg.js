@@ -11,7 +11,33 @@ import { Path } from './path.js'
  * This allows the builder to respond to variables that might have changed in a higher scope, such as a seed value.
  */
 
-export class Svg extends Tag {  
+/**
+ * @class Svg
+ * @description The root of any SVG document.
+ * Although you can construct this class manually, it's much nicer to the the `svg` builder function,
+ * or the `renderSvg` function if you're running this locally or on a server.
+ * @example
+ * ```js
+ * import { svg, vec2 } from 'artsvg'
+ *
+ * const document = svg({ width: 100, height: 100, scale: 5 }, (doc) => {
+ *   doc.fill = null
+ *   doc.strokeWidth = 1
+ *   doc.path((p) => {
+ *     p.fill = '#ab9342'
+ *     p.stroke = '#000'
+ *     p.strokeWidth = 2
+ *     p.moveTo(vec2(0, 0))
+ *     p.lineTo(vec2(doc.width, doc.height))
+ *     p.lineTo(vec2(doc.width, 0))
+ *     p.close()
+ *   })
+ * })
+ *
+ * console.log(document.render())
+ * ```
+ */
+export class Svg extends Tag {
   /**
    * @param {SvgAttributes} attributes
    */
@@ -31,6 +57,7 @@ export class Svg extends Tag {
     this.filenameMetadata = null
   }
 
+  // TODO: consider using a Proxy to set aribtrary attributes using camelCase kebab-case transitions
   /** @param {'none' | string | null} value */
   set fill(value) {
     const fill = value === null ? 'none' : value
@@ -90,7 +117,7 @@ export class Svg extends Tag {
 /**
  * @callback SvgBuilderPostLoop
  * @description A callback which will be run after ever render loop.
- * Useful to trigger side-effects like setting up new values for global variables such as seeds. 
+ * Useful to trigger side-effects like setting up new values for global variables such as seeds.
  * Similar to a "cleanup" function returned from React's useEffect hook.
  * @returns {void}
  */

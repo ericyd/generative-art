@@ -1,1 +1,68 @@
-Gonna try nesting this lib... In case I ever want to publish it
+# ArtSVG
+
+A place to play with SVGs.
+
+## Why? 
+
+I love OPENRNDR and wanted to see if I could make a generative art framework that ran in an interpretted language. I've never been a JVM guy, and even though I like Kotlin, it sounded appealing to me to be able to write generative art in a language I used every day: JavaScript.
+
+Of course you may (reasonably) ask why I'm not just using p5.js, the dominant JavaScript framework for writing generative art. Well, I don't have a good answer to that. I suppose this is really "just for fun" ¯\\_(ツ)_/¯
+
+## Examples
+
+See [the /sketch folder in my personal generative art repo](https://github.com/ericyd/generative-art/tree/ce4536cffea702ccf4050e389c1b9882561732c2/homegrown-svg/sketch) for some examples.
+
+Here's a minimal example:
+
+```js
+import { renderSvg, circle, hypot, vec2, map } from 'artsvg'
+
+const config = {
+  width: 100,
+  height: 100,
+  scale: 5,
+  loopCount: 1,
+}
+
+renderSvg(config, (svg) => {
+  const center = vec2(svg.width / 2, svg.height / 2).div(2)
+  svg.circle(circle({
+    x: center.x,
+    y: center.y,
+    radius: hypot(svg.width, svg.height) * 0.05
+  }))
+
+  const nRings = 10
+  for (let i = 1; i <= nRings; i ++) {
+    const radius = map(1, Math.log(nRings), hypot(svg.width, svg.height) * 0.07, hypot(svg.width, svg.height) * 0.15, Math.log(i))
+    svg.path((p) => {
+      p.fill = 'none'
+      p.stroke = '#000'
+      p.strokeWidth = map(1, nRings, 0.3, 0.05, i)
+      p.moveTo(vec2(Math.cos(0) * radius, Math.sin(0) * radius).add(center))
+      for (let angle = 0; angle <= Math.PI * 2; angle += 0.1) {
+        p.lineTo(vec2(Math.cos(angle) * radius, Math.sin(angle) * radius).add(center))
+      }
+      p.close()
+    })
+  }
+})
+```
+
+Which can just be run as a normal Node script, assuming you have configured your `package.json` to declare `"type": "module"`
+
+```js
+node example.js
+```
+
+Here's the output of the above script:
+
+![concentric circles example script](./examples/concentric-circles.svg)
+
+## API docs
+
+Coming soon. For the time being, I tried to be pretty accurate with adding JSDoc typings to the functions and classes, so your editor should be able to help with auto-complete.
+
+## Design Philosophy
+
+This lib is heavily inspired by OPENRNDR, which means it utilizes the builder pattern extensively. My first attempt at writing my own SVG "framework" attempted to be much more functional, and I found the scripts to be really verbose and hard to follow. I think for the purpose of making art, imperative builder patterns are really nice.

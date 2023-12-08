@@ -20,7 +20,7 @@ renderSvg(config, (svg) => {
 
   /**
    * Algorithm:
-   * 
+   *
    * 1. choose a starting point about which to rotate
    * 2. each line gets placed concentrically around the starting point, with an increasing radius
    * 3. each line gets rotated 180 degrees
@@ -34,20 +34,39 @@ renderSvg(config, (svg) => {
     let radius = map(0, nLines - 1, maxRadius * minRadiusRatio, maxRadius, i)
     let center = vec2(svg.width / 2, maxRadius)
     let curveRight = true
-    const startRotation = -Math.PI/2
+    const startRotation = -Math.PI / 2
     const rotationDuration = Math.PI
 
     svg.path((path) => {
       path.strokeWidth = 0.3
-      path.moveTo(center.add(vec2(Math.cos(startRotation) * radius, Math.sin(startRotation) * radius)))
+      path.moveTo(
+        center.add(
+          vec2(
+            Math.cos(startRotation) * radius,
+            Math.sin(startRotation) * radius,
+          ),
+        ),
+      )
       while (center.y < svg.height) {
         if (curveRight) {
-          for (let r = startRotation; r < startRotation + rotationDuration; r += 0.1) {
-            path.lineTo(center.add(vec2(Math.cos(r) * radius, Math.sin(r) * radius)))
+          for (
+            let r = startRotation;
+            r < startRotation + rotationDuration;
+            r += 0.1
+          ) {
+            path.lineTo(
+              center.add(vec2(Math.cos(r) * radius, Math.sin(r) * radius)),
+            )
           }
         } else {
-          for (let r = startRotation; r > startRotation - rotationDuration; r -= 0.1) {
-            path.lineTo(center.add(vec2(Math.cos(r) * radius, Math.sin(r) * radius)))
+          for (
+            let r = startRotation;
+            r > startRotation - rotationDuration;
+            r -= 0.1
+          ) {
+            path.lineTo(
+              center.add(vec2(Math.cos(r) * radius, Math.sin(r) * radius)),
+            )
           }
         }
         // ah, we have to flip the radius so it corresponds to the "opposite" size based on it's position. Otherwise we have a lot of disjointed lines which isn't as cool

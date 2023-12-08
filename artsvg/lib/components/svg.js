@@ -31,6 +31,26 @@ export class Svg extends Tag {
     this.filenameMetadata = null
   }
 
+  /** @param {'none' | string | null} value */
+  set fill(value) {
+    const fill = value === null ? 'none' : value
+    this.setAttributes({ fill })
+    return fill
+  }
+
+  /** @param {'none' | string | null} value */
+  set stroke(value) {
+    const stroke = value === null ? 'none' : value
+    this.setAttributes({ stroke })
+    return stroke
+  }
+
+  /** @param {number} value */
+  set strokeWidth(value) {
+    this.setAttributes({ 'stroke-width': value })
+    return value
+  }
+
   // TODO: find a more generic way of expressing this "instance or builder" pattern
   /**
    * @param {Path | (path: Path) => void} pathOrBuilder

@@ -15,7 +15,8 @@ const config = {
   loopCount: 1,
 }
 
-renderSvg(config, (canvas) => {
+renderSvg(config, (svg) => {
+  svg.fill = null
 
   /**
    * Algorithm:
@@ -27,19 +28,19 @@ renderSvg(config, (canvas) => {
    * 5. rotate the other direction
    */
   const nLines = 9
-  const maxRadius = canvas.height / 10
+  const maxRadius = svg.height / 10
   const minRadiusRatio = 0.1
   for (let i = 0; i < nLines; i++) {
     let radius = map(0, nLines - 1, maxRadius * minRadiusRatio, maxRadius, i)
-    let center = vec2(canvas.width / 2, maxRadius)
+    let center = vec2(svg.width / 2, maxRadius)
     let curveRight = true
     const startRotation = -Math.PI/2
     const rotationDuration = Math.PI
 
-    canvas.path((path) => {
-      path.setAttributes({ 'stroke-width': 0.3 })
+    svg.path((path) => {
+      path.strokeWidth = 0.3
       path.moveTo(center.add(vec2(Math.cos(startRotation) * radius, Math.sin(startRotation) * radius)))
-      while (center.y < canvas.height) {
+      while (center.y < svg.height) {
         if (curveRight) {
           for (let r = startRotation; r < startRotation + rotationDuration; r += 0.1) {
             path.lineTo(center.add(vec2(Math.cos(r) * radius, Math.sin(r) * radius)))

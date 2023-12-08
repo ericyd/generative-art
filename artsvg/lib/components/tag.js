@@ -33,10 +33,9 @@ export class Tag {
    * @param {(tag: Tag) => void} builder
    * TODO: not sure if this is correct typing, I want to pass a constructor
    * @param {typeof Tag} ConstructableTag
-   * @param {object} attributes the constructor attributes for the given Tag
    * @returns {Tag}
    */
-  childBuilder(builder, ConstructableTag, attributes = {}) {
+  childBuilder(builder, ConstructableTag) {
     const p = new ConstructableTag()
     builder(p)
     this.children.push(p)

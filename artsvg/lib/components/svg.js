@@ -6,10 +6,12 @@ import { Path } from './path.js'
  * @typedef {object} SvgAttributes
  * @property {number} width
  * @property {number} height
- * @property {number} scale allows the resulting SVG to have larger dimensions, which still keeping the viewBox the same as the `width` and `height` attributes
+ * @property {number} scale Allows the resulting SVG to have larger dimensions, which still keeping the viewBox the same as the `width` and `height` attributes
+ * @property {SvgBuilder?} builder If the SVG is initialized by a builder, it will be run every time `render` is called.
+ * This allows the builder to respond to variables that might have changed in a higher scope, such as a seed value.
  */
 
-export class Svg extends Tag {
+export class Svg extends Tag {  
   /**
    * @param {SvgAttributes} attributes
    */
@@ -25,18 +27,18 @@ export class Svg extends Tag {
     })
     this.width = width
     this.height = height
+    /** @type {Record<string, string | number>} */
+    this.filenameMetadata = null
   }
 
-  // TODO: find a more generic way of expressing this "instance or builder" patterh
-  // TODO: need more overloads, because attributes should actually be first arg... or passed to the callback???
+  // TODO: find a more generic way of expressing this "instance or builder" pattern
   /**
    * @param {Path | (path: Path) => void} pathOrBuilder
-   * @param {import('./path.js').PathAttributes} attributes
    */
-  path(pathOrBuilder, attributes) {
+  path(pathOrBuilder) {
     return pathOrBuilder instanceof Path
       ? this.addChild(pathOrBuilder)
-      : this.childBuilder(pathOrBuilder, Path, attributes)
+      : this.childBuilder(pathOrBuilder, Path)
   }
 
   /**
@@ -47,11 +49,35 @@ export class Svg extends Tag {
       ? this.addChild(circleOrBuilder)
       : this.childBuilder(circleOrBuilder, Circle)
   }
+
+  /**
+   * Generates filename metadata when running in a render loop
+   * @returns {string}
+   */
+  formatFilenameMetadata() {
+    return Object.entries(this.filenameMetadata ?? {})
+      .map(([key, value]) => `${key}-${value}`)
+      .join('-')
+  }
 }
 
 /**
+ * @callback SvgBuilder
+ * @param {Svg} svg
+ * @returns {void | SvgBuilderPostLoop}
+ */
+
+/**
+ * @callback SvgBuilderPostLoop
+ * @description A callback which will be run after ever render loop.
+ * Useful to trigger side-effects like setting up new values for global variables such as seeds. 
+ * Similar to a "cleanup" function returned from React's useEffect hook.
+ * @returns {void}
+ */
+
+/**
  * @param {SvgAttributes} attributes
- * @param {(svg: Svg) => void} builder
+ * @param {SvgBuilder} builder
  */
 export function svg(attributes, builder) {
   const s = new Svg(attributes)

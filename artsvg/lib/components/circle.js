@@ -24,9 +24,9 @@ export class Circle extends Tag {
       r: attributes.radius,
       ...attributes,
     })
-    this.x = attributes.x
-    this.y = attributes.y
-    this.radius = attributes.radius
+    this.x = x
+    this.y = y
+    this.radius = radius
   }
 
   /**

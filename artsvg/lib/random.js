@@ -48,8 +48,8 @@ export function sfc32(a, b, c, d) {
  *
  * @param {string} seed
  */
-export function rngFactory(seed) {
-  var seed = cyrb128(seed ?? String(Date.now()));
+export function createRng(seed) {
+  var seed = cyrb128(String(seed) ?? String(Date.now()));
   // Four 32-bit component hashes provide the seed for sfc32.
   return sfc32(seed[0], seed[1], seed[2], seed[3]);
 }
@@ -63,6 +63,10 @@ export function random(min, max, rng = Math.random) {
 
 export function randomInt(min, max, rng = Math.random) {
   return Math.floor(random(min, max, rng))
+}
+
+export function randomSeed(rng = Math.random) {
+  return Math.floor(random(0, Number.MAX_SAFE_INTEGER, rng))
 }
 
 export function jitter(amount, value, rng) {

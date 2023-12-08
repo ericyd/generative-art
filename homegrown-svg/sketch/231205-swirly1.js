@@ -3,7 +3,7 @@
  * The purpose of this is to envision what my "ideal" API could be
  */
 
-import { svg, circle, Circle, renderLoop, vec2, map } from 'artsvg'
+import { vec2, map, renderSvg } from 'artsvg'
 
 const config = {
   background: '#fff',
@@ -12,11 +12,10 @@ const config = {
   width: 100,
   height: 100,
   scale: 10,
+  loopCount: 1,
 }
 
-let seed = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)
-
-const drawing = svg(config, (canvas) => {
+renderSvg(config, (canvas) => {
 
   /**
    * Algorithm:
@@ -60,9 +59,4 @@ const drawing = svg(config, (canvas) => {
       }
     })
   }
-})
-
-// capture screenshot and loop
-renderLoop(seed, drawing, {
-  loopCount: 1,
 })

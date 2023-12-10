@@ -1,6 +1,5 @@
 /**
- * This is perhaps not a runnable file right now.
- * The purpose of this is to envision what my "ideal" API could be
+ * Not a very interesting sketch, this was just added so I could experiment with how I wanted the lib API to work
  */
 
 import {

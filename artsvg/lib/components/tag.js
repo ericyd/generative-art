@@ -22,6 +22,33 @@ export class Tag {
 
   /**
    * @protected
+   * Returns an object containing the core "visual styles" that should be inherited
+   * as children are added to the document.
+   * @returns {Record<string, string}
+   */
+  visualAttributes() {
+    return {
+      fill: this.attributes.fill,
+      stroke: this.attributes.stroke,
+      'stroke-width': this.attributes['stroke-width'],
+    }
+  }
+
+  /**
+   * @protected
+   * Sets visual attributes on the current tag, favoring any values that have been set explicitly
+   * @param {Record<string, string>} incoming
+   * @returns {void}
+   */
+  setVisualAttributes(incoming) {
+    this.setAttributes({
+      ...incoming,
+      ...this.visualAttributes(),
+    })
+  }
+
+  /**
+   * @protected
    * @param {Tag} child
    */
   addChild(child) {

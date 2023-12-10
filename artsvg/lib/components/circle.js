@@ -1,3 +1,4 @@
+import { Vector2, vec2 } from '../vector2.js'
 import { Tag } from './tag.js'
 
 /**
@@ -14,19 +15,22 @@ import { Tag } from './tag.js'
  * @property {number} radius
  */
 export class Circle extends Tag {
+  #x = 0
+  #y = 0
+  #radius = 0
   /**
    * @param {CircleAttributes} attributes
    */
   constructor({ x = 0, y = 0, radius = 1, ...attributes } = {}) {
     super('circle', {
-      cx: attributes.x,
-      cy: attributes.y,
-      r: attributes.radius,
+      cx: x,
+      cy: y,
+      r: radius,
       ...attributes,
     })
-    this.x = x
-    this.y = y
-    this.radius = radius
+    this.#x = x
+    this.#y = y
+    this.#radius = radius
   }
 
   /**
@@ -34,7 +38,11 @@ export class Circle extends Tag {
    */
   set x(value) {
     this.setAttributes({ cx: value })
+    this.#x = value
     return value
+  }
+  get x() {
+    return this.#x
   }
 
   /**
@@ -42,7 +50,11 @@ export class Circle extends Tag {
    */
   set y(value) {
     this.setAttributes({ cy: value })
+    this.#y = value
     return value
+  }
+  get y() {
+    return this.#y
   }
 
   /**
@@ -50,7 +62,126 @@ export class Circle extends Tag {
    */
   set radius(value) {
     this.setAttributes({ r: value })
+    this.#radius = value
     return value
+  }
+  get radius() {
+    return this.#radius
+  }
+
+  /**
+   * @returns {Vector2}
+   */
+  center() {
+    return vec2(this.x, this.y)
+  }
+
+  /**
+   * @param {Circle} other
+   * @returns {boolean}
+   */
+  intersectsCircle(other) {
+    return this.center().distanceTo(other.center()) < this.radius + other.radius
+  }
+
+  /**
+   * Returns a list of all bitangents, i.e. lines that are tangent to both circles.
+   * Thanks SO! https://math.stackexchange.com/questions/719758/inner-tangent-between-two-circles-formula
+   * @param {Circle} other
+   * @returns {[Vector2, Vector2, number][]} a list of tangents,
+   * where the first value is the point on `small` and the second value is the point on `large`,
+   * and the third value is the angle of the tangent points relative to 0 radians
+   */
+  bitangents(other) {
+    // there is some duplicated calculations in outer and inner tangents; consider refactoring
+    return this.outerTangents(other).concat(this.innerTangents(other))
+  }
+
+  /**
+   * @param {Circle} other
+   * @returns {[Vector2, Vector2, number][]} outer tangent lines
+   * where the first value is the point on `small` and the second value is the point on `large`,
+   * and the third value is the angle of the tangent points relative to 0 radians
+   */
+  outerTangents(other) {
+    const small = this.radius > other.radius ? other : this
+    const large = this.radius > other.radius ? this : other
+    const hypotenuse = small.center().distanceTo(large.center())
+    const short = large.radius - small.radius
+    const angleBetweenCenters = Math.atan2(small.y - large.y, small.x - large.x)
+    const phi = angleBetweenCenters + Math.acos(short / hypotenuse)
+    const phi2 = angleBetweenCenters - Math.acos(short / hypotenuse)
+
+    return [
+      [
+        vec2(
+          small.x + small.radius * Math.cos(phi),
+          small.y + small.radius * Math.sin(phi),
+        ),
+        vec2(
+          large.x + large.radius * Math.cos(phi),
+          large.y + large.radius * Math.sin(phi),
+        ),
+        phi,
+      ],
+      [
+        vec2(
+          small.x + small.radius * Math.cos(phi2),
+          small.y + small.radius * Math.sin(phi2),
+        ),
+        vec2(
+          large.x + large.radius * Math.cos(phi2),
+          large.y + large.radius * Math.sin(phi2),
+        ),
+        phi2,
+      ],
+    ]
+  }
+
+  /**
+   * @param {Circle} other
+   * @returns {[Vector2, Vector2, number][]} inner tangent lines,
+   * where the first value is the point on `small` and the second value is the point on `large`,
+   * and the third value is the angle of the tangent points relative to 0 radians
+   */
+  innerTangents(other) {
+    if (this.intersectsCircle(other)) {
+      return []
+    }
+    const small = this.radius > other.radius ? other : this
+    const large = this.radius > other.radius ? this : other
+    const hypotenuse = small.center().distanceTo(large.center())
+    const short = large.radius + small.radius
+    const angleBetweenCenters = Math.atan2(small.y - large.y, small.x - large.x)
+    const phi =
+      angleBetweenCenters + Math.asin(short / hypotenuse) - Math.PI / 2
+    const phi2 =
+      angleBetweenCenters - Math.asin(short / hypotenuse) - Math.PI / 2
+
+    return [
+      [
+        vec2(
+          small.x - small.radius * Math.cos(phi),
+          small.y - small.radius * Math.sin(phi),
+        ),
+        vec2(
+          large.x + large.radius * Math.cos(phi),
+          large.y + large.radius * Math.sin(phi),
+        ),
+        phi,
+      ],
+      [
+        vec2(
+          small.x + small.radius * Math.cos(phi2),
+          small.y + small.radius * Math.sin(phi2),
+        ),
+        vec2(
+          large.x - large.radius * Math.cos(phi2),
+          large.y - large.radius * Math.sin(phi2),
+        ),
+        phi2,
+      ],
+    ]
   }
 }
 

@@ -1,6 +1,6 @@
 import { Tag } from './tag.js'
-import { Circle } from './circle.js'
-import { Path } from './path.js'
+import { Circle, circle } from './circle.js'
+import { Path, path } from './path.js'
 
 /**
  * @typedef {object} SvgAttributes
@@ -85,16 +85,17 @@ export class Svg extends Tag {
   path(pathOrBuilder) {
     return pathOrBuilder instanceof Path
       ? this.addChild(pathOrBuilder)
-      : this.childBuilder(pathOrBuilder, Path)
+      : this.addChild(path(pathOrBuilder))
   }
 
   /**
+   * TODO: "or builder" can be anything accepted by the "circle" helper
    * @param {Circle | (circle: Circle) => void} circleOrBuilder
    */
   circle(circleOrBuilder) {
     return circleOrBuilder instanceof Circle
       ? this.addChild(circleOrBuilder)
-      : this.childBuilder(circleOrBuilder, Circle)
+      : this.addChild(circle(circleOrBuilder))
   }
 
   /**

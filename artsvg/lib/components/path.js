@@ -157,10 +157,11 @@ export class Path extends Tag {
 
 /**
  * @param {PathAttributes | (Path: Path) => void} attrsOrBuilder
+ * @param {PathAttributes?} attributes
  */
-export function path(attrsOrBuilder) {
+export function path(attrsOrBuilder, attributes = {}) {
   if (typeof attrsOrBuilder === 'function') {
-    const c = new Path()
+    const c = new Path(attributes)
     attrsOrBuilder(c)
     return c
   } else if (typeof attrsOrBuilder === 'object') {

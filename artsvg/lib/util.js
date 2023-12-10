@@ -27,7 +27,7 @@ export const rangeWithIndex = (min, max, step = 1) => new Array((max - min) / st
 /**
  *
  * @param {Degrees} degrees
- * @returns Radians
+ * @returns {Radians}
  */
 export function degToRad(degrees) {
   return (degrees * Math.PI * 2) / 180;

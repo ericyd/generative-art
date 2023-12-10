@@ -1,8 +1,3 @@
-/**
- * This is perhaps not a runnable file right now.
- * The purpose of this is to envision what my "ideal" API could be
- */
-
 import { vec2, map, renderSvg } from 'artsvg'
 
 const config = {

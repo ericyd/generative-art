@@ -45,8 +45,14 @@ export function sfc32(a, b, c, d) {
 }
 
 /**
+ * @callback Rng
+ * @returns {number} in range [0, 1]
+ */
+
+/**
  *
  * @param {string} seed
+ * @returns {Rng}
  */
 export function createRng(seed) {
   var seed = cyrb128(String(seed) ?? String(Date.now()));
@@ -54,6 +60,12 @@ export function createRng(seed) {
   return sfc32(seed[0], seed[1], seed[2], seed[3]);
 }
 
+/**
+ * @param {number} min 
+ * @param {number} max 
+ * @param {Rng} rng 
+ * @returns {number}
+ */
 export function random(min, max, rng = Math.random) {
   if (min > max) {
     [min, max] = [max, min];
@@ -61,18 +73,42 @@ export function random(min, max, rng = Math.random) {
   return min + rng() * (max - min);
 }
 
+/**
+ * @param {number} min 
+ * @param {number} max 
+ * @param {Rng} rng 
+ * @returns {number} an integer
+ */
 export function randomInt(min, max, rng = Math.random) {
   return Math.floor(random(min, max, rng))
 }
 
+/**
+ * @param {Rng} rng 
+ * @returns {number} an integer in range [0, Number.MAX_SAFE_INTEGER]
+ */
 export function randomSeed(rng = Math.random) {
   return Math.floor(random(0, Number.MAX_SAFE_INTEGER, rng))
 }
 
+/**
+ * Returns a random number in range [`value` - `amount`, `value` + `amount`]
+ * @param {number} amount
+ * @param {number} value
+ * @param {Rng} rng 
+ * @returns {number}
+ */
 export function jitter(amount, value, rng) {
   return random(value - amount, value + amount, rng);
 }
 
+/**
+ * Shuffle an array.
+ * Returns a new array, does *not* modify in place.
+ * @param {Array<T>} arr
+ * @param {Rng} rng 
+ * @returns {Array<T>}
+ */
 export function shuffle(arr, rng = Math.random) {
   const copy = [...arr]; // create a copy of original array
   for (let i = copy.length - 1; i; i--) {
@@ -80,4 +116,15 @@ export function shuffle(arr, rng = Math.random) {
     [copy[i], copy[randomIndex]] = [copy[randomIndex], copy[i]]; // swap
   }
   return copy;
+}
+
+/**
+ * Returns a random value from an array
+ * @param {Array<T>} array 
+ * @param {Rng} rng 
+ * @returns {T}
+ */
+export function randomFromArray(array, rng = Math.random) {
+  const index = randomInt(0, array.length, rng)
+  return array[index]
 }

@@ -7,10 +7,10 @@ const config = {
   width: 100,
   height: 100,
   scale: 5,
-  loopCount: 1,
+  loopCount: 5,
 }
 
-let seed =  2465011693853095// randomSeed()
+let seed =  randomSeed()
 
 renderSvg(config, (svg) => {
   svg.filenameMetadata = { seed }
@@ -28,14 +28,8 @@ renderSvg(config, (svg) => {
    *      so I'm not sure how we will pick which one to use, perhaps it will be random,
    *      or perhaps just the "first" one we find.
    * 4. Continue until we have approached all points in the sequence.
-   * 
-   * This is extremely brute force right now, and apparently has a low chance of using inner tangents;
-   * perhaps this is because outer tangents are listed first? Seems like we should still find inner tangents occassionally.
-   * 
-   * There are still some discontinuities; I suspect there's a bug in how I'm finding good tangents to use.
-   * But goddam this has taken me way too long and doesn't even look that great so I'm going to stop
    */
-  const nPoints = 4
+  const nPoints = 7
   let angle = random(0, Math.PI * 2, rng)
   let previousTangentAngle = angle - Math.PI / 2
   
@@ -67,11 +61,6 @@ renderSvg(config, (svg) => {
   const contour = path(p => {
     p.moveTo(circles[0].center().add(vec2(Math.cos(angle) * circles[0].radius, Math.sin(angle) * circles[0].radius)))
     for (let i = 1; i < circles.length; i++) {
-      let debug = i === 3
-      // wow. If the inner tangent is used, we need to flip the angle by PI
-      // but when and where is kinda tricky.
-      // Anyway, that is what's causing my issues, and it's also what is causing all my "smooth" ones to have only outer tangents
-      if (debug) console.log({angle})
       const next = circles[i]
       const current = circles[i - 1]
 
@@ -99,11 +88,9 @@ renderSvg(config, (svg) => {
       let rotation = Math.abs(smallestPositiveRotation) < Math.PI / 2
         ? 1
         : -1
-      if (debug) console.log({rotation})
       const target = angle + (Math.PI * 2 * rotation)
       let previousPoint = p.cursor
       for (angle; rotation === 1 ? angle < target : angle > target; angle += (0.05 * rotation)) {
-        if (debug) console.log(angle)
         previousPoint = p.cursor
         p.lineTo(
           current.center().add(vec2(Math.cos(angle) * current.radius, Math.sin(angle) * current.radius)),
@@ -116,27 +103,23 @@ renderSvg(config, (svg) => {
           const isPast = rotation === 1 ? angularDifference < 0 && angularDifference > -0.1 : angularDifference > 0 && angularDifference < 0.1
           return isClose && isPast
         })
-        if (debug) console.log(closeTangents)
         for (let t = 0; t < closeTangents.length; t++) {
-          const [smallPoint, largePoint, target] = closeTangents[t] 
+          const [smallPoint, largePoint, target, tangentType] = closeTangents[t] 
           const [startPoint, endPoint] = current.radius < next.radius ? [smallPoint, largePoint] : [largePoint, smallPoint]
           const angularDerivative = rotation === 1 
-            ? Math.atan2(previousPoint.y - p.cursor.y, previousPoint.x - p.cursor.x)
+            // I really really really really do not understand why "-Math.PI" is necessary here
+            ? Math.atan2(previousPoint.y - p.cursor.y, previousPoint.x - p.cursor.x) - Math.PI
             : Math.atan2(p.cursor.y - previousPoint.y, p.cursor.x - previousPoint.x)
           let tangentAngle = Math.atan2(endPoint.y - startPoint.y, endPoint.x - startPoint.x)
           const smallestTangentRotation = smallestAngularDifference(angularDerivative, tangentAngle)
-          if (debug) console.log({angularDerivative, tangentAngle, smallestTangentRotation})
-          if (debug) console.log(startPoint)
-          if (debug) console.log(endPoint)
-          if (debug) console.log(target)
-          if (debug) console.log(angle)
-          if (debug) svg.circle({x: startPoint.x, y: startPoint.y, radius: 1})
-          if (debug) svg.circle({x: endPoint.x, y: endPoint.y, radius: 1})
           if (Math.abs(smallestTangentRotation) < Math.PI / 2) {
             // once we've reached the tangent, zip over to the tangent on the next circle
             previousTangentAngle = tangentAngle
             p.lineTo(endPoint)
             shouldBreak = true
+            if (tangentType === 'inner') {
+              angle -= Math.PI
+            }
             break
           }
         }

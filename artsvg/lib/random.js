@@ -105,6 +105,7 @@ export function jitter(amount, value, rng) {
 /**
  * Shuffle an array.
  * Returns a new array, does *not* modify in place.
+ * @template T
  * @param {Array<T>} arr
  * @param {Rng} rng 
  * @returns {Array<T>}

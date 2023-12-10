@@ -88,7 +88,7 @@ export class Circle extends Tag {
    * Returns a list of all bitangents, i.e. lines that are tangent to both circles.
    * Thanks SO! https://math.stackexchange.com/questions/719758/inner-tangent-between-two-circles-formula
    * @param {Circle} other
-   * @returns {[Vector2, Vector2, number][]} a list of tangents,
+   * @returns {[Vector2, Vector2, number, 'inner' | 'outer'][]} a list of tangents,
    * where the first value is the point on `small` and the second value is the point on `large`,
    * and the third value is the angle of the tangent points relative to 0 radians
    */
@@ -99,7 +99,7 @@ export class Circle extends Tag {
 
   /**
    * @param {Circle} other
-   * @returns {[Vector2, Vector2, number][]} outer tangent lines
+   * @returns {[Vector2, Vector2, number, 'outer'][]} outer tangent lines
    * where the first value is the point on `small` and the second value is the point on `large`,
    * and the third value is the angle of the tangent points relative to 0 radians
    */
@@ -123,6 +123,7 @@ export class Circle extends Tag {
           large.y + large.radius * Math.sin(phi),
         ),
         phi,
+        'outer',
       ],
       [
         vec2(
@@ -134,13 +135,14 @@ export class Circle extends Tag {
           large.y + large.radius * Math.sin(phi2),
         ),
         phi2,
+        'outer',
       ],
     ]
   }
 
   /**
    * @param {Circle} other
-   * @returns {[Vector2, Vector2, number][]} inner tangent lines,
+   * @returns {[Vector2, Vector2, number, 'inner'][]} inner tangent lines,
    * where the first value is the point on `small` and the second value is the point on `large`,
    * and the third value is the angle of the tangent points relative to 0 radians
    */
@@ -169,6 +171,7 @@ export class Circle extends Tag {
           large.y + large.radius * Math.sin(phi),
         ),
         phi,
+        'inner',
       ],
       [
         vec2(
@@ -180,6 +183,7 @@ export class Circle extends Tag {
           large.y - large.radius * Math.sin(phi2),
         ),
         phi2,
+        'inner',
       ],
     ]
   }

@@ -20,7 +20,8 @@
   },
   "scripts": {
     "format": "npx @biomejs/biome format lib/**/*.js --write",
-    "lint": "npx @biomejs/biome lint lib/**/*.js"
+    "lint": "npx @biomejs/biome lint lib/**/*.js",
+    "test": "node --test"
   },
   "keywords": [],
   "author": "",

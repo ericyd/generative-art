@@ -1,5 +1,7 @@
 /**
- * Helper functions for running this framework locally as an art platform
+ * Helper functions for running this framework locally as an art platform.
+ * 
+ * This file is exported separately from the rest of the lib to isolate Node.js dependencies.
  */
 
 import { mkdirSync, writeFileSync } from 'node:fs'

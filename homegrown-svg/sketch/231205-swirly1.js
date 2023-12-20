@@ -1,4 +1,5 @@
-import { vec2, map, renderSvg } from 'artsvg'
+import { vec2, map } from 'artsvg'
+import { renderSvg } from 'artsvg/render'
 
 const config = {
   background: '#fff',

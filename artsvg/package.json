@@ -6,8 +6,14 @@
   "main": "lib/index.js",
   "module": "lib/index.js",
   "exports": {
-    "import": "./lib/index.js",
-    "require": "./dist/TODO.cjs"
+    ".": {
+      "import": "./lib/index.js",
+      "require": "./dist/TODO.cjs"
+    },
+    "./render": {
+      "import": "./lib/render.js",
+      "require": "./dist/TODO.cjs"
+    }
   },
   "directories": {
     "lib": "lib"

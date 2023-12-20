@@ -1,4 +1,5 @@
-import { vec2, map, renderSvg, randomSeed, createRng, Vector2, path, random, Circle, angleOfVertex, smallestAngularDifference, haveSameSign, shuffle, circle } from 'artsvg'
+import { vec2, map, randomSeed, createRng, Vector2, path, random, Circle, angleOfVertex, smallestAngularDifference, haveSameSign, shuffle, circle } from 'artsvg'
+import { renderSvg } from 'artsvg/render'
 
 const config = {
   background: '#fff',

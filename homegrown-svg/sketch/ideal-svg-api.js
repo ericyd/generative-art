@@ -8,8 +8,8 @@ import {
   createRng,
   random,
   randomSeed,
-  renderSvg,
 } from 'artsvg'
+import { renderSvg } from 'artsvg/render'
 
 const config = {
   background: '#fff',

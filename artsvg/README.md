@@ -15,7 +15,8 @@ See [the /sketch folder in my personal generative art repo](https://github.com/e
 Here's a minimal example:
 
 ```js
-import { renderSvg, circle, hypot, vec2, map } from 'artsvg'
+import { circle, hypot, vec2, map } from 'artsvg'
+import { renderSvg } from 'artsvg/render'
 
 const config = {
   width: 100,

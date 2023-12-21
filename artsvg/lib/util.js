@@ -1,7 +1,5 @@
 // resources: https://observablehq.com/@makio135/utilities
 
-import { Vector2, vec2 } from "./vector2.js";
-
 /**
  * @param {number} n length of array
  * @returns {number[]}
@@ -20,7 +18,7 @@ export const range = (min, max, step = 1) => new Array((max - min) / step).fill(
  * @param {number} min 
  * @param {number} max 
  * @param {number} step 
- * @returns {[number[], number]}
+ * @returns {[number, number][]}
  */
 export const rangeWithIndex = (min, max, step = 1) => new Array((max - min) / step).fill(0).map((_, i) => ([min + i * step, i]));
 
@@ -41,7 +39,7 @@ export function degToRad(degrees) {
  * @param {number} afterLeft the lowest value of the after range
  * @param {number} afterRight the highest value of the after range
  * @param {number} value the value to be mapped
- * @param {boolean} clamp constrain the result to the after range
+ * @param {boolean} shouldClamp constrain the result to the after range
  * @return {number} a value in the after range
  */
 export function map(
@@ -50,22 +48,23 @@ export function map(
   afterLeft,
   afterRight,
   value,
-  doClamp = false
+  shouldClamp = false
 ) {
   const db = beforeRight - beforeLeft;
   const da = afterRight - afterLeft;
 
   if (db != 0.0) {
     const n = (value - beforeLeft) / db;
-    return afterLeft + (doClamp ? clamp(0.0, 1.0, n) : n) * da;
+    return afterLeft + (shouldClamp ? clamp(0.0, 1.0, n) : n) * da;
   } else {
     const n = value - beforeLeft;
-    afterLeft + (doClamp ? clamp(0.0, 1.0, n) : n) * da;
+    return afterLeft + (shouldClamp ? clamp(0.0, 1.0, n) : n) * da;
   }
 }
 
 /**
- *
+ * @param {number} min
+ * @param {number} max
  * @param {number} x
  * @returns number
  */
@@ -80,44 +79,19 @@ export const clamp = (min, max, x) => Math.max(min, Math.min(max, x));
 export const quantize = (quantum, value) =>
   Math.round(value / quantum) * quantum;
 
-
-/**
- * @param {number} xMin 
- * @param {number} xMax 
- * @param {number} yMin 
- * @param {number} yMax 
- * @param {number} xStep 
- * @param {number} yStep 
- * @returns {Vector2}
- */
-export function* grid(xMin, xMax, yMin, yMax, xStep = 1, yStep = 1) {  
-  for (const x of range(xMin, xMax, xStep)) {
-    for (const y of range(yMin, yMax, yStep)) {
-      yield vec2(x, y)
-    }
-  }
-}
-
-export function observe(value, name = 'seed') {
-  console.log({ [name]: value });
-  try {
-    window.location.hash = `${name}=${value}`;
-  } catch (e) {
-    // window is probably not defined, no biggie
-  }
-}
-
 // maybe I should just import ramda? https://github.com/ramda/ramda/blob/96d601016b562e887e15efd894ec401672f73757/source/pickBy.js
 /**
  * Returns a partial copy of an object containing only the keys that satisfy
  * the supplied predicate.
- * @param {Function} pred A predicate to determine whether or not a key
+ * @template T
+ * @param {Function} test A predicate to determine whether or not a key
  *        should be included on the output object.
- * @param {Object} obj The object to copy from} test  
- * @return {Object} A new object with only properties that satisfy `pred`
+ * @param {Record<string, T>} obj The object to copy from} test  
+ * @return {Record<string, T>} A new object with only properties that satisfy `pred`
  *         on it.
  */
 export function pickBy(test, obj) {
+  /** @type {Record<string, T>} */
   const result = {};
   for (const prop in obj) {
     if (test(obj[prop], prop, obj)) {

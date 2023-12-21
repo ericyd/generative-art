@@ -1,6 +1,10 @@
 import { random } from './random.js'
 
 export class Vector2 {
+  /**
+   * @param {number} x coordinate
+   * @param {number} y coordinate
+   */
   constructor(x, y) {
     this.x = x
     this.y = y
@@ -43,7 +47,7 @@ export class Vector2 {
    * @param {Vector2} a 
    * @param {Vector2} b 
    * @param {number} mix a mix percentage in range [0, 1] where 0 returns a and 1 returns b
-   * @returns {number}
+   * @returns {Vector2}
    */
   static mix(a, b, mix) {
     return a.multiply(1 - mix).add(b.multiply(mix))
@@ -96,6 +100,7 @@ export class Vector2 {
    * @param {number} xMax
    * @param {number} yMin
    * @param {number} yMax
+   * @param {import('./random.js').Rng} rng
    * @returns {Vector2}
    */
   static random(xMin, xMax, yMin, yMax, rng) {
@@ -105,7 +110,7 @@ export class Vector2 {
 
 /**
  * @param {number} x 
- * @param {numbur} y 
+ * @param {number} y 
  * @returns Vector2
  */
 export function vec2(x, y) {

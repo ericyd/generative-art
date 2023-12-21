@@ -6,9 +6,14 @@ import { pickBy } from '../util.js'
  * @property {Array<Tag>} children
  */
 export class Tag {
+  /**
+   * @param {string} tagName 
+   * @param {Record<string, unknown>} attributes 
+   */
   constructor(tagName, attributes = {}) {
     this.tagName = tagName
     this.attributes = attributes
+    /** @type {Array<Tag>} */
     this.children = []
   }
 
@@ -40,6 +45,11 @@ export class Tag {
     this.setAttributes({ 'stroke-width': value })
   }
 
+  /**
+   * @param {*} value 
+   * @param {*} key 
+   * @returns {boolean}
+   */
   #visualAttributesTestFn(value, key) {
     return (
       ['fill', 'stroke', 'stroke-width'].includes(key) && value !== undefined
@@ -50,7 +60,7 @@ export class Tag {
    * @protected
    * Returns an object containing the core "visual styles" that should be inherited
    * as children are added to the document.
-   * @returns {Record<string, string}
+   * @returns {Record<string, unknown>}
    */
   visualAttributes() {
     return pickBy(this.#visualAttributesTestFn, {
@@ -63,7 +73,7 @@ export class Tag {
   /**
    * @protected
    * Sets visual attributes on the current tag, favoring any values that have been set explicitly
-   * @param {Record<string, string>} incoming
+   * @param {Record<string, unknown>} incoming
    * @returns {void}
    */
   setVisualAttributes(incoming = {}) {
@@ -83,25 +93,15 @@ export class Tag {
     return child
   }
 
-  /**
-   * @protected
-   * @param {(tag: Tag) => void} builder
-   * TODO: not sure if this is correct typing, I want to pass a constructor
-   * @param {typeof Tag} ConstructableTag
-   * @returns {Tag}
-   */
-  childBuilder(builder, ConstructableTag) {
-    const p = new ConstructableTag()
-    builder(p)
-    return this.addChild(p)
-  }
-
   #formatAttributes() {
     return Object.entries(this.attributes)
       .map(([key, value]) => `${key}="${value}"`)
       .join(' ')
   }
 
+  /**
+   * @returns {string}
+   */
   render() {
     return [
       `<${this.tagName} ${this.#formatAttributes()}>`,
@@ -112,11 +112,12 @@ export class Tag {
 }
 
 /**
+ * @param {string} tagName
  * @param {(tag: Tag) => void} builder
  * @returns {Tag}
  */
-export function tag(builder) {
-  const t = new Tag()
+export function tag(tagName, builder) {
+  const t = new Tag(tagName)
   builder(t)
   return t
 }

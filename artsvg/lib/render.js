@@ -19,14 +19,13 @@ const NOOP = () => {}
  */
 
 /**
- * @param {Date?} d 
+ * @param {Date} [d=new Date()] 
  * @returns {string}
  */
 export function timestamp(d = new Date()) {
   return d.toISOString().replace(/[^a-zA-Z0-9]/g, '-')
 }
 
-// ok if I'm going this route, I can remove the builder from the svg render method
 /**
  * 
  * @param {import('./components/svg.js').SvgAttributes & RenderLoopOptions} config 

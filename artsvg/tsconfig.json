@@ -1,0 +1,21 @@
+{
+	"compilerOptions": {
+		"allowJs": true,
+		"checkJs": true,
+		"noEmit": true,
+		"strict": true,
+		"target": "es2022",
+		"module": "node16",
+		"moduleResolution": "node16",
+		"allowSyntheticDefaultImports": true,
+		"paths": {
+			"note-to-self": ["https://github.com/sveltejs/kit/blob/78e7b856195b36a3ed7ce857d8862e74ef271127/packages/kit/tsconfig.json"]
+		},
+		"noUnusedLocals": true,
+		"noUnusedParameters": true
+	},
+	"include": [
+		"lib/**/*",
+	],
+	"exclude": ["./**/write_types/test/**"]
+}

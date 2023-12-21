@@ -1,9 +1,9 @@
 import { clamp } from "./util.js";
 
 /**
- * @param {number} h 
- * @param {number} s 
- * @param {number} l 
+ * @param {number} h in range [0, 360]
+ * @param {number} s in range [0, 100]
+ * @param {number} l in range [0, 100]
  * @returns {Hsla} color in hsl format
  */
 export function hsl(h, s, l) {
@@ -11,6 +11,13 @@ export function hsl(h, s, l) {
 }
 
 export class Hsla {
+  /**
+   * @param {number} h in range [0, 360]
+   * @param {number} s in range [0, 100]
+   * @param {number} l in range [0, 100]
+   * @param {number} a in range [0, 1]
+   * @returns 
+   */
   constructor(h, s, l, a) {
     this.h = clamp(0, 360, h);
     this.s = clamp(0, 100, s);
@@ -37,10 +44,10 @@ export class Hsla {
 }
 
 /**
- * @param {number} h 
- * @param {number} s 
- * @param {number} l 
- * @param {number} a
+ * @param {number} h in range [0, 360]
+ * @param {number} s in range [0, 100]
+ * @param {number} l in range [0, 100]
+ * @param {number} a in range [0, 1]
  * @returns {Hsla} color in hsla format
  */
 export function hsla(h, s, l, a) {

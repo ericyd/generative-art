@@ -1,15 +1,15 @@
 /**
  * @typedef {object} GridAttributes
- * @property {number} xMax the maximum x value (exclusive), when used as an iterator
- * @property {number} xMin the minimum x value (inclusive), when used as an iterator
- * @property {number} yMin the minimum y value (inclusive), when used as an iterator
- * @property {number} yMax the maximum y value (exclusive), when used as an iterator
- * @property {number} xStep the step size in the x direction
- * @property {number} yStep the step size in the x direction
- * @property {number?} columns the number of columns in the grid. This is more commonly defined when using the grid as a data store, but if `columns` is defined it will override `xMax` when used as an iterator.
- * @property {number?} rows the number of rows in the grid. This is more commonly defined when using the grid as a data store, but if `rows` is defined it will override `yMax` when used as an iterator.
- * @property {'row major' | 'column major' = 'row major'} order of the grid. This is rarely necessary to define, but since the internal representation of the grid is a 1-D array, this defines the layout of the cells.
- * @property {any?} fill the value to fill the grid with. This is only used when the grid is used as a data store.
+ * @property {number} [xMin=0] the minimum x value (inclusive), when used as an iterator
+ * @property {number} [xMax=1] the maximum x value (exclusive), when used as an iterator
+ * @property {number} [yMin=0] the minimum y value (inclusive), when used as an iterator
+ * @property {number} [yMax=1] the maximum y value (exclusive), when used as an iterator
+ * @property {number} [xStep=1] the step size in the x direction
+ * @property {number} [yStep=1] the step size in the x direction
+ * @property {number} [columns] the number of columns in the grid. This is more commonly defined when using the grid as a data store, but if `columns` is defined it will override `xMax` when used as an iterator.
+ * @property {number} [rows] the number of rows in the grid. This is more commonly defined when using the grid as a data store, but if `rows` is defined it will override `yMax` when used as an iterator.
+ * @property {'row major' | 'column major'} [order='row major'] of the grid. This is rarely necessary to define, but since the internal representation of the grid is a 1-D array, this defines the layout of the cells.
+ * @property {*} [fill] the value to fill the grid with. This is only used when the grid is used as a data store.
  */
 
 import { Vector2, vec2 } from '../vector2.js'
@@ -36,7 +36,7 @@ export class Grid {
   /** @type {number[]} */
   #grid
   /**
-   * @param {GridAttributes?} attributes
+   * @param {GridAttributes} [attributes={}]
    */
   constructor({
     xMin = 0,
@@ -66,18 +66,61 @@ export class Grid {
     this.#order = order
   }
 
+  /**
+   * @overload
+   * @param {Vector2} x
+   * @returns {Integer}
+   */
+  /**
+   * @overload
+   * @param {Integer} x
+   * @param {Integer} y
+   * @returns {Integer}
+   */
+  /**
+   * @param {Integer | Vector2} x
+   * @param {Integer} [y]
+   * @returns {Integer}
+   */
   #index(x, y) {
-    const [i, j] = x instanceof Vector2 ? [x.x, x.y] : [x, y]
+    const [i, j] =
+      x instanceof Vector2
+        ? [x.x, x.y]
+        : y !== undefined
+          ? [x, y]
+          : (() => {
+              throw new Error(`invalid arguments ${x}, ${y}`)
+            })()
     if (this.#order === 'row major') {
       return this.#columns * j + i
     }
     return this.#rows * i + j
   }
 
+ 
   /**
-   * @param {number | Vector2} x
-   * @param {number} y
-   * @returns {number}
+   * @overload
+   * @param {Vector2} x
+   * @returns {?}
+   */
+  /**
+   * @overload
+   * @param {Integer} x
+   * @param {Integer} y
+   * @returns {?}
+   */
+  /**
+   * @param {Integer | Vector2} x
+   * @param {Integer} [y]
+   * @returns {?}
+   */
+
+  /**
+   * nice idea though doesn't seem to work https://austingil.com/typescript-function-overloads-with-jsdoc/
+   * @type {{
+   * (x: Integer, y: Integer): number;
+   * (x: Vector2): number;
+   * }}
    */
   get(x, y) {
     return this.#grid[this.#index(x, y)]
@@ -85,10 +128,8 @@ export class Grid {
 
   /**
    * @template T
-   * @param {number | Vector2} x
-   * @param {number} y
-   * @param {T} value
-   * @returns {ThisParameterType<Grid>}
+   * @param {[number | Vector2, number, T]} args
+   * @returns {void}
    */
   set(...args) {
     // TODO: is this the best way to handle overloading????? ??? ??????? ?? ? ?????

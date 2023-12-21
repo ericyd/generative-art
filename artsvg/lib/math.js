@@ -25,9 +25,10 @@ export function isWithin(min, max, value) {
  * For angles in a known range, e.g. [-PI, PI],
  * returns the angle (and direction) of the smallest angular difference between them.
  * The result will always assume traveling from `angle1` to `angle2`.
- * @param {import("./components").Radians} angle1 
- * @param {import("./components").Radians} angle2 
- * @returns {import("./components").Radians}
+ * TODO: this function is wild... write more tests and figure out how to simplify
+ * @param {Radians} angle1 
+ * @param {Radians} angle2 
+ * @returns {Radians}
  */
 export function smallestAngularDifference(angle1, angle2) {
   // put both angles in -PI,PI range

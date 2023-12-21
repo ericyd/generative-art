@@ -1,8 +1,12 @@
 /**
- * stuff in this file copy/pasted from
+ * some stuff in this file copy/pasted from
  * https://stackoverflow.com/questions/521295/seeding-the-random-number-generator-in-javascript
  */
 
+/**
+ * @param {string} str 
+ * @returns {[number, number, number, number]}
+ */
 export function cyrb128(str) {
   let h1 = 1779033703,
     h2 = 3144134277,
@@ -27,6 +31,13 @@ export function cyrb128(str) {
   ];
 }
 
+/**
+ * @param {number} a
+ * @param {number} b
+ * @param {number} c
+ * @param {number} d
+ * @returns {Rng}
+ */
 export function sfc32(a, b, c, d) {
   return function () {
     a >>>= 0;
@@ -46,18 +57,18 @@ export function sfc32(a, b, c, d) {
 
 /**
  * @callback Rng
- * @returns {number} in range [0, 1]
+ * @returns {number} in range [0, 1)
+ * TODO: not really sure what the range is, could be [0, 1] or (0, 1)
  */
 
 /**
- *
  * @param {string} seed
  * @returns {Rng}
  */
 export function createRng(seed) {
-  var seed = cyrb128(String(seed) ?? String(Date.now()));
+  const cyrb128seed = cyrb128(String(seed ?? Date.now()));
   // Four 32-bit component hashes provide the seed for sfc32.
-  return sfc32(seed[0], seed[1], seed[2], seed[3]);
+  return sfc32(cyrb128seed[0], cyrb128seed[1], cyrb128seed[2], cyrb128seed[3]);
 }
 
 /**
@@ -121,6 +132,7 @@ export function shuffle(arr, rng = Math.random) {
 
 /**
  * Returns a random value from an array
+ * @template T
  * @param {Array<T>} array 
  * @param {Rng} rng 
  * @returns {T}

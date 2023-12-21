@@ -1,3 +1,5 @@
+import { pickBy } from '../util.js'
+
 /**
  * @property {string} tagName
  * @property {object} attributes
@@ -20,6 +22,30 @@ export class Tag {
     }
   }
 
+  // TODO: consider using a Proxy to set aribtrary attributes using camelCase kebab-case transitions
+  /** @param {'none' | string | null} value */
+  set fill(value) {
+    const fill = value === null ? 'none' : value
+    this.setAttributes({ fill })
+  }
+
+  /** @param {'none' | string | null} value */
+  set stroke(value) {
+    const stroke = value === null ? 'none' : value
+    this.setAttributes({ stroke })
+  }
+
+  /** @param {number} value */
+  set strokeWidth(value) {
+    this.setAttributes({ 'stroke-width': value })
+  }
+
+  #visualAttributesTestFn(value, key) {
+    return (
+      ['fill', 'stroke', 'stroke-width'].includes(key) && value !== undefined
+    )
+  }
+
   /**
    * @protected
    * Returns an object containing the core "visual styles" that should be inherited
@@ -27,11 +53,11 @@ export class Tag {
    * @returns {Record<string, string}
    */
   visualAttributes() {
-    return {
+    return pickBy(this.#visualAttributesTestFn, {
       fill: this.attributes.fill,
       stroke: this.attributes.stroke,
       'stroke-width': this.attributes['stroke-width'],
-    }
+    })
   }
 
   /**
@@ -40,9 +66,9 @@ export class Tag {
    * @param {Record<string, string>} incoming
    * @returns {void}
    */
-  setVisualAttributes(incoming) {
+  setVisualAttributes(incoming = {}) {
     this.setAttributes({
-      ...incoming,
+      ...pickBy(this.#visualAttributesTestFn, incoming),
       ...this.visualAttributes(),
     })
   }
@@ -52,7 +78,9 @@ export class Tag {
    * @param {Tag} child
    */
   addChild(child) {
+    child.setVisualAttributes(this.visualAttributes())
     this.children.push(child)
+    return child
   }
 
   /**
@@ -65,8 +93,7 @@ export class Tag {
   childBuilder(builder, ConstructableTag) {
     const p = new ConstructableTag()
     builder(p)
-    this.children.push(p)
-    return p
+    return this.addChild(p)
   }
 
   #formatAttributes() {

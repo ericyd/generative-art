@@ -106,3 +106,23 @@ export function observe(value, name = 'seed') {
     // window is probably not defined, no biggie
   }
 }
+
+// maybe I should just import ramda? https://github.com/ramda/ramda/blob/96d601016b562e887e15efd894ec401672f73757/source/pickBy.js
+/**
+ * Returns a partial copy of an object containing only the keys that satisfy
+ * the supplied predicate.
+ * @param {Function} pred A predicate to determine whether or not a key
+ *        should be included on the output object.
+ * @param {Object} obj The object to copy from} test  
+ * @return {Object} A new object with only properties that satisfy `pred`
+ *         on it.
+ */
+export function pickBy(test, obj) {
+  const result = {};
+  for (const prop in obj) {
+    if (test(obj[prop], prop, obj)) {
+      result[prop] = obj[prop];
+    }
+  }
+  return result;
+};

@@ -62,20 +62,17 @@ export class Svg extends Tag {
   set fill(value) {
     const fill = value === null ? 'none' : value
     this.setAttributes({ fill })
-    return fill
   }
 
   /** @param {'none' | string | null} value */
   set stroke(value) {
     const stroke = value === null ? 'none' : value
     this.setAttributes({ stroke })
-    return stroke
   }
 
   /** @param {number} value */
   set strokeWidth(value) {
     this.setAttributes({ 'stroke-width': value })
-    return value
   }
 
   // TODO: find a more generic way of expressing this "instance or builder" pattern

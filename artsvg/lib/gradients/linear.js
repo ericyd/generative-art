@@ -1,13 +1,14 @@
 import { tag } from '../tag.js'
-import { clamp } from '../util.js'
+import { clamp, tap } from '../util.js'
 
 export function linearGradientStop(offset, color, opacity = 1) {
-  if (offset < 0 || offset > 100) {
-    console.warn(`offset '${offset}' is not in range [0, 100]`)
-    offset = clamp(0, 100, offset)
-  }
+  const clampedOffset =
+    offset < 0 || offset > 100
+      ? console.warn(`offset '${offset}' is not in range [0, 100]`) ??
+        clamp(0, 100, offset)
+      : offset
   return tag('stop', {
-    offset: `${offset}%`,
+    offset: `${clampedOffset}%`,
     'stop-color': color,
     'stop-opacity': opacity,
   })

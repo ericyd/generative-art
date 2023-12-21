@@ -64,7 +64,7 @@ node example.js
 
 Here's the output of the above script:
 
-![concentric circles example script](./examples/concentric-circles.svg)
+![concentric circles example output](./examples/concentric-circles.svg)
 
 ## API docs
 

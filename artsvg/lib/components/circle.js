@@ -39,7 +39,6 @@ export class Circle extends Tag {
   set x(value) {
     this.setAttributes({ cx: value })
     this.#x = value
-    return value
   }
   get x() {
     return this.#x
@@ -51,7 +50,6 @@ export class Circle extends Tag {
   set y(value) {
     this.setAttributes({ cy: value })
     this.#y = value
-    return value
   }
   get y() {
     return this.#y
@@ -63,7 +61,6 @@ export class Circle extends Tag {
   set radius(value) {
     this.setAttributes({ r: value })
     this.#radius = value
-    return value
   }
   get radius() {
     return this.#radius
@@ -199,17 +196,18 @@ export function circle(attrsOrBuilderOrX, y, radius) {
     const c = new Circle()
     attrsOrBuilderOrX(c)
     return c
-  } else if (typeof attrsOrBuilderOrX === 'object') {
+  }
+  if (typeof attrsOrBuilderOrX === 'object') {
     return new Circle(attrsOrBuilderOrX)
-  } else if (
+  }
+  if (
     typeof attrsOrBuilderOrX === 'number' &&
     typeof y === 'number' &&
     typeof radius === 'number'
   ) {
     return new Circle({ x: attrsOrBuilderOrX, y, radius })
-  } else {
-    throw new Error(
-      `Unable to construct circle from "${attrsOrBuilderOrX}, ${y}, ${radius}"`,
-    )
   }
+  throw new Error(
+    `Unable to construct circle from "${attrsOrBuilderOrX}, ${y}, ${radius}"`,
+  )
 }

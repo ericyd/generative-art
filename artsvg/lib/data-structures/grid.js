@@ -69,9 +69,8 @@ export class Grid {
   #index(x, y) {
     if (this.#order === 'row major') {
       return this.#columns * y + x
-    } else {
-      return this.#rows * x + y
     }
+    return this.#rows * x + y
   }
 
   /**

@@ -21,34 +21,40 @@ const config = {
 
 let seed = randomSeed()
 
-renderSvg(config, (canvas) => {
-  canvas.filenameMetadata = { seed }
+renderSvg(config, (svg) => {
+  svg.filenameMetadata = { seed }
   const rng = createRng(seed)
 
+  svg.fill = '#fff'
+  svg.stroke = '#000'
   // add circle with explicit constructor
-  canvas.circle(new Circle({ x: 10, y: 10, radius: 10 }))
+  svg.circle(new Circle({ x: 10, y: 10, radius: 10 }))
   // add circle with helper function x,y,radius args
-  canvas.circle(
+  svg.circle(
     circle(
-      random(0, canvas.width, rng),
-      random(0, canvas.width, rng),
+      random(0, svg.width, rng),
+      random(0, svg.width, rng),
       random(5, 15, rng),
     ),
   )
   // add circle with helper function CircleAttributes arg
-  canvas.circle(circle({ x: 50, y: 50, radius: 10 }))
+  svg.circle(circle({ x: 50, y: 50, radius: 10 }))
 
+  svg.fill = '#000'
+  svg.stroke = '#f00'
   // create circle via builder
   const c = circle((c) => {
-    c.x = random(0, canvas.width, rng)
-    c.y = random(0, canvas.width, rng)
+    c.x = random(0, svg.width, rng)
+    c.y = random(0, svg.width, rng)
     c.radius = 10
+    c.fill = '#03b'
+    c.stroke = null
   })
   // add circle built via builder
-  canvas.circle(c)
+  svg.circle(c)
 
   // add circle directly via builder
-  canvas.circle((c) => {
+  svg.circle((c) => {
     c.x = 90
     c.y = 90
     c.radius = 10

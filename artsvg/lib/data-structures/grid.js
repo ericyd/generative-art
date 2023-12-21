@@ -12,7 +12,7 @@
  * @property {any?} fill the value to fill the grid with. This is only used when the grid is used as a data store.
  */
 
-import { vec2 } from '../vector2.js'
+import { Vector2, vec2 } from '../vector2.js'
 
 export class Grid {
   /** @type {number} */
@@ -60,21 +60,22 @@ export class Grid {
       columns ?? Math.floor((this.#xMax - this.#xMin) / this.#xStep)
     this.#rows = rows ?? Math.floor((this.#yMax - this.#yMin) / this.#yStep)
     this.#grid = new Array(this.#columns * this.#rows)
-    if (typeof fill === 'number') {
+    if (fill !== undefined) {
       this.#grid.fill(fill)
     }
     this.#order = order
   }
 
   #index(x, y) {
+    const [i, j] = x instanceof Vector2 ? [x.x, x.y] : [x, y]
     if (this.#order === 'row major') {
-      return this.#columns * y + x
+      return this.#columns * j + i
     }
-    return this.#rows * x + y
+    return this.#rows * i + j
   }
 
   /**
-   * @param {number} x
+   * @param {number | Vector2} x
    * @param {number} y
    * @returns {number}
    */
@@ -84,12 +85,15 @@ export class Grid {
 
   /**
    * @template T
-   * @param {number} x
+   * @param {number | Vector2} x
    * @param {number} y
    * @param {T} value
    * @returns {ThisParameterType<Grid>}
    */
-  set(x, y, value) {
+  set(...args) {
+    // TODO: is this the best way to handle overloading????? ??? ??????? ?? ? ?????
+    const [x, y, value] =
+      args[0] instanceof Vector2 ? [args[0].x, args[0].y, args[1]] : args
     this.#grid[this.#index(x, y)] = value
   }
 

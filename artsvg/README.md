@@ -4,7 +4,7 @@ A place to play with SVGs.
 
 ## Why? 
 
-I love OPENRNDR and wanted to see if I could make a generative art framework that ran in an interpretted language. I've never been a JVM guy, and even though I like Kotlin, it sounded appealing to me to be able to write generative art in a language I used every day: JavaScript.
+I love [OPENRNDR](https://openrndr.org/) and wanted to see if I could make a generative art framework that ran in an interpretted language. I've never been a JVM guy, and even though I like Kotlin, it sounded appealing to me to be able to write generative art in a language I used every day: JavaScript.
 
 Of course you may (reasonably) ask why I'm not just using p5.js, the dominant JavaScript framework for writing generative art. Well, I don't have a good answer to that. I suppose this is really "just for fun" ¯\\_(ツ)_/¯
 
@@ -72,4 +72,18 @@ Coming soon. For the time being, I tried to be pretty accurate with adding JSDoc
 
 ## Design Philosophy
 
-This lib is heavily inspired by OPENRNDR, which means it utilizes the builder pattern extensively. My first attempt at writing my own SVG "framework" attempted to be much more functional, and I found the scripts to be really verbose and hard to follow. I think for the purpose of making art, imperative builder patterns are really nice.
+This lib is heavily inspired by [OPENRNDR](https://openrndr.org/), which means it utilizes the builder pattern extensively. My first attempt at writing my own SVG "framework" attempted to be much more functional, and I found the scripts to be really verbose and hard to follow. I think for the purpose of making art, imperative builder patterns are really nice.
+
+## TODO:
+
+1. Migrate JSDocs to `.d.ts` files
+2. Add `types` to package.json `exports` prop
+3. Add `rollup` to compile a common JS output
+4. Add tsc to type check
+5. Fix Biome.js lints
+6. Finish grid specs
+7. Decide on a package name (artsvg, coalesvg, progressvg, gressvg, gress, coalesce, accessvg, access, egressvg, iridesvg, yesvg (damn @yesvg is squatted), finessvg, simpledraw, drawsvg, algoart, simplesvg, createsvg, )
+8. Describe why not https://www.npmjs.com/package/svg.js, or https://dmitrybaranovskiy.github.io/raphael/
+9. Add `Path.fromPoints` static function
+10. Add comparisons to other frameworks (see https://openrndr.org/ for example)
+11. Add "Rectangle" 🤣

@@ -7,10 +7,26 @@ import { Tag } from './tag.js'
  * @property {number} [y=0]
  * @property {number} [width=1]
  * @property {number} [height=1]
+ * @property {number} [borderRadius] if provided, sets the `rx` property of the SVG rect tag.
+ *    Takes precedence over `rx` property if both are passed in the constructor
+ * @property {number} [rx] border radius in the x direction
+ * @property {number} [ry] border radius in the y direction. Defaults to rx if not provided.
  */
 
 /**
  * @class Rectangle
+ * @example
+ *   const r = rect(r => {
+ *     r.fill = '#000'
+ *     r.stroke = '#055'
+ *     r.x = 1
+ *     r.y = 10
+ *     r.width = 100
+ *     r.height = 15
+ *     r.borderRadius = 1.4
+ *   })
+ * @example
+ *   const r = rect({ x: 1, y: 10, width: 100, height: 15, borderRadius: 1.4 })
  */
 export class Rectangle extends Tag {
   /**
@@ -22,6 +38,7 @@ export class Rectangle extends Tag {
       y,
       width,
       height,
+      rx: attributes.borderRadius ?? attributes.rx,
       ...attributes,
     })
   }

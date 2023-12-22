@@ -97,7 +97,6 @@ export class Grid {
     return this.#rows * i + j
   }
 
- 
   /**
    * @overload
    * @param {Vector2} x

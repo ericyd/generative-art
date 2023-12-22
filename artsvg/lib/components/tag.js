@@ -7,8 +7,8 @@ import { pickBy } from '../util.js'
  */
 export class Tag {
   /**
-   * @param {string} tagName 
-   * @param {Record<string, unknown>} attributes 
+   * @param {string} tagName
+   * @param {Record<string, unknown>} attributes
    */
   constructor(tagName, attributes = {}) {
     this.tagName = tagName
@@ -46,8 +46,8 @@ export class Tag {
   }
 
   /**
-   * @param {*} value 
-   * @param {*} key 
+   * @param {*} value
+   * @param {*} key
    * @returns {boolean}
    */
   #visualAttributesTestFn(value, key) {

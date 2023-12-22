@@ -15,7 +15,7 @@ describe('grid', () => {
  * @param {Grid} grid
  */
 function gridToPojo(grid) {
-  return [...grid].map(({ x, y }) => ({ x, y }))
+  return [...grid].map(([{ x, y }]) => ({ x, y }))
 }
 
 describe('Grid', () => {
@@ -97,8 +97,8 @@ describe('Grid', () => {
       const g = new Grid({ xMin: 2, xMax: 4, yMin: 2, yMax: 4 })
       const expected = [
         { x: 2, y: 2 },
-        { x: 2, y: 3 },
         { x: 3, y: 2 },
+        { x: 2, y: 3 },
         { x: 3, y: 3 },
       ]
       const actual = gridToPojo(g)
@@ -115,8 +115,8 @@ describe('Grid', () => {
       })
       const expected = [
         { x: 2, y: 2 },
-        { x: 3, y: 2 },
         { x: 2, y: 3 },
+        { x: 3, y: 2 },
         { x: 3, y: 3 },
       ]
       const actual = gridToPojo(g)

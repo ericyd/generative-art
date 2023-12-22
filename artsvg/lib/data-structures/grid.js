@@ -89,9 +89,9 @@ export class Grid {
               throw new Error(`invalid arguments ${x}, ${y}`)
             })()
     if (this.#order === 'row major') {
-      return this.columnCount * j + i
+      return this.rowCount * i + j
     }
-    return this.rowCount * i + j
+    return this.columnCount * j + i
   }
 
   /**
@@ -129,19 +129,20 @@ export class Grid {
   }
 
   /**
-   * @returns {Generator<{x: number, y: number}, void>}
+   * @template T
+   * @returns {Generator<[Vector2, T], void>}
    */
   *[Symbol.iterator]() {
     if (this.#order === 'row major') {
-      for (let x = this.#xMin; x < this.#xMax; x += this.#xStep) {
-        for (let y = this.#yMin; y < this.#yMax; y += this.#yStep) {
-          yield vec2(x, y)
+      for (let y = this.#yMin; y < this.#yMax; y += this.#yStep) {
+        for (let x = this.#xMin; x < this.#xMax; x += this.#xStep) {
+          yield [vec2(x, y), this.get(x, y)]
         }
       }
     } else {
-      for (let y = this.#yMin; y < this.#yMax; y += this.#yStep) {
-        for (let x = this.#xMin; x < this.#xMax; x += this.#xStep) {
-          yield vec2(x, y)
+      for (let x = this.#xMin; x < this.#xMax; x += this.#xStep) {
+        for (let y = this.#yMin; y < this.#yMax; y += this.#yStep) {
+          yield [vec2(x, y), this.get(x, y)]
         }
       }
     }

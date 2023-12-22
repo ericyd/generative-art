@@ -1,6 +1,7 @@
 import { Tag } from './tag.js'
 import { Circle, circle } from './circle.js'
 import { Path, path } from './path.js'
+import { Rectangle, rect } from './rectangle.js'
 
 /**
  * @typedef {object} SvgAttributes
@@ -76,6 +77,15 @@ export class Svg extends Tag {
     return circleOrBuilder instanceof Circle
       ? this.addChild(circleOrBuilder)
       : this.addChild(circle(circleOrBuilder))
+  }
+
+  /**
+   * @param {Rectangle | ((rect: Rectangle) => void)} rectOrBuilder
+   */
+  rect(rectOrBuilder) {
+    return rectOrBuilder instanceof Rectangle
+      ? this.addChild(rectOrBuilder)
+      : this.addChild(rect(rectOrBuilder))
   }
 
   /**

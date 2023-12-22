@@ -55,6 +55,6 @@ export function hsla(h, s, l, a) {
 }
 
 export const ColorHex = {
-  black: '#000000',
-  white: '#ffffff'
+  Black: '#000000',
+  White: '#ffffff'
 }

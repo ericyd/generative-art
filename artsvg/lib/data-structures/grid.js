@@ -6,8 +6,8 @@
  * @property {number} [yMax=1] the maximum y value (exclusive), when used as an iterator
  * @property {number} [xStep=1] the step size in the x direction
  * @property {number} [yStep=1] the step size in the x direction
- * @property {number} [columns] the number of columns in the grid. This is more commonly defined when using the grid as a data store, but if `columns` is defined it will override `xMax` when used as an iterator.
- * @property {number} [rows] the number of rows in the grid. This is more commonly defined when using the grid as a data store, but if `rows` is defined it will override `yMax` when used as an iterator.
+ * @property {number} [columnCount] the number of columnCount in the grid. This is more commonly defined when using the grid as a data store, but if `columnCount` is defined it will override `xMax` when used as an iterator.
+ * @property {number} [rowCount] the number of rowCount in the grid. This is more commonly defined when using the grid as a data store, but if `rowCount` is defined it will override `yMax` when used as an iterator.
  * @property {'row major' | 'column major'} [order='row major'] of the grid. This is rarely necessary to define, but since the internal representation of the grid is a 1-D array, this defines the layout of the cells.
  * @property {*} [fill] the value to fill the grid with. This is only used when the grid is used as a data store.
  */
@@ -27,10 +27,6 @@ export class Grid {
   #xStep
   /** @type {number} */
   #yStep
-  /** @type {number} */
-  #columns
-  /** @type {number} */
-  #rows
   /** @type {'row major' | 'column major'} */
   #order
   /** @type {number[]} */
@@ -46,20 +42,21 @@ export class Grid {
     xStep = 1,
     yStep = 1,
     order = 'row major',
-    columns,
-    rows,
+    columnCount,
+    rowCount,
     fill,
   } = {}) {
     this.#xMin = xMin
-    this.#xMax = columns ? this.#xMin + columns : xMax
+    this.#xMax = columnCount ? this.#xMin + columnCount : xMax
     this.#yMin = yMin
-    this.#yMax = rows ? this.#yMin + rows : yMax
+    this.#yMax = rowCount ? this.#yMin + rowCount : yMax
     this.#xStep = xStep
     this.#yStep = yStep
-    this.#columns =
-      columns ?? Math.floor((this.#xMax - this.#xMin) / this.#xStep)
-    this.#rows = rows ?? Math.floor((this.#yMax - this.#yMin) / this.#yStep)
-    this.#grid = new Array(this.#columns * this.#rows)
+    this.columnCount =
+      columnCount ?? Math.floor((this.#xMax - this.#xMin) / this.#xStep)
+    this.rowCount =
+      rowCount ?? Math.floor((this.#yMax - this.#yMin) / this.#yStep)
+    this.#grid = new Array(this.columnCount * this.rowCount)
     if (fill !== undefined) {
       this.#grid.fill(fill)
     }
@@ -92,9 +89,9 @@ export class Grid {
               throw new Error(`invalid arguments ${x}, ${y}`)
             })()
     if (this.#order === 'row major') {
-      return this.#columns * j + i
+      return this.columnCount * j + i
     }
-    return this.#rows * i + j
+    return this.rowCount * i + j
   }
 
   /**

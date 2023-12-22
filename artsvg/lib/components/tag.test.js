@@ -27,7 +27,11 @@ describe('Tag', () => {
       const t = new Tag('test')
       t.fill = '#0f0'
       t.strokeWidth = 2
-      t['setVisualAttributes']({ fill: '#fff', 'stroke-width': 5, stroke: '#000' })
+      t['setVisualAttributes']({
+        fill: '#fff',
+        'stroke-width': 5,
+        stroke: '#000',
+      })
       assert.strictEqual(t.attributes.fill, '#0f0')
       assert.strictEqual(t.attributes['stroke-width'], 2)
       assert.strictEqual(t.attributes.stroke, '#000')

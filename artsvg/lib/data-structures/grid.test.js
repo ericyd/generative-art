@@ -10,7 +10,10 @@ describe('grid', () => {
   })
 })
 
-// helper to simplify comparing vector2 outputs
+/**
+ * helper to simplify comparing vector2 outputs
+ * @param {Grid} grid
+ */
 function gridToPojo(grid) {
   return [...grid].map(({ x, y }) => ({ x, y }))
 }
@@ -69,7 +72,7 @@ describe('Grid', () => {
     })
 
     it('when columns is set, should yield x range of [xMin, xMin + columns)', () => {
-      const g = new Grid({ xMin: 2, columns: 3 })
+      const g = new Grid({ xMin: 2, columnCount: 3 })
       const expected = [
         { x: 2, y: 0 },
         { x: 3, y: 0 },
@@ -80,7 +83,7 @@ describe('Grid', () => {
     })
 
     it('when rows is set, should yield y range of [yMin, yMin + rows)', () => {
-      const g = new Grid({ yMin: 2, rows: 3 })
+      const g = new Grid({ yMin: 2, rowCount: 3 })
       const expected = [
         { x: 0, y: 2 },
         { x: 0, y: 3 },
@@ -128,7 +131,7 @@ describe('Grid', () => {
   })
 
   it('should create data store of correct size when columns and rows are specified', () => {
-    const g = new Grid({ columns: 10, rows: 10, fill: 'test' })
+    const g = new Grid({ columnCount: 10, rowCount: 10, fill: 'test' })
     for (let i = 0; i < 10; i++) {
       for (let j = 0; j < 10; j++) {
         assert.strictEqual(
@@ -156,8 +159,8 @@ describe('Grid', () => {
 
   it('should ignore xStep and yStep when creating data store', () => {
     const g = new Grid({
-      columns: 10,
-      rows: 10,
+      columnCount: 10,
+      rowCount: 10,
       xStep: 10,
       yStep: 10,
       fill: 'test',
@@ -167,25 +170,25 @@ describe('Grid', () => {
 
   describe('.get', () => {
     it('should get values from discrete x/y args', () => {
-      const g = new Grid({ columns: 10, rows: 10, fill: 'test' })
+      const g = new Grid({ columnCount: 10, rowCount: 10, fill: 'test' })
       assert.strictEqual(g.get(9, 9), 'test')
     })
 
     it('should get values from Vector2 arg', () => {
-      const g = new Grid({ columns: 10, rows: 10, fill: 'test' })
+      const g = new Grid({ columnCount: 10, rowCount: 10, fill: 'test' })
       assert.strictEqual(g.get(vec2(9, 9)), 'test')
     })
   })
 
   describe('.set', () => {
     it('should set values from discrete x/y args', () => {
-      const g = new Grid({ columns: 10, rows: 10, fill: 'test' })
+      const g = new Grid({ columnCount: 10, rowCount: 10, fill: 'test' })
       g.set(8, 8, 'test2')
       assert.strictEqual(g.get(8, 8), 'test2')
     })
 
     it('should set values from Vector2 arg', () => {
-      const g = new Grid({ columns: 10, rows: 10, fill: 'test' })
+      const g = new Grid({ columnCount: 10, rowCount: 10, fill: 'test' })
       g.set(vec2(8, 8), 'test2')
       assert.strictEqual(g.get(8, 8), 'test2')
     })

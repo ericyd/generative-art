@@ -21,6 +21,7 @@
   "scripts": {
     "format": "npx @biomejs/biome format lib/**/*.js --write",
     "lint": "npx @biomejs/biome lint lib/**/*.js",
+    "lint:fix": "npx @biomejs/biome lint --apply-unsafe lib/**/*.js",
     "test": "node --test",
     "check": "tsc"
   },

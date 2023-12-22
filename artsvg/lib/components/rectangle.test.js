@@ -22,7 +22,7 @@ describe('rect', () => {
   })
 
   it('can accept a builder', () => {
-    const r = rect(r => {
+    const r = rect((r) => {
       r.x = 10
       r.y = 11
       r.width = 12

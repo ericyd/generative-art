@@ -28,7 +28,7 @@ export const rangeWithIndex = (min, max, step = 1) => new Array((max - min) / st
  * @returns {Radians}
  */
 export function degToRad(degrees) {
-  return (degrees * Math.PI * 2) / 180;
+  return (degrees * Math.PI) / 180;
 }
 
 /**
@@ -74,7 +74,7 @@ export const clamp = (min, max, x) => Math.max(min, Math.min(max, x));
  *
  * @param {number} quantum
  * @param {number} value
- * @returns number
+ * @returns {number}
  */
 export const quantize = (quantum, value) =>
   Math.round(value / quantum) * quantum;

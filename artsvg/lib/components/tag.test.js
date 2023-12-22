@@ -18,7 +18,8 @@ describe('Tag', () => {
   describe('setVisualAttributes', () => {
     it('should use incoming attributes when they are not set on the target instance', () => {
       const t = new Tag('test')
-      t['setVisualAttributes']({ fill: '#fff', stroke: '#000' })
+      // @ts-expect-error this is either a lint error or a TS error. It's a test so it's fine
+      t.setVisualAttributes({ fill: '#fff', stroke: '#000' })
       assert.strictEqual(t.attributes.fill, '#fff')
       assert.strictEqual(t.attributes.stroke, '#000')
     })
@@ -27,7 +28,8 @@ describe('Tag', () => {
       const t = new Tag('test')
       t.fill = '#0f0'
       t.strokeWidth = 2
-      t['setVisualAttributes']({
+      // @ts-expect-error this is either a lint error or a TS error. It's a test so it's fine
+      t.setVisualAttributes({
         fill: '#fff',
         'stroke-width': 5,
         stroke: '#000',
@@ -40,7 +42,8 @@ describe('Tag', () => {
     it('should omit attributes that are not defined in either incomine or target', () => {
       const t = new Tag('test')
       t.fill = '#0f0'
-      t['setVisualAttributes']({ 'stroke-width': 5 })
+      // @ts-expect-error this is either a lint error or a TS error. It's a test so it's fine
+      t.setVisualAttributes({ 'stroke-width': 5 })
       assert.strictEqual(t.attributes.stroke, undefined)
     })
   })
@@ -50,7 +53,8 @@ describe('Tag', () => {
       const t = new Tag('test')
       t.fill = '#0f0'
       const child = new Tag('test')
-      t['addChild'](child)
+      // @ts-expect-error this is either a lint error or a TS error. It's a test so it's fine
+      t.addChild(child)
       assert.strictEqual(child.attributes.fill, '#0f0')
       assert.strictEqual(child.attributes.stroke, undefined)
     })

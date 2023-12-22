@@ -114,27 +114,21 @@ export class Grid {
    * @param {Integer} [y]
    * @returns {?}
    */
-
-  /**
-   * nice idea though doesn't seem to work https://austingil.com/typescript-function-overloads-with-jsdoc/
-   * @type {{
-   * (x: Integer, y: Integer): number;
-   * (x: Vector2): number;
-   * }}
-   */
   get(x, y) {
+    // @ts-expect-error TS can't handle overloads calling overloads
     return this.#grid[this.#index(x, y)]
   }
 
   /**
-   * @template T
-   * @param {[number | Vector2, number, T]} args
+   * TODO: see if this "overload" notation works
+   * @param {[number, number, any] | [Vector2, any]} args
    * @returns {void}
    */
   set(...args) {
     // TODO: is this the best way to handle overloading????? ??? ??????? ?? ? ?????
     const [x, y, value] =
       args[0] instanceof Vector2 ? [args[0].x, args[0].y, args[1]] : args
+    // @ts-expect-error TS can't handle overloads calling overloads
     this.#grid[this.#index(x, y)] = value
   }
 
@@ -158,6 +152,10 @@ export class Grid {
   }
 }
 
-export function grid(attributes) {
+/**
+ * @param {GridAttributes} [attributes={}]
+ * @returns {Grid}
+ */
+export function grid(attributes = {}) {
   return new Grid(attributes)
 }

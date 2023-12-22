@@ -3,9 +3,9 @@ import { Tag } from './tag.js'
 
 /**
  * @typedef {object} CircleAttributes
- * @property {number} x
- * @property {number} y
- * @property {number} radius
+ * @property {number} [x=0]
+ * @property {number} [y=0]
+ * @property {number} [radius=1]
  */
 
 /**
@@ -19,7 +19,7 @@ export class Circle extends Tag {
   #y = 0
   #radius = 0
   /**
-   * @param {CircleAttributes} attributes
+   * @param {CircleAttributes} [attributes={}]
    */
   constructor({ x = 0, y = 0, radius = 1, ...attributes } = {}) {
     super('circle', {
@@ -91,6 +91,7 @@ export class Circle extends Tag {
    */
   bitangents(other) {
     // there is some duplicated calculations in outer and inner tangents; consider refactoring
+    // @ts-expect-error TS can't handle that 'outer' concatenated with 'inner' becomes 'outer' | 'inner'
     return this.outerTangents(other).concat(this.innerTangents(other))
   }
 
@@ -187,9 +188,26 @@ export class Circle extends Tag {
 }
 
 /**
- * @param {CircleAttributes | x: number | (circle: Circle) => void} attrsOrBuilderOrX
- * @param {number?} y
- * @param {number?} radius
+ * @overload
+ * @param {CircleAttributes} attrsOrBuilderOrX
+ * @returns {Circle}
+ */
+/**
+ * @overload
+ * @param {number} attrsOrBuilderOrX
+ * @param {number} y
+ * @param {number} radius
+ * @returns {Circle}
+ */
+/**
+ * @overload
+ * @param {(circle: Circle) => void} attrsOrBuilderOrX
+ * @returns {Circle}
+ */
+/**
+ * @param {CircleAttributes | number | ((circle: Circle) => void)} attrsOrBuilderOrX
+ * @param {number} [y]
+ * @param {number} [radius]
  */
 export function circle(attrsOrBuilderOrX, y, radius) {
   if (typeof attrsOrBuilderOrX === 'function') {

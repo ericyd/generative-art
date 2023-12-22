@@ -21,33 +21,33 @@ import { Tag } from './tag.js'
 import { vec2, Vector2 } from '../vector2.js'
 
 /**
- * @typedef {object} PathAttributes
- * @property {number} x
- * @property {number} y
- * @property {number} radius
+ * @typedef CoordinateType
+ * @type {'absolute' | 'relative'}
+ */
+
+/**
+ * @typedef {Record<string, unknown>} PathAttributes
+ * TODO: consider adding definitions for shared attributes like fill, stroke, etc
  */
 
 /**
  * @class Path
- * @property {PathInstruction[]} instructions
  */
 export class Path extends Tag {
+  /** @type {PathInstruction[]} */
   #d = []
   /**
-   * @param {PathAttributes} attributes
+   * @param {PathAttributes} [attributes={}]
    */
-  constructor({ ...attributes } = {}) {
-    super('path', {
-      ...attributes,
-    })
+  constructor(attributes = {}) {
+    super('path', attributes)
     this.cursor = vec2(0, 0)
   }
 
   /**
    *
-   * @param {Point} endPoint
+   * @param {Vector2} endPoint
    * @param {CoordinateType} coordinateType
-   * @returns {PathInstruction}
    */
   moveTo(endPoint, coordinateType = 'absolute') {
     this.#d.push(
@@ -60,9 +60,8 @@ export class Path extends Tag {
 
   /**
    *
-   * @param {Point} endPoint
+   * @param {Vector2} endPoint
    * @param {CoordinateType} coordinateType
-   * @returns {PathInstruction}
    */
   lineTo(endPoint, coordinateType = 'absolute') {
     this.#d.push(
@@ -78,11 +77,10 @@ export class Path extends Tag {
    * (x1,y1, x2,y2, x,y)
    * Draw a cubic Bézier curve from the current point to the end point specified by x,y.
    * The start control point is specified by x1,y1 and the end control point is specified by x2,y2
-   * @param {Point} controlPoint1
-   * @param {Point} controlPoint2
-   * @param {Point} endPoint
+   * @param {Vector2} controlPoint1
+   * @param {Vector2} controlPoint2
+   * @param {Vector2} endPoint
    * @param {CoordinateType} coordinateType
-   * @returns {PathInstruction}
    */
   cubicBezier(
     controlPoint1,
@@ -105,10 +103,9 @@ export class Path extends Tag {
    * Draw a smooth cubic Bézier curve from the current point to the end point specified by x,y.
    * The end control point is specified by x2,y2.
    * The start control point is a reflection of the end control point of the previous curve command
-   * @param {Point} controlPoint
-   * @param {Point} endPoint
+   * @param {Vector2} controlPoint
+   * @param {Vector2} endPoint
    * @param {'absolute' | 'relative'} coordinateType
-   * @returns {PathInstruction}
    */
   smoothBezier(controlPoint, endPoint, coordinateType = 'absolute') {
     this.#d.push(
@@ -136,8 +133,21 @@ export class Path extends Tag {
 }
 
 /**
- * @param {PathAttributes | (Path: Path) => void} attrsOrBuilder
- * @param {PathAttributes?} attributes
+ * @overload
+ * @param {PathAttributes} attrsOrBuilder
+ * @param {PathAttributes} [attributes={}]
+ * @returns {Path}
+ */
+/**
+ * @overload
+ * @param {(Path: Path) => void} attrsOrBuilder
+ * @param {PathAttributes} [attributes={}]
+ * @returns {Path}
+ */
+/**
+ * @param {PathAttributes | ((Path: Path) => void)} attrsOrBuilder
+ * @param {PathAttributes} [attributes={}]
+ * @returns {Path}
  */
 export function path(attrsOrBuilder, attributes = {}) {
   if (typeof attrsOrBuilder === 'function') {
@@ -151,33 +161,10 @@ export function path(attrsOrBuilder, attributes = {}) {
   throw new Error(`Unable to construct Path from "${attrsOrBuilder}"`)
 }
 
-//------------------------------------------------------------------------------
-
-/**
- * @typedef CoordinateType
- * @type {'absolute' | 'relative'}
- */
-
-/**
- * @typedef PathBuilder
- * @type {object}
- * @property {() => Point} cursor get the current point
- * @property {(endPoint: Point, coordinateType: CoordinateType) => void} move lift up pen and move to point
- * @property {() => void} close close the path back to the start point
- * @property {(endPoint: Point, coodinateType: CoordinateType) => void} line straight line to point
- * @property {(controlPoint1: Point, controlPoint2: Point, endPoint: Point, coordinateType: CoordinateType) => void} cubicBezier
- * @property {(controlPoint: Point, endPoint: Point, coordinateType: CoordinateType) => void} smoothBezier
- */
-
-/**
- * @typedef Radians
- * @type {number}
- */
-
 class PathInstruction {
   /**
    *
-   * @param {'l' | 'L' | 'm' | 'M' | 'c' | 'C' | 's' | 'S'} commandType
+   * @param {'l' | 'L' | 'm' | 'M' | 'c' | 'C' | 's' | 'S' | 'Z'} commandType
    * @param {Vector2[]} points
    */
   constructor(commandType, points) {

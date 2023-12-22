@@ -4,11 +4,11 @@ import { Path, path } from './path.js'
 
 /**
  * @typedef {object} SvgAttributes
- * @property {number} width
- * @property {number} height
- * @property {number} scale Allows the resulting SVG to have larger dimensions, which still keeping the viewBox the same as the `width` and `height` attributes
- * @property {SvgBuilder?} builder If the SVG is initialized by a builder, it will be run every time `render` is called.
- * This allows the builder to respond to variables that might have changed in a higher scope, such as a seed value.
+ * @property {number} [width=100]
+ * @property {number} [height=100]
+ * @property {number} [scale=1] Allows the resulting SVG to have larger dimensions, which still keeping the viewBox the same as the `width` and `height` attributes
+ * @property {string} [viewBox] Defaults to `0 0 width height`
+ * @property {string} [preserveAspectRatio] Defaults to `xMidYMid meet`
  */
 
 /**
@@ -39,7 +39,7 @@ import { Path, path } from './path.js'
  */
 export class Svg extends Tag {
   /**
-   * @param {SvgAttributes} attributes
+   * @param {SvgAttributes} [attributes={}]
    */
   constructor({ width = 100, height = 100, scale = 1, ...attributes } = {}) {
     super('svg', {
@@ -53,13 +53,13 @@ export class Svg extends Tag {
     })
     this.width = width
     this.height = height
-    /** @type {Record<string, string | number>} */
+    /** @type {Record<string, string | number> | null} */
     this.filenameMetadata = null
   }
 
   // TODO: find a more generic way of expressing this "instance or builder" pattern
   /**
-   * @param {Path | (path: Path) => void} pathOrBuilder
+   * @param {Path | ((path: Path) => void)} pathOrBuilder
    */
   path(pathOrBuilder) {
     return pathOrBuilder instanceof Path
@@ -69,7 +69,8 @@ export class Svg extends Tag {
 
   /**
    * TODO: "or builder" can be anything accepted by the "circle" helper
-   * @param {Circle | (circle: Circle) => void} circleOrBuilder
+   * TODO: add overload type defs
+   * @param {Circle | ((circle: Circle) => void)} circleOrBuilder
    */
   circle(circleOrBuilder) {
     return circleOrBuilder instanceof Circle

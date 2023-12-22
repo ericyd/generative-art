@@ -78,9 +78,9 @@ This lib is heavily inspired by [OPENRNDR](https://openrndr.org/), which means i
 
 1. Migrate JSDocs to `.d.ts` files
 2. Add `types` to package.json `exports` prop
-3. Add `rollup` to compile a common JS output
+3. Add `rollup` to compile a common JS output (needed?)
 4. ~Add tsc to type check~
-4.a. Fix typescript errors
+4.a. ~Fix typescript errors~
 5. ~Fix Biome.js lints~
 6. ~Finish grid specs~
 7. Decide on a package name (artsvg, coalesvg, progressvg, gressvg, gress, coalesce, accessvg, access, egressvg, iridesvg, yesvg (damn @yesvg is squatted), finessvg, simpledraw, drawsvg, algoart, simplesvg, createsvg, )

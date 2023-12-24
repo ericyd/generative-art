@@ -1,4 +1,4 @@
-import { vec2, randomSeed, createRng, Vector2, random, circle, ColorHex, randomFromArray, rect, hypot, Grid, range } from 'artsvg'
+import { vec2, randomSeed, createRng, Vector2, random, circle, ColorRgb, randomFromArray, rect, hypot, Grid, range } from 'artsvg'
 import { renderSvg } from 'artsvg/render'
 
 const config = {
@@ -16,7 +16,7 @@ renderSvg(config, (svg) => {
   const rng = createRng(seed)
 
   svg.fill = null
-  svg.stroke = ColorHex.Black
+  svg.stroke = ColorRgb.Black
   svg.strokeWidth = 0.15
 
   populateGrid(svg, rng, {

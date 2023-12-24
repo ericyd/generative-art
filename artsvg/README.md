@@ -83,9 +83,11 @@ This lib is heavily inspired by [OPENRNDR](https://openrndr.org/), which means i
 4.a. ~Fix typescript errors~
 5. ~Fix Biome.js lints~
 6. ~Finish grid specs~
-7. Decide on a package name (artsvg, coalesvg, progressvg, gressvg, gress, coalesce, accessvg, access, egressvg, iridesvg, yesvg (damn @yesvg is squatted), finessvg, simpledraw, drawsvg, algoart, simplesvg, createsvg, )
+7. Decide on a package name (artsvg, coalesvg, progressvg, gressvg, gress, coalesce, accessvg, access, egressvg, iridesvg, yesvg (damn @yesvg is squatted), finessvg, simpledraw, drawsvg, algoart, simplesvg, createsvg, SalamiVG)
 8. Describe why not https://www.npmjs.com/package/svg.js, or https://dmitrybaranovskiy.github.io/raphael/
 9. Add `Path.fromPoints` static function
 10. Add comparisons to other frameworks (see https://openrndr.org/ for example)
-11. Add "Rectangle" 🤣
+11. ~Add "Rectangle" 🤣~
 12. ~Add "style inheritance" -- e.g. when svg.fill is set, all child elements should inherit the current value, unless it is explicitly set on the child.~
+13. Add "oscillator" noise
+14. Add color module, with colorSequence

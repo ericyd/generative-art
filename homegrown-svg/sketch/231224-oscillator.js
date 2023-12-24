@@ -1,4 +1,4 @@
-import { vec2, randomSeed, createRng, Vector2, random, circle, ColorHex, randomFromArray, rect, hypot, Grid, range, Oscillator } from 'artsvg'
+import { vec2, randomSeed, createRng, Vector2, random, circle, ColorRgb, randomFromArray, rect, hypot, Grid, range, Oscillator } from 'artsvg'
 import { renderSvg } from 'artsvg/render'
 
 const config = {
@@ -16,7 +16,7 @@ renderSvg(config, (svg) => {
   svg.filenameMetadata = { seed }
 
   svg.fill = null
-  svg.stroke = ColorHex.Black
+  svg.stroke = ColorRgb.Black
   svg.strokeWidth = 0.15
 
   const osc = new Oscillator({ period: svg.width, amplitude: svg.height * 0.15 })

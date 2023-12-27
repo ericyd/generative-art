@@ -72,7 +72,7 @@ export class Oscillator {
     const yModulation = Math.sin(y / this.#amplitude)
     return this.#amplitude * yModulation + modulated
     // not sure if this is more appropriate, more experimentation needed
-    return (this.#amplitude + modulated) * yModulation
+    // return (this.#amplitude + modulated) * yModulation
   }
 
   /**

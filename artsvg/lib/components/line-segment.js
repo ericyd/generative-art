@@ -1,14 +1,26 @@
 import { Vector2 } from '../vector2.js'
-import { path, Path } from './path.js'
+import { PathInstruction } from './path.js'
+import { Tag } from './tag.js'
+
+export class LineSegment extends Tag {
+  /**
+   * @param {Vector2} start
+   * @param {Vector2} end
+   */
+  constructor(start, end) {
+    super('path', {
+      d: [new PathInstruction('M', [start]), new PathInstruction('L', [end])],
+    })
+    this.start = start
+    this.end = end
+  }
+}
 
 /**
  * @param {Vector2} start
  * @param {Vector2} end
- * @returns {Path}
+ * @returns {LineSegment}
  */
 export function lineSegment(start, end) {
-  return path((p) => {
-    p.moveTo(start)
-    p.lineTo(end)
-  })
+  return new LineSegment(start, end)
 }

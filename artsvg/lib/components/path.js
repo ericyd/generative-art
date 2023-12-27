@@ -126,6 +126,23 @@ export class Path extends Tag {
     this.cursor = this.#d[0].endPoint
   }
 
+  /**
+   * @param {Vector2[]} points
+   * @param {boolean} [closed=true]
+   * @param {CoordinateType} [coordinateType='absolute']
+   */
+  static fromPoints(points, closed = true, coordinateType = 'absolute') {
+    return path((p) => {
+      p.moveTo(points[0], coordinateType)
+      for (let i = 1; i < points.length; i++) {
+        p.lineTo(points[i], coordinateType)
+      }
+      if (closed) {
+        p.close()
+      }
+    })
+  }
+
   render() {
     this.setAttributes({ d: this.#d.map((p) => p.render()).join(' ') })
     return super.render()
@@ -161,7 +178,10 @@ export function path(attrsOrBuilder, attributes = {}) {
   throw new Error(`Unable to construct Path from "${attrsOrBuilder}"`)
 }
 
-class PathInstruction {
+/**
+ * Generally this should not be used directly, but feel free if you find it useful.
+ */
+export class PathInstruction {
   /**
    *
    * @param {'l' | 'L' | 'm' | 'M' | 'c' | 'C' | 's' | 'S' | 'Z'} commandType

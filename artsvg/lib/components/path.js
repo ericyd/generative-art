@@ -45,6 +45,14 @@ export class Path extends Tag {
   }
 
   /**
+   * This only works when the path is only made up of straight lines...
+   * @type {Vector2[]}
+   */
+  get points() {
+    return this.#d.map((p) => p.endPoint)
+  }
+
+  /**
    *
    * @param {Vector2} endPoint
    * @param {CoordinateType} coordinateType

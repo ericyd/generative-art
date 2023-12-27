@@ -8,11 +8,11 @@
   "exports": {
     ".": {
       "import": "./lib/index.js",
-      "require": "./dist/TODO.cjs"
+      "types": "./lib/index.d.ts"
     },
     "./render": {
       "import": "./lib/render.js",
-      "require": "./dist/TODO.cjs"
+      "types": "./lib/render.d.ts"
     }
   },
   "directories": {
@@ -23,7 +23,8 @@
     "lint": "npx @biomejs/biome lint lib/**/*.js",
     "lint:fix": "npx @biomejs/biome lint --apply-unsafe lib/**/*.js",
     "test": "node --test",
-    "check": "tsc"
+    "check": "tsc --noEmit true --emitDeclarationOnly false",
+    "typegen": "tsc"
   },
   "keywords": [],
   "author": "",

@@ -39,7 +39,7 @@ renderSvg(config, (svg) => {
     const baseSaturation = random(0.25, 0.75, rng)
     const baseLightness = random(0.35, 0.95, rng)
 
-    for (let radius = 1; radius < 20; radius += 1) {
+    for (let radius = 1; radius < Math.min(svg.width / columnCount / 2, svg.height / rowCount / 2); radius += 1) {
       const p = path(p => {
         const center = vec2(x, y)
         p.moveTo(center.add(vec2(cos(0), sin(0)).multiply(radius)))

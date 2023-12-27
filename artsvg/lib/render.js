@@ -30,7 +30,7 @@ export function timestamp(d = new Date()) {
  * 
  * @param {import('./components/svg.js').SvgAttributes & RenderLoopOptions} config 
  * @param {import('./components/svg.js').SvgBuilder} builder 
- * @returns {string} the rendered SVG
+ * @returns {string} the most recent rendered SVG
  */
 export function renderSvg({ loopCount = 1, openEveryFrame = true, logFilename = true, ...svgAttributes}, builder) {
   let loops = 0

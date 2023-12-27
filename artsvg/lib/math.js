@@ -1,5 +1,11 @@
 import { Vector2 } from "./vector2.js";
 
+// some helpers to avoid the `Math.` namespace everywhere
+export const cos = Math.cos
+export const sin = Math.sin
+export const tan = Math.tan
+export const atan2 = Math.atan2
+
 /**
  * Hypotenuse of a right triangle
  * @param {number} x 

@@ -30,7 +30,7 @@ export class ColorHsl {
   }
 
   toString() {
-    return `hsl(${this.h}, ${this.s}%, ${this.l}%, ${this.a})`
+    return `hsl(${this.h}, ${this.s * 100}%, ${this.l * 100}%, ${this.a})`
   }
 }
 

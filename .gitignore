@@ -31,3 +31,6 @@ screenshots
 .DS_Store
 
 node_modules
+
+artsvg/lib/**/*.d.ts
+!artsvg/lib/types.d.ts

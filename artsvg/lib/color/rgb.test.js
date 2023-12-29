@@ -10,13 +10,13 @@ describe('rgb', () => {
 
 describe('ColorRgb', () => {
   it('correctly stringifies with interpolation', () => {
-    const actual = `${new ColorRgb(0.2, 0.4, 0.6, 1)}`
-    assert.strictEqual(actual, 'rgb(0.2, 0.4, 0.6, 1)')
+    const actual = `${new ColorRgb(0.1, 0.2, 0.4, 1)}`
+    assert.strictEqual(actual, 'rgb(25.5, 51, 102, 1)')
   })
 
   it('correctly stringifies with `toString()`', () => {
-    const actual = new ColorRgb(0.2, 0.4, 0.6, 1).toString()
-    assert.strictEqual(actual, 'rgb(0.2, 0.4, 0.6, 1)')
+    const actual = new ColorRgb(0.1, 0.2, 0.4, 1).toString()
+    assert.strictEqual(actual, 'rgb(25.5, 51, 102, 1)')
   })
 
   describe('fromHex', () => {
@@ -36,6 +36,10 @@ describe('ColorRgb', () => {
       ['#ffffff00', { r: 1, g: 1, b: 1, a: 0 }],
       ['#000000', { r: 0, g: 0, b: 0, a: 1 }],
       ['#00000000', { r: 0, g: 0, b: 0, a: 0 }],
+      ['#000', { r: 0, g: 0, b: 0, a: 1 }],
+      ['#fff', { r: 1, g: 1, b: 1, a: 1 }],
+      ['#000000', { r: 0, g: 0, b: 0, a: 1 }],
+      ['#ffffff', { r: 1, g: 1, b: 1, a: 1 }],
       ['0x000', { r: 0, g: 0, b: 0, a: 1 }],
       ['0xfff', { r: 1, g: 1, b: 1, a: 1 }],
       [

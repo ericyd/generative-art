@@ -30,7 +30,6 @@ export class FractalizedLine {
   }
 
   /**
-   * @readonly
    * @type {LineSegment[]} segments - The segments formed by connecting consecutive points.
    */
   get segments() {

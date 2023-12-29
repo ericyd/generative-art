@@ -1,3 +1,13 @@
+/**
+ * Genuary 2024, Day 1
+ * https://genuary.art/prompts
+ * 
+ * """
+ * JAN. 1 (credit: Melissa & Nicolas Barradeau)
+ *
+ * Particles, lots of them.
+ * """
+ */
 package sketch
 
 import org.openrndr.application

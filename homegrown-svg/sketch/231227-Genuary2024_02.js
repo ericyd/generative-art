@@ -1,13 +1,15 @@
 /**
  * Genuary 2024, Day 2
  * https://genuary.art/prompts
+ * 
+ * """
  * JAN. 2 (credit: Luis Fraguada)
  * 
  * No palettes.
  * 
  * Generative colors, procedural colors, emergent colors.
+ * """
  */
-
 import { vec2, randomSeed, createRng, Vector2, random, circle, ColorRgb, randomFromArray, rect, hypot, Grid, range, Oscillator, ColorHsl, hsl, path, FractalizedLine, cos, sin } from 'artsvg'
 import { renderSvg } from 'artsvg/render'
 

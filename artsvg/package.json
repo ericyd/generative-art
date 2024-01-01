@@ -24,6 +24,7 @@
     "lint:fix": "npx @biomejs/biome lint --apply-unsafe lib/**/*.js",
     "test": "node --test",
     "check": "tsc --noEmit true --emitDeclarationOnly false",
+    "pretypegen": "find lib/* | grep '\\.d\\.ts' | grep -v 'lib/types\\.d\\.ts' | xargs rm",
     "typegen": "tsc"
   },
   "keywords": [],

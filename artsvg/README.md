@@ -66,13 +66,59 @@ Here's the output of the above script:
 
 ![concentric circles example output](./examples/concentric-circles.svg)
 
-## API docs
+## Guide
 
-Coming soon. For the time being, I tried to be pretty accurate with adding JSDoc typings to the functions and classes, so your editor should be able to help with auto-complete.
+### Tags
+
+Tags are the heart of SVGs, so they is also the heart of this library. Tags always have a `render()` method which always returns a string representation of the tag. Strings are the primary intended output of the library: the actual visual rendering must happen in a program that can render SVGs such as a browser.
+
+#### Style inheritance
+
+Tags can have child tags. For example, the root `<svg>` tag will have child tags to define the shapes in the SVG. When child tags are added, there are a few special attributes that get inherited automatically:
+
+* `fill`
+* `stroke`
+* `stroke-width`
+
+This allows for some simplified patterns to declare visual styles for multiple elements, e.g.
+
+```js
+svg.fill = '#45abf8'
+svg.circle(c) // automatically gets `fill="#45abf8"` attribute added
+```
+
+### renderSvg()
+
+- TODO
+- mention return function type
+
+### Math
+
+- TODO
+
+### Oscillator noise
+
+- TODO
 
 ## Design Philosophy
 
 This lib is heavily inspired by [OPENRNDR](https://openrndr.org/), which means it utilizes the builder pattern extensively. My first attempt at writing my own SVG "framework" attempted to be much more functional, and I found the scripts to be really verbose and hard to follow. I think for the purpose of making art, imperative builder patterns are really nice.
+
+## Development
+
+Install dependencies:
+
+```shell
+npm ci
+```
+
+Before committing:
+
+```shell
+npm run format
+npm run lint
+npm run check
+```
 
 ## TODO:
 

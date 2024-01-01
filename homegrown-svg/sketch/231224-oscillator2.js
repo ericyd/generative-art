@@ -19,10 +19,10 @@ renderSvg(config, (svg) => {
   svg.stroke = ColorRgb.Black
   svg.strokeWidth = 0.15
 
-  const osc = new Oscillator({ period: svg.width, amplitude: 1 })
+  const osc = new Oscillator({ period: svg.width, amplitude: 1, compress: true })
     .modulateAmplitude(
-      new Oscillator({ period: svg.width * 0.13, amplitude: 0.3, phase: Math.PI * 0.25 })
-        .modulateAmplitude(new Oscillator({ period: svg.width * 0.3, amplitude: 0.5, phase: Math.PI * -0.9 }))
+      new Oscillator({ period: svg.width * 0.13, amplitude: 0.3, phase: Math.PI * 0.25, compress: true })
+        .modulateAmplitude(new Oscillator({ period: svg.width * 0.3, amplitude: 0.5, phase: Math.PI * -0.9, compress: true }))
     )
   
   const scale = svg.height * 0.15

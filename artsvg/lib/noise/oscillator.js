@@ -4,12 +4,15 @@
  * Kinda similar to this (https://piterpasma.nl/articles/wobbly) although I had the idea independently
  */
 
+import { Compressor } from "./compressor.js"
+
 /**
  * @typedef {object} OscillatorAttributes
  * @property {number} period
  * @property {number} amplitude
  * @property {(t: number) => number} [wave=Math.sin]
  * @property {number} [phase=0]
+ * @property {boolean} [compress=true] TODO change this to settings... but it should default to `amplitude` for threshold probably...
  */
 
 export class Oscillator {
@@ -33,12 +36,14 @@ export class Oscillator {
   /**
    * @param {OscillatorAttributes} attributes
    */
-  constructor({ phase = 0, period, amplitude, wave = Math.sin }) {
+  constructor({ phase = 0, period, amplitude, wave = Math.sin, compress = false }) {
     this.#phase = phase
     this.#period = period
     this.#frequency = (2 * Math.PI) / this.#period
     this.#amplitude = amplitude
     this.#wave = wave
+    // these params are kinda just a guess for now
+    this.compressor = compress ? new Compressor({ W: amplitude * 0.3, T: amplitude * 0.7, R: 2 }) : null
   }
 
   /**
@@ -116,12 +121,14 @@ export class Oscillator {
     return this
   }
 
-  // TODO: need some way to compress/limit this. Otherwise the results will be fairly unpredictable
-  // although, maybe it is better to have a compressor as a "plugin" that takes the oscillators output
-  // and returns a compressed signal
-  // resources: doesn't look remarkably difficult
-  // https://midisic.com/compressor-ratio/#:~:text=Output%20%3D%20(Input%20%E2%80%93%20Threshold),the%20calculation%20of%20compressor%20ratio.
-  // https://www.audiomasterclass.com/blog/what-is-the-math-behind-audio-compression
+  /**
+   * @param {number} input
+   * @returns {number}
+   */
+  compress(input) {
+    return this.compressor === null ? input : this.compressor.compress(input)
+  }
+
   /**
    *
    * @param {number} x
@@ -129,9 +136,25 @@ export class Oscillator {
    * @returns {number}
    */
   output(x, y = 0) {
-    return (
+    return this.compress(
       this.#wave(x * this.frequency(x, y) + this.phase(x, y)) *
       this.amplitude(x, y)
     )
+  }
+
+  /**
+   * @param {Partial<OscillatorAttributes>} attributes
+   */
+  clone(attributes) {
+    const newOsc = new Oscillator({ phase: this.#phase, amplitude: this.#amplitude, wave: this.#wave, compress: !!this.compressor, period: this.#period, ...attributes})
+    for (const o of this.#amplitudeModulators) {
+      newOsc.modulateAmplitude(o)
+    }
+    for (const o of this.#frequencyModulators) {
+      newOsc.modulateFrequency(o)
+    }
+    for (const o of this.#phaseModulators) {
+      newOsc.modulatePhase(o)
+    }
   }
 }

@@ -1,6 +1,6 @@
-import { describe, it } from "node:test";
-import { Compressor } from "./compressor.js";
-import assert from "node:assert";
+import { describe, it } from 'node:test'
+import { Compressor } from './compressor.js'
+import assert from 'node:assert'
 
 describe('Compressor', () => {
   const compressor = new Compressor({ W: 0.1, T: 0.5, R: 2 })
@@ -77,16 +77,16 @@ describe('Compressor', () => {
 
   describe('compressInsideKnee', () => {
     const tests = [
-      [-0.5499, -0.5249499750000001], 
-      [-0.525, -0.5109375], 
-      [-0.5, -0.49375], 
-      [-0.475, -0.47343749999999996], 
-      [-0.45, -0.45], 
-      [0.45, 0.45], 
-      [0.475, 0.47343749999999996], 
-      [0.5, 0.49375], 
-      [0.525, 0.5109375], 
-      [0.5499, 0.5249499750000001], 
+      [-0.5499, -0.5249499750000001],
+      [-0.525, -0.5109375],
+      [-0.5, -0.49375],
+      [-0.475, -0.47343749999999996],
+      [-0.45, -0.45],
+      [0.45, 0.45],
+      [0.475, 0.47343749999999996],
+      [0.5, 0.49375],
+      [0.525, 0.5109375],
+      [0.5499, 0.5249499750000001],
     ]
 
     for (const test of tests) {

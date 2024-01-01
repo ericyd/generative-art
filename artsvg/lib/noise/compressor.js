@@ -12,14 +12,16 @@ export class Compressor {
     this.W = W
     this.T = T
     if (this.T < 0) {
-      console.warn(`T is '${T}', but was expected to be in range [0, Infinity]. Wonkiness may ensue.`)
+      console.warn(
+        `T is '${T}', but was expected to be in range [0, Infinity]. Wonkiness may ensue.`,
+      )
     }
     this.R = R
   }
   /**
    * This should be the only public function,
    * but while developing I need to have the other functions available for testing.
-   * @param {number} input 
+   * @param {number} input
    * @returns {number}
    */
   compress(input) {
@@ -33,7 +35,7 @@ export class Compressor {
   }
 
   /**
-   * @param {number} input 
+   * @param {number} input
    * @returns {boolean}
    */
   belowKnee(input) {
@@ -42,7 +44,7 @@ export class Compressor {
     return Math.abs(input) < this.T && 2 * (Math.abs(input) - this.T) < -this.W
   }
   /**
-   * @param {number} input 
+   * @param {number} input
    * @returns {boolean}
    */
   insideKnee(input) {
@@ -50,17 +52,23 @@ export class Compressor {
   }
 
   /**
-   * @param {number} input 
+   * @param {number} input
    * @returns {number}
    */
   compressInsideKnee(input) {
     const sign = input < 0 ? -1 : 1
-    return sign * (Math.abs(input) + (1 / this.R - 1) * Math.pow(Math.abs(input) - this.T + this.W / 2, 2) / (2 * this.W))
+    return (
+      sign *
+      (Math.abs(input) +
+        ((1 / this.R - 1) *
+          ((Math.abs(input) - this.T + this.W / 2) ** 2)) /
+          (2 * this.W))
+    )
   }
 
   /**
    * Above the knee, compression is same as "hard knee" compression formula
-   * @param {number} input 
+   * @param {number} input
    * @returns {number}
    */
   compressAboveKnee(input) {

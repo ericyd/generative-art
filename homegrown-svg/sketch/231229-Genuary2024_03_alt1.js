@@ -19,8 +19,8 @@ const config = {
   background: '#fff',
   width: 100,
   height: 100,
-  scale: 5,
-  loopCount: 5,
+  scale: 10,
+  loopCount: 1,
 }
 
 let seed =  randomSeed()
@@ -30,7 +30,7 @@ let seed =  randomSeed()
  * 859125460899071
  * 3828653628662489
  */
-// seed = 859125460899071
+seed = 3828653628662489
 
 const colors = [
   'EEA16E',
@@ -40,6 +40,8 @@ const colors = [
   '93C6D6',
   '82AEB1',
   '668586',
+  'FFFFFF',
+  'FFFFFF',
 ]
 
 renderSvg(config, (svg) => {
@@ -47,7 +49,6 @@ renderSvg(config, (svg) => {
 
   svg.fill = null
   svg.stroke = ColorRgb.Black
-  svg.strokeWidth = 0.15
 
   const columnCount = 6
   const rowCount = 6
@@ -91,13 +92,14 @@ function populateGrid(svg, seed, { xStart, yStart, columnCount, rowCount, width,
     if (dim.x == dim.y && dim.x > 1 && random(0, 1, rng) < 0.8) {
       const radius = (dim.x / 2.0 * Math.min(xCellSize, yCellSize)) - Math.min(xPadding, yPadding)
       // not sure of the math here.
-      const xOffset = (dim.x * xCellSize - xPadding * 2) / 2
-      const yOffset = (dim.y * yCellSize - yPadding * 2) / 2
+      const xCenter = (dim.x * xCellSize - xPadding * 2) / 2
+      const yCenter = (dim.y * yCellSize - yPadding * 2) / 2
 
       svg.fill = ColorRgb.fromHex(randomFromArray(colors, rng)).toString()
+      svg.strokeWidth = 1 / (depth + 1) / 2
       svg.circle(circle(
-        xStart + x * xCellSize + xOffset + xPadding,
-        yStart + y * yCellSize + yOffset + yPadding,
+        xStart + x * xCellSize + xCenter + xPadding,
+        yStart + y * yCellSize + yCenter + yPadding,
         radius
       ))
     } else {
@@ -109,6 +111,7 @@ function populateGrid(svg, seed, { xStart, yStart, columnCount, rowCount, width,
         dim.y * yCellSize - yPadding * 2.0,
       )
       r.borderRadius = cornerRadius
+      svg.strokeWidth = 1 / (depth + 1) / 2
       svg.rect(r)
 
       // SUB GRIDS!!!

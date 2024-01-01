@@ -1,0 +1,17 @@
+title: Genuary 2024 Day 01
+imageSeries:
+  # /c_scale,w_500
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1704130002/art/2024-01-01T11.21.27-seed-2089847213_kprrpe.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1704130002/art/2024-01-01T11.21.27-seed-2089847213_kprrpe.jpg
+
+description: >
+  #Genuary day 01! https://genuary.art/prompts#jan1
+  <br><br>
+  <blockquote>JAN. 1 (credit: Melissa & Nicolas Barradeau)
+  <br>Share your results using the hashtags #genuary1 (this prompt) and #genuary!
+  <br>Particles, lots of them.</blockquote>
+
+sourceCodeLinks:
+  - https://github.com/ericyd/generative-art/blob/200315d4105bfaa7da38193e9e6016ccb555309b/openrndr/src/main/kotlin/sketch/S59_Genuary2024_01.kt
+
+createdAt: 2024-01-01

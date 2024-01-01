@@ -34,7 +34,7 @@ fun main() = application {
     val progName = this.name.ifBlank { this.window.title.ifBlank { "my-amazing-drawing" } }
     // Seed is the basis for all our randomization, because it is used to create a seeded RNG (Random(seed))
     var seed = random(0.0, Int.MAX_VALUE.toDouble()).toInt()
-    seed = 1485667459 // good seed
+    seed = 2089847213 // good seed
     println("seed = $seed")
 
     val screenshots = extend(Screenshots()) {
@@ -75,10 +75,10 @@ fun main() = application {
       val spectrum = ColorSequence(colors.shuffled(rng).mapIndexed { index, hex ->
         Pair(map(0.0, colors.size - 1.0, 0.0, 1.0, index.toDouble()), ColorRGBa.fromHex(hex))
       })
-      val PHI = 0.5 + 0.5.pow(0.5) * 0.5
+      val PHI = 0.5 + 5.0.pow(0.5) * 0.5
       val n = 50
       val basePoints = List(n) {
-        val angle = it * (1.0 + PHI)
+        val angle = it * PHI
         val radius = map(0.0, n.toDouble(), 0.0, center.length, it.toDouble())
         center + Vector2(cos(angle), sin(angle)) * radius
       }
@@ -86,7 +86,7 @@ fun main() = application {
       for (point in basePoints) {
         val spectrumStart = random(0.0, 0.6, rng)
         val spectrumEnd = random(spectrumStart, spectrumStart + 0.4, rng)
-        val rotationDrift = map(-1.0, 1.0, 0.0, PHI * PI, simplex(seed, point.distanceTo(center) / center.length * 1.3))
+        val rotationDrift = map(-1.0, 1.0, 0.0, PHI, simplex(seed, point.distanceTo(center) / center.length * 1.3))
         var angle = 0.0
         while (angle < rotationDrift) {
           angle += 0.03

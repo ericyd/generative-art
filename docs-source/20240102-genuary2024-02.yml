@@ -1,0 +1,17 @@
+title: Genuary 2024 Day 02
+imageSeries:
+  # /c_scale,w_500
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1704140954/art/231227-Genuary2024_02_2024-01-01T20-27-05-245Z-seed-1557764099652407.svg_hhxpdw.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1704140954/art/231227-Genuary2024_02_2024-01-01T20-27-05-245Z-seed-1557764099652407.svg_hhxpdw.png
+
+description: >
+  #Genuary day 02! https://genuary.art/prompts#jan2
+  <br><br>
+  <blockquote>JAN. 2 (credit: Luis Fraguada)
+  <br>No palettes.
+  <br>Generative colors, procedural colors, emergent colors.</blockquote>
+
+sourceCodeLinks:
+  - https://github.com/ericyd/generative-art/blob/8ecab67b460454a20d850eece89c7bc3e2186831/homegrown-svg/sketch/231227-Genuary2024_02.js
+
+createdAt: 2024-01-02

@@ -1,0 +1,17 @@
+title: Genuary 2024 Day 03
+imageSeries:
+  # /c_scale,w_500
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1704141482/art/231229-Genuary2024_03_alt1_2024-01-01T20-36-59-164Z-seed-1025780897932507.svg_qvf6ko.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1704141482/art/231229-Genuary2024_03_alt1_2024-01-01T20-36-59-164Z-seed-1025780897932507.svg_qvf6ko.png
+
+description: >
+  #Genuary day 03! https://genuary.art/prompts#jan3
+  <br><br>
+  <blockquote>JAN. 3 (credit: Stranger in the Q)
+  <br>Droste effect.
+  <br>Wikipedia: <a href="https://en.wikipedia.org/wiki/Droste_effect">Droste effect</a></blockquote>
+
+sourceCodeLinks:
+  - https://github.com/ericyd/generative-art/blob/9042774df272d975f01fd273e8d483626f1dee28/homegrown-svg/sketch/231229-Genuary2024_03_alt1.js
+
+createdAt: 2024-01-03

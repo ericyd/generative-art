@@ -28,6 +28,7 @@
     "yaml": "^1.10.0"
   },
   "dependencies": {
+    "@resvg/resvg-js": "^2.6.0",
     "artsvg": "file:artsvg",
     "husky": "^4.3.8"
   },

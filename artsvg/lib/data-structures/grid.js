@@ -61,6 +61,7 @@ export class Grid {
       this.#grid.fill(fill)
     }
     this.#order = order
+    this.length = this.#grid.length
   }
 
   /**
@@ -130,19 +131,19 @@ export class Grid {
 
   /**
    * @template T
-   * @returns {Generator<[Vector2, T], void>}
+   * @returns {Generator<[Vector2, T, number], void>} each item is of type [position, value, index]
    */
   *[Symbol.iterator]() {
     if (this.#order === 'row major') {
       for (let y = this.#yMin; y < this.#yMax; y += this.#yStep) {
         for (let x = this.#xMin; x < this.#xMax; x += this.#xStep) {
-          yield [vec2(x, y), this.get(x, y)]
+          yield [vec2(x, y), this.get(x, y), this.#index(x, y)]
         }
       }
     } else {
       for (let x = this.#xMin; x < this.#xMax; x += this.#xStep) {
         for (let y = this.#yMin; y < this.#yMax; y += this.#yStep) {
-          yield [vec2(x, y), this.get(x, y)]
+          yield [vec2(x, y), this.get(x, y), this.#index(x, y)]
         }
       }
     }

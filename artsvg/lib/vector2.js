@@ -106,6 +106,15 @@ export class Vector2 {
   static random(xMin, xMax, yMin, yMax, rng) {
     return vec2(random(xMin, xMax, rng), random(yMin, yMax, rng));
   }
+
+  /**
+   * Value equality check
+   * @param {Vector2} other 
+   * @returns {boolean}
+   */
+  eq(other) {
+    return this.x === other.x && this.y === other.y
+  }
 }
 
 /**

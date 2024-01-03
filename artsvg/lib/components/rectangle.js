@@ -1,4 +1,5 @@
 import { Vector2, vec2 } from '../vector2.js'
+import { LineSegment } from './line-segment.js'
 import { Tag } from './tag.js'
 
 /**
@@ -111,6 +112,37 @@ export class Rectangle extends Tag {
    */
   center() {
     return vec2(this.x + this.width / 2, this.y + this.height / 2)
+  }
+
+  /**
+   * @returns {Vector2} the upper left corner of the rectangle
+   */
+  corner() {
+    return vec2(this.x, this.y)
+  }
+
+  /**
+   * @returns {Array<Vector2>} List of all vertices of the rectangle
+   */
+  vertices() {
+    return [
+      vec2(this.x, this.y),
+      vec2(this.x, this.y + this.height),
+      vec2(this.x + this.width, this.y + this.height),
+      vec2(this.x + this.width, this.y),
+    ]
+  }
+
+  /**
+   * @returns {Array<LineSegment>} List of all sides of the rectangle as LineSegments
+   */
+  sides() {
+    return [
+      new LineSegment(vec2(this.x, this.y), vec2(this.x, this.y + this.height)),
+      new LineSegment(vec2(this.x, this.y + this.height), vec2(this.x + this.width, this.y + this.height)),
+      new LineSegment(vec2(this.x + this.width, this.y + this.height), vec2(this.x + this.width, this.y)),
+      new LineSegment(vec2(this.x + this.width, this.y), vec2(this.x, this.y)),
+    ]
   }
 }
 

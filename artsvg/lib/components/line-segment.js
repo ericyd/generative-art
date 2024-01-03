@@ -9,7 +9,7 @@ export class LineSegment extends Tag {
    */
   constructor(start, end) {
     super('path', {
-      d: [new PathInstruction('M', [start]), new PathInstruction('L', [end])],
+      d: [new PathInstruction('M', [start]).render(), new PathInstruction('L', [end]).render()].join(' '),
     })
     this.start = start
     this.end = end

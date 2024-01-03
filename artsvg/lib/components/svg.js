@@ -2,6 +2,7 @@ import { Tag } from './tag.js'
 import { Circle, circle } from './circle.js'
 import { Path, path } from './path.js'
 import { Rectangle, rect } from './rectangle.js'
+import { LineSegment } from './line-segment.js'
 
 /**
  * @typedef {object} SvgAttributes
@@ -66,6 +67,13 @@ export class Svg extends Tag {
     return pathOrBuilder instanceof Path
       ? this.addChild(pathOrBuilder)
       : this.addChild(path(pathOrBuilder))
+  }
+
+  /**
+   * @param {LineSegment} lineSegment
+   */
+  lineSegment(lineSegment) {
+    return this.addChild(lineSegment)
   }
 
   /**

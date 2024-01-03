@@ -60,8 +60,7 @@ export class Compressor {
     return (
       sign *
       (Math.abs(input) +
-        ((1 / this.R - 1) *
-          ((Math.abs(input) - this.T + this.W / 2) ** 2)) /
+        ((1 / this.R - 1) * (Math.abs(input) - this.T + this.W / 2) ** 2) /
           (2 * this.W))
     )
   }

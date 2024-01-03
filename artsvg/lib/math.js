@@ -28,6 +28,17 @@ export function isWithin(min, max, value) {
 }
 
 /**
+ * Returns if a number is in a range [target-error, target+error]
+ * @param {number} target 
+ * @param {number} error 
+ * @param {number} value 
+ * @returns {boolean}
+ */
+export function isWithinError(target, error, value) {
+  return value > (target - error) && value < (target + error)
+}
+
+/**
  * For angles in a known range, e.g. [-PI, PI],
  * returns the angle (and direction) of the smallest angular difference between them.
  * The result will always assume traveling from `angle1` to `angle2`.

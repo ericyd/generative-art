@@ -209,6 +209,20 @@ footer {
   font-size: 0.9em;
 }
 
+blockquote {
+  display: block;
+  position: relative;
+  padding: 0.8rem 1.6rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  margin:20px 0;
+  font-style:normal;
+  border-radius: 0.2rem;
+  border-left: 0.4rem solid var(--border-color);
+  background: var(--bg-color);
+  color: var(--font-color);
+}
+
 /*********************
 Utility
 **********************/

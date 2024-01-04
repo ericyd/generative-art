@@ -1,0 +1,22 @@
+title: Genuary 2024 Day 05
+imageSeries:
+  # /c_scale,w_500
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1704409449/art/240104-Genuary2024_05-walker-alt1_2024-01-04T23-01-37-342Z-seed-1213658905635049.svg_xojla3.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1704409449/art/240104-Genuary2024_05-walker-alt1_2024-01-04T23-01-37-342Z-seed-1213658905635049.svg_xojla3.png
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1704409805/art/240104-Genuary2024_05-columns_2024-01-04T23-07-24-475Z-seed-205108194658611.svg_jemuku.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1704409805/art/240104-Genuary2024_05-columns_2024-01-04T23-07-24-475Z-seed-205108194658611.svg_jemuku.png
+
+description: >
+  #Genuary day 05! https://genuary.art/prompts#jan5
+  <br><br>
+  <blockquote>JAN. 5 (credit: Melissa Wiederrecht & Piter Pasma)
+  <br>In the style of Vera Molnár (1924-2023).
+  <br>Wikipedia: <a href="https://en.wikipedia.org/wiki/Vera_Moln%C3%A1r">Vera Molnár</a></blockquote>
+  <br>
+  Inspired by _Lignes ou formes ("Lines or shapes")_, and _Molndrian_
+
+sourceCodeLinks:
+  - https://github.com/ericyd/generative-art/blob/6ceee9b890232a1d6c18bb4e58b7d8a264bcaa32/homegrown-svg/sketch/240104-Genuary2024_05-columns.js
+  - https://github.com/ericyd/generative-art/blob/6ceee9b890232a1d6c18bb4e58b7d8a264bcaa32/homegrown-svg/sketch/240104-Genuary2024_05-walker-alt1.js
+
+createdAt: 2024-01-05

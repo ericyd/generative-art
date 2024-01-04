@@ -12,7 +12,6 @@ import {
 import { renderSvg } from 'artsvg/render'
 
 const config = {
-  background: '#fff',
   stroke: '#000',
   width: 100,
   height: 100,

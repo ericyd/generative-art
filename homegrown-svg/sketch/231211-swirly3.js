@@ -2,7 +2,6 @@ import { vec2, map, randomSeed, createRng, Vector2, path, random, Circle, angleO
 import { renderSvg } from 'artsvg/render'
 
 const config = {
-  background: '#fff',
   fill: 'none',
   stroke: '#000',
   width: 100,

@@ -16,7 +16,6 @@ import { vec2, randomSeed, createRng, Vector2, random, circle, ColorRgb, randomF
 import { renderSvg } from 'artsvg/render'
 
 const config = {
-  background: '#fff',
   width: 100,
   height: 100,
   scale: 10,

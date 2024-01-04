@@ -2,7 +2,6 @@ import { vec2, map } from 'artsvg'
 import { renderSvg } from 'artsvg/render'
 
 const config = {
-  background: '#fff',
   fill: 'none',
   stroke: '#000',
   width: 100,

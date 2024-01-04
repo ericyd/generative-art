@@ -3,6 +3,7 @@ import { Circle, circle } from './circle.js'
 import { Path, path } from './path.js'
 import { Rectangle, rect } from './rectangle.js'
 import { LineSegment } from './line-segment.js'
+import { ColorRgb } from '../color/rgb.js'
 
 /**
  * @typedef {object} SvgAttributes
@@ -104,6 +105,21 @@ export class Svg extends Tag {
     return Object.entries(this.filenameMetadata ?? {})
       .map(([key, value]) => `${key}-${value}`)
       .join('-')
+  }
+
+  /**
+   * @param {string | ColorRgb} color 
+   */
+  setBackground(color) {
+    const rect = new Rectangle({
+      x: 0,
+      y: 0,
+      width: this.width,
+      height: this.height,
+    })
+    rect.stroke = null
+    rect.fill = typeof color === 'string' ? color : color.toString()
+    this.children.unshift(rect)
   }
 }
 

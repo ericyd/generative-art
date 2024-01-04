@@ -17,10 +17,11 @@ const config = {
   width: 100,
   height: 100,
   scale: 6,
-  loopCount: 10,
+  loopCount: 1,
 }
 
 let seed = randomSeed()
+seed = 1213658905635049
 
 renderSvg(config, (svg) => {
   svg.filenameMetadata = { seed }

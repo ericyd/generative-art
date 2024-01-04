@@ -16,12 +16,12 @@ import { renderSvg } from 'artsvg/render'
 const config = {
   width: 100,
   height: 100,
-  scale: 6,
+  scale: 10,
   loopCount: 1,
 }
 
 let seed = randomSeed()
-// seed = 320262858286529
+seed = 205108194658611
 
 /**
  * Rules
@@ -42,6 +42,9 @@ renderSvg(config, (svg) => {
   svg.stroke = null
   const rectWidth = svg.width / 10
   const rectHeight = svg.height / 200
+  const baseHue = 230
+  const baseSat = 0.48
+  const baseLight = 0.68
 
   // Rule 7
   const nRows = 3
@@ -49,8 +52,14 @@ renderSvg(config, (svg) => {
     // Rule 1
     const columnCount = randomInt(6, 10, rng) 
     for (const c of range(0, columnCount)) {
+      svg.fill = hsl(
+        jitter(10, baseHue, rng),
+        jitter(0.1, baseSat, rng),
+        jitter(0.1, baseLight, rng),
+        0.65
+      )
       // Rule 1, part 2
-      const baseY = jitter(svg.height * 0.05, map(0, nRows, svg.height * 0.125, svg.height * 0.7, i))
+      const baseY = jitter(svg.height * 0.05, map(0, nRows, svg.height * 0.125, svg.height * 0.7, i), rng)
       const baseX = jitter(svg.width * 0.04, map(0, columnCount, svg.width * 0.125, svg.width * 0.875, c), rng)
       // Rule 3
       const angle = random(Math.PI / 2 - 0.01, Math.PI / 2 + 0.01, rng)
@@ -66,7 +75,6 @@ renderSvg(config, (svg) => {
           // Rule 5
           x += sine(j - sineInfluencePos) * map(sineInfluencePos, length, 0, 1, j)
         }
-        svg.fill = hsl(230, 0.48, 0.68, 0.65)
         svg.rect({ x, y, width: rectWidth, height: rectHeight })
       }
     }

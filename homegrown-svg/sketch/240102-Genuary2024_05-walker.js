@@ -7,6 +7,8 @@
  *
  * Wikipedia: https://en.wikipedia.org/wiki/Vera_Moln%C3%A1r
  * """
+ * 
+ * Inspired by Vera Molnár, Molndrian, e.g. https://artlogic-res.cloudinary.com/w_1100,c_limit,f_auto,fl_lossy,q_auto:good/ws-ropac/usr/images/artworks/main_image/items/05/05fd6865c7f24ef6878e59503fe61350/vem_1016_300dpi.jpg
  */
 import { map, vec2, randomSeed, createRng, Vector2, random, circle, ColorRgb, randomFromArray, rect, hypot, Grid, range, hsl, lineSegment, Rectangle } from 'artsvg'
 import { renderSvg } from 'artsvg/render'

@@ -120,20 +120,24 @@ npm run lint
 npm run check
 ```
 
-## TODO:
+## TODO pre-migrating-to-own-repo:
 
-1. ~Migrate JSDocs to `.d.ts` files~
-2. ~Add `types` to package.json `exports` prop~
-3. Add `rollup` to compile a common JS output (needed?)
-4. ~Add tsc to type check~
-4.a. ~Fix typescript errors~
-5. ~Fix Biome.js lints~
-6. ~Finish grid specs~
-7. Decide on a package name (artsvg, coalesvg, progressvg, gressvg, gress, coalesce, accessvg, access, egressvg, iridesvg, yesvg (damn @yesvg is squatted), finessvg, simpledraw, drawsvg, algoart, simplesvg, createsvg, SalamiVG)
-8. Describe why not https://www.npmjs.com/package/svg.js, or https://dmitrybaranovskiy.github.io/raphael/
-9. ~Add `Path.fromPoints` static function~
-10. Add comparisons to other frameworks (see https://openrndr.org/ for example)
-11. ~Add "Rectangle" 🤣~
-12. ~Add "style inheritance" -- e.g. when svg.fill is set, all child elements should inherit the current value, unless it is explicitly set on the child.~
-13. Add "oscillator" noise
-14. Add color module, with colorSequence
+1. Decide on a package name (artsvg, coalesvg, progressvg, gressvg, gress, coalesce, accessvg, access, egressvg, iridesvg, yesvg (damn @yesvg is squatted), finessvg, simpledraw, drawsvg, algoart, simplesvg, createsvg, SalamiVG)
+2. Describe why not https://www.npmjs.com/package/svg.js, or https://dmitrybaranovskiy.github.io/raphael/
+3. Add comparisons to other frameworks (see https://openrndr.org/ for example)
+4. Finish public interface for "oscillator noise"
+5. Finish color module
+    - add ColorRgb <--> ColorHsl
+    - add "mix" function to both
+    - add ColorSequence
+6. Finish "guide"
+
+## TODO post-migrating-to-own-repo:
+
+1. Move docs to Wiki
+2. Set up CI
+    - npm test
+    - npm run check:format
+    - npm run check:types
+    - npm run lint
+3. Publish on npm 😱

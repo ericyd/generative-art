@@ -53,30 +53,10 @@ renderSvg(config, (svg) => {
 
   // Rule 1
   const walkers = [
-    newWalker(
-      vec2(0, 0),
-      // map(0, hypot(svg.width, svg.height) / 2, hueMin, hueMax, vec2(0, 0).distanceTo(center)),
-      // random(0.2, 0.4, rng),
-      // random(0.6, 0.8, rng),
-    ),
-    newWalker(
-      vec2(0, rowCount - 1),
-      // map(0, hypot(svg.width, svg.height) / 2, hueMin, hueMax, vec2(0, rowCount - 1).distanceTo(center)),
-      // random(0.2, 0.4, rng),
-      // random(0.6, 0.8, rng),
-    ),
-    newWalker(
-      vec2(columnCount - 1, rowCount - 1),
-      // map(0, hypot(svg.width, svg.height) / 2, hueMin, hueMax, vec2(columnCount - 1, rowCount - 1).distanceTo(center)),
-      // random(0.2, 0.4, rng),
-      // random(0.6, 0.8, rng),
-    ),
-    newWalker(
-      vec2(columnCount - 1, 0),
-      // map(0, hypot(svg.width, svg.height) / 2, hueMin, hueMax, vec2(columnCount - 1, 0).distanceTo(center)),
-      // random(0.2, 0.4, rng),
-      // random(0.6, 0.8, rng),
-    ),
+    newWalker(vec2(0, 0)),
+    newWalker(vec2(0, rowCount - 1)),
+    newWalker(vec2(columnCount - 1, rowCount - 1)),
+    newWalker(vec2(columnCount - 1, 0)),
   ]
 
   // Rule 4
@@ -110,50 +90,23 @@ renderSvg(config, (svg) => {
       // Rule 3
       if (random(0, 1, rng) < 0.025 && nextDirectionOptions.length > 1) {
         const splitStart = randomFromArray(nextDirectionOptions.filter(vec => !vec.eq(next)), rng)
-        walkers.push(
-          newWalker(
-            splitStart,
-            // map(0, hypot(svg.width, svg.height) / 2, hueMin, hueMax, splitStart.distanceTo(center)),
-            // random(0.2, 0.4, rng),
-            // random(0.6, 0.8, rng),
-          )
-        )
+        walkers.push(newWalker(splitStart))
       }
       walker.position = walker.position.add(next)
       walker.moves.push(next)
       grid.set(walker.position.x, walker.position.y, true)
-
-      // render
-
-      // the problem with rendering inline is that we don't know the final length of the walker path so it's hard to map the sat/light as we were doing before.
-      // looking at 10 random renders, the max length of a walker is 153, so we could use that as a max and simply decrement accordingly.
-      // my only concern with that is it isn't scalable; different grid orientations or rules will result in different max lengths.
-      // I think despite the inefficiency, it might make sense to separate the data and render steps, as I was doing previously
-
-      // const sat = map(0, walker.moves.length, satBase, 0.8, i)
-      // const light = map(0, walker.moves.length, lightBase, 0.2, i)
-      // svg.stroke = hsl(walker.hue, sat, light)
-      // svg.stroke = hsl(hue, satBase, lightBase)
-      // const rect = new Rectangle({ x: walker.position.x * cellWidth, y: walker.position.y * cellHeight, width: cellWidth, height: cellHeight })
-      // let sides = rect.sides().filter(() => random(0, 1, rng) > 0.5)
-      // if (sides.length === 0) {
-      //   sides = [randomFromArray(rect.sides(), rng)]
-      // }
-      // for (const side of sides) {
-      //   side.setAttributes({ 'stroke-linecap': 'square' })
-      //   svg.lineSegment(side)
-      // }
     }
   }
 
 
-  // TODO: fix phrasing here to explain why not rendering in place
-  // the problem with rendering inline is that we don't know the final length of the walker path so it's hard to map the sat/light as we were doing before.
-  // looking at 10 random renders, the max length of a walker is 153, so we could use that as a max and simply decrement accordingly.
-  // my only concern with that is it isn't scalable; different grid orientations or rules will result in different max lengths.
-  // I think despite the inefficiency, it might make sense to separate the data and render steps, as I was doing previously
+  // The more efficient route would be to render in place, every time the walker moves.
+  // The problem with rendering in place is that we don't know the final length of the walker path so it's hard to map the sat/lum values in the way I want.
+  // Looking at 10 random renders, the max length of a walker is 153, so we could use that as a max and simply decrement accordingly.
+  // Two problems with that:
+  // 1. it isn't scalable; different grid orientations or rules will result in different max lengths.
+  // 2. the range of sat/lum will be different for each walker. (not necessarily "wrong" but again not what I want)
 
-  // new render via walker paths
+  // render via walker paths
   for (const walker of walkers) {
     // not super efficient but we just retrace the same steps. I guess I could just render this immediately when the path is defined...
     walker.position = walker.start
@@ -191,7 +144,7 @@ renderSvg(config, (svg) => {
       }
     }
 
-    console.log(walker.moves.length)
+    // console.log(walker.moves.length)
   }
 
   return () => {
@@ -199,14 +152,11 @@ renderSvg(config, (svg) => {
   }
 })
 
-function newWalker(position, /*hue, sat, light */) {
+function newWalker(position) {
   return {
     position,
     canMove: true,
     start: position,
-    moves: [],
-    // hue,
-    // sat,
-    // light
+    moves: []
   }
 }

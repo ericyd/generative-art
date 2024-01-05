@@ -1,5 +1,6 @@
 import { warnWithDefault } from '../internal.js'
 import { clamp } from '../util.js'
+import { ColorHsl } from './hsl.js'
 
 export class ColorRgb {
   /**
@@ -74,11 +75,7 @@ export class ColorRgb {
    * @returns {ColorRgb}
    */
   mix(other, mix = 0.5) {
-    const r = mixColorComponent(this.r, other.r, mix)
-    const g = mixColorComponent(this.g, other.g, mix)
-    const b = mixColorComponent(this.b, other.b, mix)
-    const a = lerp(this.a, other.a, mix)
-    return new ColorRgb(r, g, b, a)
+    return ColorHsl.fromRgb(this).mix(ColorHsl.fromRgb(other), mix).toRgb()
   }
 
   toString() {
@@ -102,6 +99,14 @@ export class ColorRgb {
         .padStart(2, '0'),
     ].join('')
   }
+
+  /**
+   * Converts to HSL color space
+   * @returns {ColorHsl}
+   */
+  toHsl() {
+    return ColorHsl.fromRgb(this)
+  }
 }
 
 ColorRgb.Black = new ColorRgb(0, 0, 0)
@@ -116,37 +121,4 @@ ColorRgb.White = new ColorRgb(1, 1, 1)
  */
 export function rgb(r, g, b, a = 1) {
   return new ColorRgb(r, g, b, a)
-}
-
-/**
- * Mixes two color components (in range [0, 1]) using linear interpolation.
- * Color components mix in an interesting way because the values cycle,
- * i.e. 0.001 is "close" to 0.999 on a color wheel.
- * @param {number} a in range [0, 1]
- * @param {number} b in range [0, 1]
- * @param {number} mix in range [0, 1]. When 0, returns `a`. When 1, returns `b`.
- * @returns {number}
- */
-export function mixColorComponent(a, b, mix) {
-  const aVal = a < b && b - a > 0.5 ? a + 1 : a
-  const bVal = b < a && a - b > 0.5 ? b + 1 : b
-  const aPct = 1 - mix
-  const bPct = mix
-  const result = aVal * aPct + bVal * bPct
-  return result > 1 ? result - 1 : result
-}
-
-// this should probably go in a utility file
-/**
- *
- * @param {number} a in range [0, 1]
- * @param {number} b in range [0, 1]
- * @param {number} mix in range [0, 1]
- * @returns {number}
- */
-function lerp(a, b, mix) {
-  const aPct = 1 - mix
-  const bPct = mix
-  const result = a * aPct + b * bPct
-  return result
 }

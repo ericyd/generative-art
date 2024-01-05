@@ -126,11 +126,7 @@ npm run check
 2. Describe why not https://www.npmjs.com/package/svg.js, or https://dmitrybaranovskiy.github.io/raphael/
 3. Add comparisons to other frameworks (see https://openrndr.org/ for example)
 4. Finish public interface for "oscillator noise"
-5. Finish color module
-    - add ColorRgb <--> ColorHsl
-    - add "mix" function to both
-    - add ColorSequence
-6. Finish "guide"
+5. Finish "guide"
 
 ## TODO post-migrating-to-own-repo:
 

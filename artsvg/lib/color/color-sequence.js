@@ -18,6 +18,7 @@ export class ColorSequence {
 
   /**
    * @param {string[]} hexes list of color hex strings
+   * @returns {ColorSequence}
    */
   static fromHexes(hexes) {
     console.log(

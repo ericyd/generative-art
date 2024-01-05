@@ -28,7 +28,7 @@
     "yaml": "^1.10.0"
   },
   "dependencies": {
-    "artsvg": "file:artsvg",
+    "@salamivg/core": "file:../salamivg",
     "husky": "^4.3.8"
   },
   "husky": {

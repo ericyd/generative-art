@@ -12,8 +12,7 @@
  * 
  * This is different from the original because rowCount / columnCount vary based on the size of the element.
  */
-import { vec2, randomSeed, createRng, Vector2, random, circle, ColorRgb, randomFromArray, rect, hypot, Grid, range } from 'artsvg'
-import { renderSvg } from 'artsvg/render'
+import { renderSvg, vec2, randomSeed, createRng, Vector2, random, circle, ColorRgb, randomFromArray, rect, hypot, Grid, range } from '@salamivg/core'
 
 const config = {
   width: 100,

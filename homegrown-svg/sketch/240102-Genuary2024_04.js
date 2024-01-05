@@ -6,8 +6,7 @@
  * Pixels.
  * """
  */
-import { map, vec2, randomSeed, createRng, Vector2, random, circle, ColorRgb, randomFromArray, rect, hypot, Grid, range, hsl } from 'artsvg'
-import { renderSvg } from 'artsvg/render'
+import { renderSvg, map, vec2, randomSeed, createRng, Vector2, random, circle, ColorRgb, randomFromArray, rect, hypot, Grid, range, hsl } from '@salamivg/core'
 
 const config = {
   width: 100,

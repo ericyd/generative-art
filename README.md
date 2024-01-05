@@ -3,7 +3,7 @@ Built with [Nannou][], [Processing][], and [OpenRNDR][]
 
 ## Where can I see the finished products without running the code?
 
-Please see [my personal site](https://ericyd.com/generative-art) or [my instagram](https://www.instagram.com/ericydauenhauer/)
+Please see [my personal site](https://ericyd.github.io/generative-art) or [my instagram](https://www.instagram.com/ericydauenhauer/)
 
 ## Broken links? 😱
 
@@ -60,7 +60,6 @@ I ❤️ auto-formatting (also props to [rustfmt][], it is such a great and fast
 cargo fmt
 ```
 
-
 ## Processing sketches ([/processing](./processing))
 
 Originally I was planning on only using Rust. Then I realized I was interested in learning to use shaders. It turns out, Rust + Shaders = Nightmare. Yes, it's very much possible but holy crap it's a lot of work for not a lot of gain. Conversely, there are a billion tools out there that make shaders easy to use and Processing is a great candidate.
@@ -73,24 +72,25 @@ I personally like the Processing CLI because I dislike the Processing editor, so
 processing-java --sketch=`pwd`/processing/sketch_name --run
 ```
 
-----
+## "Homegrow SVG"
 
-## Why is the primary branch named `main` instead of `master`?
+I started writing a simple SVG lib called [SalamiVG](https://github.com/ericyd/salamivg) and I'm using it to make some art. It's been really fun!
 
-To support [anti-racist language in tech!](https://dev.to/damcosset/replacing-master-in-git-2jim)
+In order to run these sketches, you need to clone SalamiVG locally and `npm link` it:
 
-If you'd like to do the same:
-
-```bash
-$  git checkout master
-$  git pull origin master
-$  git branch -M main
-$  git push origin main
-# Update Settings/Branches/Default branch to main on GitHub or your git server of choice
-$  git push origin :master
+```shell
+# clone this repo
+git clone git@github.com:ericyd/generative-art
+# clone salamivg as a sibling
+git clone git@github.com:ericyd/salamivg
+cd salamivg
+npm i
+npm link
+cd ../generative-art
+npm i
+# I don't think this next line is necessary...
+npm link @salamivg/core
 ```
-
-If you ascribe more to the stance that [renaming master is harmful](https://dev.to/dandv/8-problems-with-replacing-master-in-git-2hck) then my recommendation to you is to stop being so fragile, it's really no big deal.
 
 <!-- Links -->
 

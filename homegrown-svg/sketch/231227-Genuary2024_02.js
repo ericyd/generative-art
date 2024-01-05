@@ -10,8 +10,7 @@
  * Generative colors, procedural colors, emergent colors.
  * """
  */
-import { PHI, vec2, randomSeed, createRng, Vector2, random, circle, ColorRgb, randomFromArray, rect, hypot, Grid, range, Oscillator, ColorHsl, hsl, path, FractalizedLine, cos, sin } from 'artsvg'
-import { renderSvg } from 'artsvg/render'
+import { renderSvg, PHI, vec2, randomSeed, createRng, Vector2, random, circle, ColorRgb, randomFromArray, rect, hypot, Grid, range, Oscillator, ColorHsl, hsl, path, FractalizedLine, cos, sin } from '@salamivg/core'
 
 const config = {
   width: 100,

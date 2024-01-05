@@ -10,8 +10,7 @@
  * Wikipedia: https://en.wikipedia.org/wiki/Droste_effect
  * """
  */
-import { vec2, randomSeed, createRng, Vector2, random, circle, ColorRgb, randomFromArray, rect, hypot, Grid, range } from 'artsvg'
-import { renderSvg } from 'artsvg/render'
+import { renderSvg, vec2, randomSeed, createRng, Vector2, random, circle, ColorRgb, randomFromArray, rect, hypot, Grid, range } from '@salamivg/core'
 
 const config = {
   width: 100,

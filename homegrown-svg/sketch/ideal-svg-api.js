@@ -8,8 +8,8 @@ import {
   createRng,
   random,
   randomSeed,
-} from 'artsvg'
-import { renderSvg } from 'artsvg/render'
+  renderSvg,
+} from '@salamivg/core'
 
 const config = {
   stroke: '#000',

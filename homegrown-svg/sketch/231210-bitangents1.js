@@ -1,5 +1,4 @@
-import { vec2, map, randomSeed, circle, createRng, Vector2, path, random, angleOfVertex, smallestAngularDifference, lineSegment } from 'artsvg'
-import { renderSvg } from 'artsvg/render'
+import { renderSvg, vec2, map, randomSeed, circle, createRng, Vector2, path, random, angleOfVertex, smallestAngularDifference, lineSegment } from '@salamivg/core'
 
 const config = {
   fill: 'none',

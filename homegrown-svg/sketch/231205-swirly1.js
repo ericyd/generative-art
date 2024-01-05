@@ -1,5 +1,4 @@
-import { vec2, map } from 'artsvg'
-import { renderSvg } from 'artsvg/render'
+import { renderSvg, vec2, map } from '@salamivg/core'
 
 const config = {
   fill: 'none',

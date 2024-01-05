@@ -1,5 +1,4 @@
-import { vec2, randomSeed, createRng, Vector2, random, circle, ColorRgb, randomFromArray, rect, hypot, Grid, range, Oscillator, map } from 'artsvg'
-import { renderSvg } from 'artsvg/render'
+import { renderSvg, vec2, randomSeed, createRng, Vector2, random, circle, ColorRgb, randomFromArray, rect, hypot, Grid, range, Oscillator, map } from '@salamivg/core'
 
 const config = {
   width: 100,

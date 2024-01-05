@@ -10,8 +10,7 @@
  * 
  * This one is inspired by Vera Molnar, Lignes ou formes (“Lines or shapes”), 1983, e.g. https://assets-global.website-files.com/61e6c06a23cb13bf76051194/6303ac4fe078e95399392d51_Screen%20Shot%202022-08-22%20at%2018.15.38.png
  */
-import { map, vec2, randomSeed, createRng, Vector2, random, circle, ColorRgb, randomFromArray, rect, hypot, Grid, range, hsl, lineSegment, Rectangle, randomInt, jitter, cos } from 'artsvg'
-import { renderSvg } from 'artsvg/render'
+import { renderSvg, map, vec2, randomSeed, createRng, Vector2, random, circle, ColorRgb, randomFromArray, rect, hypot, Grid, range, hsl, lineSegment, Rectangle, randomInt, jitter, cos } from '@salamivg/core'
 
 const config = {
   width: 100,

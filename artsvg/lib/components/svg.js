@@ -108,7 +108,7 @@ export class Svg extends Tag {
   }
 
   /**
-   * @param {string | ColorRgb} color 
+   * @param {string | ColorRgb} color
    */
   setBackground(color) {
     const rect = new Rectangle({

@@ -139,23 +139,29 @@ export class Rectangle extends Tag {
   sides() {
     return [
       new LineSegment(vec2(this.x, this.y), vec2(this.x, this.y + this.height)),
-      new LineSegment(vec2(this.x, this.y + this.height), vec2(this.x + this.width, this.y + this.height)),
-      new LineSegment(vec2(this.x + this.width, this.y + this.height), vec2(this.x + this.width, this.y)),
+      new LineSegment(
+        vec2(this.x, this.y + this.height),
+        vec2(this.x + this.width, this.y + this.height),
+      ),
+      new LineSegment(
+        vec2(this.x + this.width, this.y + this.height),
+        vec2(this.x + this.width, this.y),
+      ),
       new LineSegment(vec2(this.x + this.width, this.y), vec2(this.x, this.y)),
     ]
   }
 
   /**
-   * @param {Vector2} center 
-   * @param {number} width 
-   * @param {number} height 
+   * @param {Vector2} center
+   * @param {number} width
+   * @param {number} height
    */
   static fromCenter(center, width, height) {
     return new Rectangle({
       x: center.x - width / 2,
       y: center.y - height / 2,
       width,
-      height
+      height,
     })
   }
 }

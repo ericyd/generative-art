@@ -1,0 +1,22 @@
+title: Genuary 2024 Day 05
+imageSeries:
+  # /c_scale,w_500
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1704737928/art/240108-Genuary2024_08_2024-01-08T18-15-58-477Z-seed-1546416152405953.svg_utwknf.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1704737928/art/240108-Genuary2024_08_2024-01-08T18-15-58-477Z-seed-1546416152405953.svg_utwknf.png
+
+description: >
+  #Genuary day 08! https://genuary.art/prompts#jan8
+  <br><br>
+  <blockquote>
+  JAN. 8 (credit: Darien Brito)
+  <br>
+  Share your results using the hashtags #genuary8 (this prompt) and #genuary!
+  <br>
+  Chaotic system.
+  </blockquote>
+  <br>
+
+sourceCodeLinks:
+  - https://github.com/ericyd/generative-art/blob/039f329e3efb84c2fbee45823359647c33b69204/homegrown-svg/sketch/240108-Genuary2024_08.js
+
+createdAt: 2024-01-08

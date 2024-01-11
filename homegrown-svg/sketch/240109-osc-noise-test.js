@@ -7,7 +7,7 @@ const config = {
   width: 100,
   height: 100,
   scale: 6,
-  loopCount: 10,
+  loopCount: 2,
 }
 
 let seed = randomSeed()

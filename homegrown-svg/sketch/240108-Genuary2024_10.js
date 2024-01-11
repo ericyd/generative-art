@@ -8,7 +8,7 @@
  * Hexagonal.
  * """
  */
-import { renderSvg, map, vec2, randomSeed, createRng, Vector2, random, circle, ColorRgb, randomFromArray, rect, hypot, Grid, range, hsl, lineSegment, Rectangle, randomInt, PI, cos, sin, clamp, ColorSequence, shuffle, Polygon, rangeWithIndex, createOscNoise } from '@salamivg/core'
+import { renderSvg, map, vec2, randomSeed, createRng, Vector2, random, circle, ColorRgb, randomFromArray, rect, hypot, Grid, range, hsl, lineSegment, Rectangle, randomInt, PI, cos, sin, clamp, ColorSequence, shuffle, Polygon, rangeWithIndex, createOscNoise, Hexagon, TAU } from '@salamivg/core'
 
 const config = {
   width: 100,
@@ -37,45 +37,83 @@ renderSvg(config, (svg) => {
   svg.fill = null
   svg.stroke = ColorRgb.Black
   svg.strokeWidth = 0.25
+  const center = vec2(svg.width, svg.height).div(2)
 
-  const center = Vector2.random(
-    svg.width * 0.2,
-    svg.width * 0.8,
-    svg.height * 0.2,
-    svg.height * 0.8,
-    rng,
-  )
-  // circumradius is radius of circumcircle
-  // apothem is radius of inscribed circle
-  const circumradius = hypot(svg.width, svg.height) * 0.1
-  const hexagon = new Polygon({
-    points: range(0, 6)
-      .map((i) => (Math.PI / 3) * i)
-      .map((angle) =>
-        center.add(vec2(cos(angle), sin(angle)).multiply(circumradius)),
-      ),
-  })
+  const angleMin = random(-PI, PI, rng)
+  const hexCenter = center.add(vec2(cos(angleMin), sin(angleMin)).multiply(random(center.length() * 0.5, center.length() * 0.9, rng)))
+  const hexagons = [new Hexagon({ center: hexCenter, circumradius: hypot(svg.width, svg.height) * 0.1 })]
+  svg.polygon(hexagons[0])
 
-  svg.polygon(hexagon)
-
-  const nPoints = 100
-  // this is clumsy but works for now
-  const points = new Array(nPoints).fill(0).map(() =>
-    Vector2.random(hexagon.boundingBox.x, hexagon.boundingBox.x + hexagon.boundingBox.width, hexagon.boundingBox.y, hexagon.boundingBox.y + hexagon.boundingBox.height))
-
-  const noise = createOscNoise(seed)
-  for (const point of points) {
-    svg.path(path => {
-      path.moveTo(point)
-      for (let i = 0; i < 100; i++) {
-        const angle = map(-1, 1, -PI, PI, noise(path.cursor.x / 5, path.cursor.y / 5))
-        console.log(noise(path.cursor.x / 10, path.cursor.y / 10))
-        path.lineTo(vec2(cos(angle), sin(angle)), 'relative')
-      }
-    })
+  for (let i = 0; i < 3; i++) {
+    const startHex = randomFromArray(hexagons, rng)
+    const nPoints = 100
+    // this is clumsy but works for now
+    const points = new Array(nPoints).fill(0)
+      .map(() =>
+        Vector2.random(
+          startHex.boundingBox.x,
+          startHex.boundingBox.x + startHex.boundingBox.width,
+          startHex.boundingBox.y,
+          startHex.boundingBox.y + startHex.boundingBox.height,
+          rng
+        )
+      ).filter(point => startHex.contains(point))
+  
+    const noise = createOscNoise(seed)
+    const scale = random(0.05, 0.13, rng)
+    const visited = []
+    for (const point of points) {
+      const pathVisited = []
+      svg.path(path => {
+        path.moveTo(point)
+        for (let i = 0; i < 1000; i++) {
+          const angle = map(-1, 1, angleMin, angleMin + TAU, noise(path.cursor.x * scale, path.cursor.y * scale))
+          const next = path.cursor.add(vec2(cos(angle), sin(angle)))
+          if (nearAnyPoint(next, visited, 0.4)) {
+            break
+          }
+          path.lineTo(next, 'absolute')
+  
+          // add new hexagons as needed
+          if (!insideAnyHexagon(path.cursor, hexagons)) {
+            for (let i = 0; i < hexagons.length; i++) {
+              for (const hex of hexagons[i].neighbors()) {
+                if (hex.contains(path.cursor)) {
+                  hexagons.push(hex)
+                  svg.polygon(hex)
+                  i = hexagons.length
+                  break
+                }
+              }
+            }
+          }
+          pathVisited.push(path.cursor)
+        }
+      })
+      visited.push(...pathVisited)
+    }
   }
+
 
   return () => {
     seed = randomSeed()
   }
 })
+
+function nearAnyPoint(point, others, padding = 0.1) {
+  for (const other of others) {
+    if (point.distanceTo(other) < padding) {
+      return true
+    }
+  }
+  return false
+}
+
+function insideAnyHexagon(point, hexagons) {
+  for (const hex of hexagons) {
+    if (hex.contains(point)) {
+      return true
+    }
+  }
+  return false
+}

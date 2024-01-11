@@ -1,0 +1,20 @@
+title: Genuary 2024 Day 10
+imageSeries:
+  # /c_scale,w_500
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1704946347/art/240110-Genuary2024_10-alt1_2024-01-11T04-09-25-749Z-seed-2469707569356721.svg_xntciu.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1704946347/art/240110-Genuary2024_10-alt1_2024-01-11T04-09-25-749Z-seed-2469707569356721.svg_xntciu.png
+
+description: >
+  #Genuary day 10! https://genuary.art/prompts#jan10
+  <br><br>
+  <blockquote>
+  JAN. 10 (credit: greweb)
+  <br>
+  Hexagonal
+  </blockquote>
+  <br>
+
+sourceCodeLinks:
+  - https://github.com/ericyd/generative-art/blob/32511f4d99989f89172e1ed22426858bc3cd709e/homegrown-svg/sketch/240110-Genuary2024_10-alt1.js
+
+createdAt: 2024-01-10

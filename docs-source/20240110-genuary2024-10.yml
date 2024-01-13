@@ -1,6 +1,12 @@
 title: Genuary 2024 Day 10
 imageSeries:
   # /c_scale,w_500
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1705178933/art/240113-Genuary2024_10-alt3_2024-01-13T20-47-04-183Z-seed-3045808483684873.svg_hzr8gz.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1705178933/art/240113-Genuary2024_10-alt3_2024-01-13T20-47-04-183Z-seed-3045808483684873.svg_hzr8gz.png
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1705178931/art/240113-Genuary2024_10-alt3_2024-01-13T20-47-32-698Z-seed-2258639052875117.svg_nxbtuj.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1705178931/art/240113-Genuary2024_10-alt3_2024-01-13T20-47-32-698Z-seed-2258639052875117.svg_nxbtuj.png
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1705178932/art/240113-Genuary2024_10-alt3_2024-01-13T20-47-45-036Z-seed-718344516212305.svg_ok3lts.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1705178932/art/240113-Genuary2024_10-alt3_2024-01-13T20-47-45-036Z-seed-718344516212305.svg_ok3lts.png
   - src: https://res.cloudinary.com/ericyd/image/upload/v1704946347/art/240110-Genuary2024_10-alt1_2024-01-11T04-09-25-749Z-seed-2469707569356721.svg_xntciu.png
     srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1704946347/art/240110-Genuary2024_10-alt1_2024-01-11T04-09-25-749Z-seed-2469707569356721.svg_xntciu.png
 
@@ -16,5 +22,6 @@ description: >
 
 sourceCodeLinks:
   - https://github.com/ericyd/generative-art/blob/32511f4d99989f89172e1ed22426858bc3cd709e/homegrown-svg/sketch/240110-Genuary2024_10-alt1.js
+  - https://github.com/ericyd/generative-art/blob/2a8afca61bb4e9b16114796bdef5e2d49fe76c5f/homegrown-svg/sketch/240113-Genuary2024_10-alt3.js
 
 createdAt: 2024-01-10

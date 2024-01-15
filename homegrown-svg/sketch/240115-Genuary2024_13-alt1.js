@@ -1,11 +1,11 @@
 /**
- * Genuary 2024, Day 10
+ * Genuary 2024, Day 13
  * https://genuary.art/prompts
  *
  * """
- * JAN. 10 (credit: greweb)
+ * JAN. 13
  *
- * Hexagonal.
+ * Wobbly functions
  * """
  */
 import { renderSvg, map, vec2, randomSeed, createRng, Vector2, random, circle, ColorRgb, randomFromArray, rect, hypot, Grid, range, hsl, lineSegment, Rectangle, randomInt, PI, cos, sin, clamp, ColorSequence, shuffle, Polygon, rangeWithIndex, createOscNoise, Hexagon, TAU, path, polyline, Polyline, createOscCurl } from '@salamivg/core'

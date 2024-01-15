@@ -29,7 +29,8 @@
   },
   "dependencies": {
     "@salamivg/core": "file:../salamivg",
-    "husky": "^4.3.8"
+    "husky": "^4.3.8",
+    "matter-js": "^0.19.0"
   },
   "husky": {
     "hooks": {

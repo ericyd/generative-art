@@ -14,20 +14,26 @@ const config = {
   width: 100,
   height: 100,
   scale: 10,
-  loopCount: 1,
+  loopCount: 10,
 }
 
 let seed = randomSeed()
-seed = 3831459812932491
 
 renderSvg(config, (svg) => {
   svg.filenameMetadata = { seed }
   const rng = createRng(seed)
-  const bg = ColorRgb.fromHex('#E9EFF2')
-  svg.setBackground(bg)
+  const grad = svg.defineLinearGradient({
+    colors: [
+      '#eaceed',
+      '#f7cbad',
+    ],
+  })
+  svg.setBackground(grad)
 
   svg.numericPrecision = 3
-  const noiseFn = createOscCurl(seed, 0.1)
+  const angleMin = random(-PI, PI, rng)
+  const noiseFn = createOscCurl(seed)
+  const noiseFn2 = createOscNoise(seed)
 
   const spectrum = new ColorSequence([
     [0.1, ColorRgb.fromHex('#3C73A3')],
@@ -46,16 +52,17 @@ renderSvg(config, (svg) => {
   const points = new Array(nPoints).fill(0)
     .map(() => Vector2.random(0, svg.width, 0, svg.height, rng))
 
-  const scale = random(0.03, 0.06, rng)
+  const scale = random(0.02, 0.04, rng)
   const visited = []
-  const padding = 0.55
+  const padding = 0.85
  
   for (const startPoint of points) {
     let cursor = startPoint.jitter(0.3, rng)
     const color = spectrum.at(random(0, 1, rng))
 
     for (let i = 0; i < 100; i++) {
-      const vec = noiseFn(cursor.x * scale, cursor.y * scale)
+      const angle = map(-1, 1, angleMin, angleMin + TAU, noiseFn2(cursor.x * scale, cursor.y * scale))
+      const vec = noiseFn(cursor.x * scale, cursor.y * scale).add(vec2(cos(angle), sin(angle)))
       const next = cursor.add(vec)
       if (!nearAnyPoint(next, visited, padding)) {
         svg.circle({ x: next.x, y: next.y, r: padding / 3, fill: color, stroke: color })

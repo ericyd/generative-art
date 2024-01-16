@@ -1,0 +1,21 @@
+title: Genuary 2024 Day 16
+imageSeries:
+  # /c_scale,w_500
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1705426222/art/240116-Genuary2024_16_2024-01-16T17-24-20-849Z-seed-6536093506434323-visted-10000.svg_xkafmk.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1705426222/art/240116-Genuary2024_16_2024-01-16T17-24-20-849Z-seed-6536093506434323-visted-10000.svg_xkafmk.png
+  
+description: >
+  #Genuary day 16! https://genuary.art/prompts
+  <br><br>
+  <blockquote>
+  JAN. 16 (credit: Bruce Holmer & Michael Lowe)
+  <br>
+  Draw 10 000 of something.
+  </blockquote>
+  <br>
+  This is a riff on my Jan 13 post.
+
+sourceCodeLinks:
+  - https://github.com/ericyd/generative-art/blob/353d4a870684a8aa48800d12910ad3105a4f06be/homegrown-svg/sketch/240116-Genuary2024_16.js
+
+createdAt: 2024-01-16

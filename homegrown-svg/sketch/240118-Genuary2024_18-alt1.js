@@ -17,7 +17,7 @@ const config = {
   loopCount: 10,
 }
 
-let seed = 7118028728691427 // randomSeed()
+let seed = 8480248560592589 // randomSeed()
 
 const colors = [
   '#72AAD2',
@@ -57,16 +57,18 @@ renderSvg(config, (svg) => {
   svg.filenameMetadata = { seed }
   const rng = createRng(seed)
   const bg = '#F6E2BA'
-  svg.setBackground(bg) // #eda is also nice
+  svg.setBackground(bg)
   svg.numericPrecision = 3
 
   const gridSize = 8
   for (const [position] of new Grid({ columnCount: gridSize, rowCount: gridSize })) {
-    const center = position.multiply(svg.width / gridSize).add(vec2(svg.width / gridSize / 2, svg.height / gridSize / 2))
-    const orientation = randomFromObject(orientations, rng)
-    const radius = svg.width / gridSize / 2
-    const shape = semiCircle(center, orientation, radius, rng)
-    svg.path(shape.path)
+    for (let i = 0; i < 2; i++) {
+      const center = position.multiply(svg.width / gridSize).add(vec2(svg.width / gridSize / 2, svg.height / gridSize / 2))
+      const orientation = randomFromObject(orientations, rng)
+      const radius = svg.width / gridSize / 2
+      const shape = semiCircle(center, orientation, radius, rng)
+      svg.path(shape.path)
+    }
   }
 
   return () => { seed = randomSeed() }  

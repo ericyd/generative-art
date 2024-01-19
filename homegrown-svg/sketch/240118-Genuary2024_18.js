@@ -7,6 +7,8 @@
  *
  * Bauhaus.
  * """
+ * 
+ * This sketch ended up not really working, but this one (homegrown-svg/sketch/240118-Genuary2024_18-alt1.js) is quite nice
  */
 import { renderSvg, map, vec2, randomSeed, createRng, Vector2, random, circle, ColorRgb, randomFromArray, rect, hypot, Grid, range, hsl, lineSegment, Rectangle, randomInt, PI, cos, sin, clamp, ColorSequence, shuffle, Polygon, rangeWithIndex, createOscNoise, Hexagon, TAU, path, polyline, Polyline, createOscCurl, randomFromObject, PHI } from '@salamivg/core'
 

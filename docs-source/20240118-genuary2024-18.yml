@@ -1,0 +1,21 @@
+title: Genuary 2024 Day 18
+imageSeries:
+  # /c_scale,w_500
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1705629061/art/240118-Genuary2024_18-alt1_2024-01-19T01-48-25-039Z-seed-8480248560592589.svg_j1bzoc.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1705629061/art/240118-Genuary2024_18-alt1_2024-01-19T01-48-25-039Z-seed-8480248560592589.svg_j1bzoc.png
+  
+description: >
+  #Genuary day 18! https://genuary.art/prompts
+  <br><br>
+  <blockquote>
+  JAN. 18 (credit: Chris Barber)
+  <br>
+  Bauhaus
+  </blockquote>
+  <br>
+  I tried to do something incredible and eventually it just wasn't working and I had to scale it back to a simpler design. I'm still happy with the result 😊
+
+sourceCodeLinks:
+  - https://github.com/ericyd/generative-art/blob/8b82cf3b657c02dd212cd407e4af82ac649cbfea/homegrown-svg/sketch/240118-Genuary2024_18-alt1.js
+
+createdAt: 2024-01-18

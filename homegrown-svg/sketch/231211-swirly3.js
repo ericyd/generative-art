@@ -60,7 +60,7 @@ renderSvg(config, (svg) => {
   circles.sort((a, b) => a.y < b.y ? 1 : a.y > b.y ? -1 : 0)
   
   const contour = path(p => {
-    p.moveTo(circles[0].center().add(vec2(Math.cos(angle) * circles[0].radius, Math.sin(angle) * circles[0].radius)))
+    p.moveTo(circles[0].center.add(vec2(Math.cos(angle) * circles[0].radius, Math.sin(angle) * circles[0].radius)))
     for (let i = 1; i < circles.length; i++) {
       const next = circles[i]
       const current = circles[i - 1]
@@ -83,7 +83,7 @@ renderSvg(config, (svg) => {
       // There is an issue where landing on the target circle is not exactly the angle we'd expect.
       // Therefore, to be "extra" sure that we're testing the correct direction, we add 3 degrees to the current angle to test it
       const someDegrees = (Math.PI / 180) * 3
-      const nextPositivePoint = current.center().add(vec2(Math.cos(angle + someDegrees) * current.radius, Math.sin(angle + someDegrees) * current.radius))
+      const nextPositivePoint = current.center.add(vec2(Math.cos(angle + someDegrees) * current.radius, Math.sin(angle + someDegrees) * current.radius))
       const angularDerivative = Math.atan2(nextPositivePoint.y - p.cursor.y, nextPositivePoint.x - p.cursor.x)
       const smallestPositiveRotation = smallestAngularDifference(previousTangentAngle, angularDerivative)
       let rotation = Math.abs(smallestPositiveRotation) < Math.PI / 2
@@ -94,7 +94,7 @@ renderSvg(config, (svg) => {
       for (angle; rotation === 1 ? angle < target : angle > target; angle += (0.05 * rotation)) {
         previousPoint = p.cursor
         p.lineTo(
-          current.center().add(vec2(Math.cos(angle) * current.radius, Math.sin(angle) * current.radius)),
+          current.center.add(vec2(Math.cos(angle) * current.radius, Math.sin(angle) * current.radius)),
         )
 
         const closeTangents = tangents.filter(([smallPoint, largePoint, tangentAngle]) => {

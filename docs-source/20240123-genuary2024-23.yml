@@ -1,0 +1,20 @@
+title: Genuary 2024 Day 23
+imageSeries:
+  # /c_scale,w_500
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1706030568/art/240119-Genuary2024_23-alt1_2024-01-23T17-18-39-713Z-seed-2567865651087179.svg_abenmz.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1706030568/art/240119-Genuary2024_23-alt1_2024-01-23T17-18-39-713Z-seed-2567865651087179.svg_abenmz.png
+  
+description: >
+  #Genuary day 23! https://genuary.art/prompts
+  <br><br>
+  <blockquote>
+  JAN. 23 (credit: Marc Edwards)
+  <br>
+  8x8
+  </blockquote>
+  <br>
+
+sourceCodeLinks:
+  - https://github.com/ericyd/generative-art/blob/1ba9707c7193409280352831bd1e1669025fde8f/homegrown-svg/sketch/240123-Genuary2024_23-alt1.js
+
+createdAt: 2024-01-23

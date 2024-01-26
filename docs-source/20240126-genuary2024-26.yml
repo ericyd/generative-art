@@ -1,0 +1,23 @@
+title: Genuary 2024 Day 26
+imageSeries:
+  # /c_scale,w_500
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1706296535/art/240126-Genuary2024_26_2024-01-26T19-12-15-855Z-seed-7597300052541357-maxDepth-5.svg_heeicm.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1706296535/art/240126-Genuary2024_26_2024-01-26T19-12-15-855Z-seed-7597300052541357-maxDepth-5.svg_heeicm.png
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1706296534/art/240126-Genuary2024_26_2024-01-26T19-12-20-307Z-seed-7196228887045077-maxDepth-4.svg_ucsohs.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1706296534/art/240126-Genuary2024_26_2024-01-26T19-12-20-307Z-seed-7196228887045077-maxDepth-4.svg_ucsohs.png
+  
+description: >
+  #Genuary day 26! https://genuary.art/prompts
+  <br><br>
+  <blockquote>
+  JAN. 26 (credit: Monokai)
+  <br>
+  Grow a seed.
+  </blockquote>
+  <br>
+  A recursive tree-building algorithm
+
+sourceCodeLinks:
+  - https://github.com/ericyd/generative-art/blob/b161387f1275574e2ff42850443b7557444fe656/homegrown-svg/sketch/240126-Genuary2024_26.js
+
+createdAt: 2024-01-26

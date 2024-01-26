@@ -38,7 +38,7 @@ renderSvg(config, (svg) => {
   const noiseFn = createOscCurl(seed)
   const noiseFn2 = createOscNoise(seed)
 
-  const spectrum = ColorSequence.fromHexes(shuffle([
+  const spectrum = ColorSequence.fromColors(shuffle([
     '#E8BD67',
     '#D9713D',
     '#CBCFE8',

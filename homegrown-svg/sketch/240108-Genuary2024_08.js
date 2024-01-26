@@ -53,7 +53,7 @@ renderSvg(config, (svg) => {
   svg.stroke = ColorRgb.Black
   svg.strokeWidth = 0.5
 
-  const spectrum = ColorSequence.fromHexes(shuffle(colors, rng))
+  const spectrum = ColorSequence.fromColors(shuffle(colors, rng))
 
   const nLines = randomInt(15, 25, rng)
   for (const i of range(0, nLines)) {

@@ -15,7 +15,7 @@ description: >
   Grow a seed.
   </blockquote>
   <br>
-  A recursive tree-building algorithm
+  A recursive tree-building algorithm, using quadratic bezier curves for the "branches".
 
 sourceCodeLinks:
   - https://github.com/ericyd/generative-art/blob/b161387f1275574e2ff42850443b7557444fe656/homegrown-svg/sketch/240126-Genuary2024_26.js

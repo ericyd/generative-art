@@ -1,0 +1,23 @@
+title: Genuary 2024 Day 27
+imageSeries:
+  # /c_scale,w_500
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1706302213/art/240127-Genuary2024_27_2024-01-26T20-41-19-516Z-seed-8852037180828291-maxDepth-8.svg_nftckq.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1706302213/art/240127-Genuary2024_27_2024-01-26T20-41-19-516Z-seed-8852037180828291-maxDepth-8.svg_nftckq.png
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1706302212/art/240127-Genuary2024_27_2024-01-26T20-41-06-081Z-seed-7640603347606109-maxDepth-7.svg_ooezdu.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1706302212/art/240127-Genuary2024_27_2024-01-26T20-41-06-081Z-seed-7640603347606109-maxDepth-7.svg_ooezdu.png
+  
+description: >
+  #Genuary day 27! https://genuary.art/prompts
+  <br><br>
+  <blockquote>
+  JAN. 27 (credit: Amy Goodchild)
+  <br>
+  Code for one hour. At the one hour mark, you're done.
+  </blockquote>
+  <br>
+  I spent about 29 minutes coding this one - very happy with the result! That said, I spent at least 30-60 minutes thinking about it before hand 😁
+
+sourceCodeLinks:
+  - https://github.com/ericyd/generative-art/blob/946953736e2fa9ce10b91016390ff92636b20c2e/homegrown-svg/sketch/240126-Genuary2024_27.js
+
+createdAt: 2024-01-27

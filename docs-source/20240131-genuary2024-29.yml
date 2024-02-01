@@ -1,0 +1,21 @@
+title: Genuary 2024 Day 29
+imageSeries:
+  # /c_scale,w_500
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1706757293/art/240129-Genuary2024_29_2024-01-31T17-55-41-126Z-seed-3016182276706477.svg_t1nkwc.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1706757293/art/240129-Genuary2024_29_2024-01-31T17-55-41-126Z-seed-3016182276706477.svg_t1nkwc.png
+  
+description: >
+  #Genuary day 29! https://genuary.art/prompts
+  <br><br>
+  <blockquote>
+  JAN. 29 (credit: Melissa Wiederrecht & Camille Roux)
+  <br>
+  Signed Distance Functions (if we keep trying once per year, eventually we will be good at it!).
+  </blockquote>
+  <br>
+  This was my first time trying to use a signed distance function. Weird outcome, but I was pretty happy with it.
+
+sourceCodeLinks:
+  - https://github.com/ericyd/generative-art/blob/4357cda0f375e32f982f126f0ac7e7131b89ea02/homegrown-svg/sketch/240129-Genuary2024_29.js
+
+createdAt: 2024-01-31

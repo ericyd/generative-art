@@ -1,13 +1,34 @@
 import { renderSvg, map, vec2, randomSeed, createRng, Vector2, random, circle, ColorRgb, randomFromArray, rect, hypot, Grid, range, hsl, lineSegment, Rectangle, randomInt, PI, cos, sin, clamp, ColorSequence, shuffle, Polygon, rangeWithIndex, createOscNoise, Hexagon, TAU, path, polyline, Polyline, createOscCurl, randomFromObject, PHI, LineSegment, Circle, Svg, ColorHsl } from '@salamivg/core'
 
+/**
+ * - I want a line or sequence of points which "snakes through" the hex grid
+ * - Rules for the "snake":
+ *    1. Cannot visit a "side" (l, r, t) more than once
+ *    2. Can only travel to "adjacent" sides of neighbors, or unoccupied sides of self
+ *    3. Adjacent sides of neighbors are defined as
+ *      - top is adjacent to left and right of neighbor on top
+ *      - left is adjacent to right of left neighbor, and top of bottom neighbor
+ *      - right is adjacent to left of right neighbor, and top of bottom neighbor
+ *    4. Snake enters a side perpendicular to it's edge, accounting for perspective
+ *    5. Snake can change angles anywhere inside of the side/face that it is currently in
+ *      - Snake can also go straight, e.g. from left to right of same SplitHex
+ *    6. Snake should try to touch all hexes
+ *    7. Snake enters from boundary of sketch, and moves straight until it hits the edge of the first hex
+ */
+
+
 const config = {
   width: 800,
   height: 800,
   scale: 1,
-  loopCount: 10,
+  loopCount: 1,
 }
 
 let seed = randomSeed()
+// seed = 8211922090159339
+let snakeSeed = randomSeed()
+// snakeSeed = 4992160343199125
+// snakeSeed = 2391314494864797
 
 const colors = [
   '785A96',
@@ -20,7 +41,7 @@ const colors = [
   '9D689C',
 ].map(h => ColorRgb.fromHex(h).toHsl())
 
-const bg = '#1E1D1D'
+const stroke = '#1E1D1D'
 
 /**
  * props: l = left, r = right, t = top
@@ -237,26 +258,9 @@ class SplitHex {
   }
 }
 
-renderSvg(config, (svg) => {
-  const grad = svg.defineLinearGradient({
-    stops: [
-      [0.2, ColorRgb.fromHex('#332C2B')],
-      // [0.5, ColorRgb.fromHex('#332C2B')],
-      // [0.51, ColorRgb.fromHex('#332C2B').mix(ColorRgb.fromHex('#ffffff'), 0.3)],
-      [0.8, ColorRgb.fromHex('#332C2B').mix(ColorRgb.fromHex('#ffffff'), 0.35)],
-    ]
-  })
-
+function buildGrid(strokeWidth) {
   const rng = createRng(seed)
-  svg.filenameMetadata = { seed }
-  svg.numericPrecision = 3
-  svg.fill = grad
-  svg.stroke = grad
-  svg.setBackground(grad)
-  svg.setAttributes({'stroke-linecap': 'round'})
-
   const n = 5
-  const strokeWidth = 4
   const xStart = config.width * 0.15
   const xEnd = config.width * 0.85
   const xRange = xEnd - xStart
@@ -271,7 +275,7 @@ renderSvg(config, (svg) => {
     // offset x by "apothem" so they are staggered appopriately
     const x = map(0, n-1, xStart + apothem, xEnd + apothem, i)
     // offset y by "circumradius * 1.5" so the edges line up
-    row.push(new SplitHex(vec2(x, config.height/2 - circumradius * 1.5), rng, circumradius, strokeWidth, bg))
+    row.push(new SplitHex(vec2(x, config.height/2 - circumradius * 1.5), rng, circumradius, strokeWidth, stroke))
   }
   grid.push(row)
 
@@ -279,38 +283,39 @@ renderSvg(config, (svg) => {
   row = []
   for (let i = 0; i < n; i++) {
     const x = map(0, n-1, xStart, xEnd, i)
-    row.push(new SplitHex(vec2(x, config.height/2), rng, circumradius, strokeWidth, bg))
+    row.push(new SplitHex(vec2(x, config.height/2), rng, circumradius, strokeWidth, stroke))
   }
   grid.push(row)
 
   row = []
   for (let i = 0; i < n-1; i++) {
     const x = map(0, n-1, xStart + apothem, xEnd + apothem, i)
-    row.push(new SplitHex(vec2(x, config.height/2 + circumradius * 1.5), rng, circumradius, strokeWidth, bg))
+    row.push(new SplitHex(vec2(x, config.height/2 + circumradius * 1.5), rng, circumradius, strokeWidth, stroke))
   }
   grid.push(row)
+  return grid
+}
 
-  for (const row of grid) {
-    for (const hex of row) {
-      hex.draw(svg)
-    }
-  }
+renderSvg(config, (svg) => {
+  const grad = svg.defineLinearGradient({
+    stops: [
+      [0.2, ColorRgb.fromHex('#332C2B')],
+      // [0.5, ColorRgb.fromHex('#332C2B')],
+      // [0.51, ColorRgb.fromHex('#332C2B').mix(ColorRgb.fromHex('#ffffff'), 0.3)],
+      [0.8, ColorRgb.fromHex('#332C2B').mix(ColorRgb.fromHex('#ffffff'), 0.35)],
+    ]
+  })
 
-  /**
-   * - I want a line or sequence of points which "snakes through" the hex grid
-   * - Rules for the "snake":
-   *    1. Cannot visit a "side" (l, r, t) more than once
-   *    2. Can only travel to "adjacent" sides of neighbors, or unoccupied sides of self
-   *    3. Adjacent sides of neighbors are defined as
-   *      - top is adjacent to left and right of neighbor on top
-   *      - left is adjacent to right of left neighbor, and top of bottom neighbor
-   *      - right is adjacent to left of right neighbor, and top of bottom neighbor
-   *    4. Snake enters a side perpendicular to it's edge, accounting for perspective
-   *    5. Snake can change angles anywhere inside of the side/face that it is currently in
-   *      - Snake can also go straight, e.g. from left to right of same SplitHex
-   *    6. Snake should try to touch all hexes
-   *    7. Snake enters from boundary of sketch, and moves straight until it hits the edge of the first hex
-   */
+  const rng = createRng(snakeSeed)
+  svg.filenameMetadata = { seed, snakeSeed }
+  svg.numericPrecision = 3
+  // svg.fill = grad
+  // svg.stroke = grad
+  svg.setBackground(grad)
+  svg.setAttributes({'stroke-linecap': 'round'})
+
+  const strokeWidth = 4
+  const grid = buildGrid(strokeWidth)
 
   const Dir = {
     l: 'left',
@@ -318,81 +323,67 @@ renderSvg(config, (svg) => {
     t: 'top',
   }
 
+  const allowDoubleVisits = snakeSeed % 3 === 0
+
   const eligibleFaces = (pos, sort = true) => {
     // it's a little hard to explain why this is necessary - it has to do with the hexagon grid and transforming it to a square grid
     // every 2 rows get "virtually offset" by 1 to the right
     const xAdjust = (y) => Math.floor(y / 2)
 
+    let maybe = []
+
     if (pos.face === Dir.l) {
-      const maybe = [
+      maybe = [
         { x: pos.x, y: pos.y, face: Dir.r },
         { x: pos.x, y: pos.y, face: Dir.t },
         { x: pos.x - xAdjust(pos.y + 1), y: pos.y + 1, face: Dir.t },
         { x: pos.x - 1, y: pos.y, face: Dir.r },
       ]
-
-      let results = maybe.filter(m => {
-        const cell = grid[m.y]?.[m.x]
-        return !(cell?.taken.includes(m.face) ?? true)
-      });
-      if (!sort) return results
-      // sort decending by number of eligible faces, so we get the "best" option first
-      results = results
-        .map(m => ({ ...m, count: eligibleFaces(m, false).length }))
-        .sort((a,b) =>  a.count > b.count ? -1 : a.count < b.count ? 1 : 0);
-      // only take options with the maximal number of eligible faces
-      return results.filter(m => m.count >= results[0].count)
     }
 
     if (pos.face === Dir.r) {
-      const maybe = [
+      maybe = [
         { x: pos.x, y: pos.y, face: Dir.l },
         { x: pos.x, y: pos.y, face: Dir.t },
         { x: pos.x + 1 - xAdjust(pos.y + 1), y: pos.y + 1, face: Dir.t },
         { x: pos.x + 1, y: pos.y, face: Dir.l },
       ]
-
-      let results = maybe.filter(m => {
-        const cell = grid[m.y]?.[m.x]
-        return !(cell?.taken.includes(m.face) ?? true)
-      });
-      if (!sort) return results
-      results = results
-        .map(m => ({ ...m, count: eligibleFaces(m, false).length }))
-        .sort((a,b) =>  a.count > b.count ? -1 : a.count < b.count ? 1 : 0);
-      return results.filter(m => m.count >= results[0].count)
     }
 
     if (pos.face === Dir.t) {
-      const maybe = [
+      maybe = [
         { x: pos.x, y: pos.y, face: Dir.l },
         { x: pos.x, y: pos.y, face: Dir.r },
         { x: pos.x + xAdjust(pos.y), y: pos.y - 1, face: Dir.l },
         { x: pos.x - 1 + xAdjust(pos.y), y: pos.y - 1, face: Dir.r },
       ]
-      let results = maybe.filter(m => {
-        const cell = grid[m.y]?.[m.x]
-        return !(cell?.taken.includes(m.face) ?? true)
-      });
-      if (!sort) return results
-      results = results
-        .map(m => ({ ...m, count: eligibleFaces(m, false).length }))
-        .sort((a,b) =>  a.count > b.count ? -1 : a.count < b.count ? 1 : 0);
-      return results.filter(m => m.count >= results[0].count)
     }
-  }
 
-  const snakeStops = shuffle(colors).map((c, i) => 
-    [i / (colors.length - 1), c]
-  )
-  const snakeStroke = svg.defineLinearGradient({
-    stops: snakeStops
-  })
+    let results = maybe
+      .filter(m => {
+        const cell = grid[m.y]?.[m.x]
+
+        if (allowDoubleVisits) {
+          return !!cell
+        } else {
+          return !(cell?.taken.includes(m.face) ?? true)
+        }
+      });
+
+    if (!sort || allowDoubleVisits) return results
+    results = results
+      .map(m => ({ ...m, count: eligibleFaces(m, false).length }))
+      .sort((a,b) =>  a.count > b.count ? -1 : a.count < b.count ? 1 : 0);
+    return results.filter(m => m.count >= results[0].count)
+  }
 
   // for test, start in top left hext, `l` face
   const snake = path(p => {
     p.fill = null
-    p.stroke = bg
+    // p.stroke = stroke
+    // const shadow = new ColorRgb(0.9, 0.9, 0.9, 0.99).toString()
+    p.stroke = '#eeeeee'
+    const shadow = new ColorRgb(0.05, 0.05, 0.05, 0.99).toString()
     p.strokeWidth = strokeWidth
 
 
@@ -400,10 +391,9 @@ renderSvg(config, (svg) => {
     const blur = 5
     const yOffset = 0
     const xOffset = 0
-    const color = new ColorRgb(0.9, 0.9, 0.9, 0.99).toString()
     p.setAttributes({
       'stroke-linejoin': 'round', // miter, round, bevel, miter-clip, arcs
-      style: `filter: drop-shadow( ${xOffset}px ${yOffset}px ${blur}px ${color});`,
+      style: `filter: drop-shadow( ${xOffset}px ${yOffset}px ${blur}px ${shadow});`,
     }) 
 
     // start position
@@ -412,7 +402,8 @@ renderSvg(config, (svg) => {
     grid[pos.y][pos.x].taken.push(pos.face)
     
     let count = 0
-    while (count++ < 30) {
+    const max = allowDoubleVisits ? 100 : 300
+    while (count++ < max) {
       const next = randomFromArray(eligibleFaces(pos), rng)
       if (!next) break;
       
@@ -437,8 +428,14 @@ renderSvg(config, (svg) => {
     }
   })
 
+  // draw everything
+  for (const row of grid) {
+    for (const hex of row) {
+      hex.draw(svg)
+    }
+  }
   svg.path(snake)
 
 
-  return () => { seed = randomSeed() }
+  return () => { seed = randomSeed(); snakeSeed = randomSeed(); }
 })

@@ -22,6 +22,7 @@ const config = {
   height: 800,
   scale: 1,
   loopCount: 1,
+  // openEveryFrame: false
 }
 
 let seed = randomSeed()
@@ -258,22 +259,27 @@ class SplitHex {
   }
 }
 
-function buildGrid(strokeWidth) {
+const Dir = {
+  l: 'left',
+  r: 'right',
+  t: 'top',
+}
+
+function buildGrid(strokeWidth, nWide) {
   const rng = createRng(seed)
-  const n = 5
   const xStart = config.width * 0.15
   const xEnd = config.width * 0.85
   const xRange = xEnd - xStart
-  const apothem = xRange / (n - 1) / 2 // trial-and-error 🤷
+  const apothem = xRange / (nWide - 1) / 2 // trial-and-error 🤷
   const circumradius = (apothem * 2) / Math.sqrt(3) // from salamivg Hexagon.js
 
   const grid = []
 
   // top row
   let row = []
-  for (let i = 0; i < n-1; i++) {
+  for (let i = 0; i < nWide-1; i++) {
     // offset x by "apothem" so they are staggered appopriately
-    const x = map(0, n-1, xStart + apothem, xEnd + apothem, i)
+    const x = map(0, nWide-1, xStart + apothem, xEnd + apothem, i)
     // offset y by "circumradius * 1.5" so the edges line up
     row.push(new SplitHex(vec2(x, config.height/2 - circumradius * 1.5), rng, circumradius, strokeWidth, stroke))
   }
@@ -281,15 +287,15 @@ function buildGrid(strokeWidth) {
 
   // center row - has one extra
   row = []
-  for (let i = 0; i < n; i++) {
-    const x = map(0, n-1, xStart, xEnd, i)
+  for (let i = 0; i < nWide; i++) {
+    const x = map(0, nWide-1, xStart, xEnd, i)
     row.push(new SplitHex(vec2(x, config.height/2), rng, circumradius, strokeWidth, stroke))
   }
   grid.push(row)
 
   row = []
-  for (let i = 0; i < n-1; i++) {
-    const x = map(0, n-1, xStart + apothem, xEnd + apothem, i)
+  for (let i = 0; i < nWide-1; i++) {
+    const x = map(0, nWide-1, xStart + apothem, xEnd + apothem, i)
     row.push(new SplitHex(vec2(x, config.height/2 + circumradius * 1.5), rng, circumradius, strokeWidth, stroke))
   }
   grid.push(row)
@@ -314,68 +320,11 @@ renderSvg(config, (svg) => {
   svg.setBackground(grad)
   svg.setAttributes({'stroke-linecap': 'round'})
 
+  // primary parameters
   const strokeWidth = 4
-  const grid = buildGrid(strokeWidth)
-
-  const Dir = {
-    l: 'left',
-    r: 'right',
-    t: 'top',
-  }
-
+  const nWide = 5
   const allowDoubleVisits = snakeSeed % 3 === 0
-
-  const eligibleFaces = (pos, sort = true) => {
-    // it's a little hard to explain why this is necessary - it has to do with the hexagon grid and transforming it to a square grid
-    // every 2 rows get "virtually offset" by 1 to the right
-    const xAdjust = (y) => Math.floor(y / 2)
-
-    let maybe = []
-
-    if (pos.face === Dir.l) {
-      maybe = [
-        { x: pos.x, y: pos.y, face: Dir.r },
-        { x: pos.x, y: pos.y, face: Dir.t },
-        { x: pos.x - xAdjust(pos.y + 1), y: pos.y + 1, face: Dir.t },
-        { x: pos.x - 1, y: pos.y, face: Dir.r },
-      ]
-    }
-
-    if (pos.face === Dir.r) {
-      maybe = [
-        { x: pos.x, y: pos.y, face: Dir.l },
-        { x: pos.x, y: pos.y, face: Dir.t },
-        { x: pos.x + 1 - xAdjust(pos.y + 1), y: pos.y + 1, face: Dir.t },
-        { x: pos.x + 1, y: pos.y, face: Dir.l },
-      ]
-    }
-
-    if (pos.face === Dir.t) {
-      maybe = [
-        { x: pos.x, y: pos.y, face: Dir.l },
-        { x: pos.x, y: pos.y, face: Dir.r },
-        { x: pos.x + xAdjust(pos.y), y: pos.y - 1, face: Dir.l },
-        { x: pos.x - 1 + xAdjust(pos.y), y: pos.y - 1, face: Dir.r },
-      ]
-    }
-
-    let results = maybe
-      .filter(m => {
-        const cell = grid[m.y]?.[m.x]
-
-        if (allowDoubleVisits) {
-          return !!cell
-        } else {
-          return !(cell?.taken.includes(m.face) ?? true)
-        }
-      });
-
-    if (!sort || allowDoubleVisits) return results
-    results = results
-      .map(m => ({ ...m, count: eligibleFaces(m, false).length }))
-      .sort((a,b) =>  a.count > b.count ? -1 : a.count < b.count ? 1 : 0);
-    return results.filter(m => m.count >= results[0].count)
-  }
+  const grid = buildGrid(strokeWidth, nWide)
 
   // for test, start in top left hext, `l` face
   const snake = path(p => {
@@ -385,7 +334,6 @@ renderSvg(config, (svg) => {
     p.stroke = '#eeeeee'
     const shadow = new ColorRgb(0.05, 0.05, 0.05, 0.99).toString()
     p.strokeWidth = strokeWidth
-
 
     // hm, might need to play with these more
     const blur = 5
@@ -397,14 +345,15 @@ renderSvg(config, (svg) => {
     }) 
 
     // start position
-    let pos = {x:0, y:1, face: Dir.l}
+    let pos = startPos(grid, rng)
+    if (pos.y === 2) { console.log(pos) }
     p.moveTo(grid[pos.y][pos.x].findFaceCenter(pos.face))
     grid[pos.y][pos.x].taken.push(pos.face)
     
     let count = 0
     const max = allowDoubleVisits ? 100 : 300
     while (count++ < max) {
-      const next = randomFromArray(eligibleFaces(pos), rng)
+      const next = randomFromArray(eligibleFaces(grid, pos, allowDoubleVisits), rng)
       if (!next) break;
       
       const hex = grid[pos.y]?.[pos.x]
@@ -439,3 +388,71 @@ renderSvg(config, (svg) => {
 
   return () => { seed = randomSeed(); snakeSeed = randomSeed(); }
 })
+
+function startPos(grid, rng) {
+  // return {x:0, y:1, face: Dir.l}
+  const y = randomInt(0, grid.length, rng)
+  if (y === 0 || y === grid.length - 1) {
+    const x = randomInt(0, grid[y].length, rng)
+    const dirOptions = y === 0 ? [Dir.l, Dir.r, Dir.t] : [Dir.l, Dir.r]
+    const face = randomFromArray(dirOptions, rng)
+    return { x, y, face }
+  } else {
+    const x = randomFromArray([0, grid[y].length - 1], rng)
+    const dirOptions = x === 0 ? [Dir.l, Dir.t] : [Dir.r, Dir.t]
+    const face = randomFromArray(dirOptions, rng)
+    return { x, y, face }
+  }
+}
+
+function eligibleFaces(grid, pos, allowDoubleVisits, sort = true) {
+  // it's a little hard to explain why this is necessary - it has to do with the hexagon grid and transforming it to a square grid
+  // every 2 rows get "virtually offset" by 1 to the right
+  const xAdjust = (y) => Math.floor(y / 2)
+
+  let maybe = []
+
+  if (pos.face === Dir.l) {
+    maybe = [
+      { x: pos.x, y: pos.y, face: Dir.r },
+      { x: pos.x, y: pos.y, face: Dir.t },
+      { x: pos.x - xAdjust(pos.y + 1), y: pos.y + 1, face: Dir.t },
+      { x: pos.x - 1, y: pos.y, face: Dir.r },
+    ]
+  }
+
+  if (pos.face === Dir.r) {
+    maybe = [
+      { x: pos.x, y: pos.y, face: Dir.l },
+      { x: pos.x, y: pos.y, face: Dir.t },
+      { x: pos.x + 1 - xAdjust(pos.y + 1), y: pos.y + 1, face: Dir.t },
+      { x: pos.x + 1, y: pos.y, face: Dir.l },
+    ]
+  }
+
+  if (pos.face === Dir.t) {
+    maybe = [
+      { x: pos.x, y: pos.y, face: Dir.l },
+      { x: pos.x, y: pos.y, face: Dir.r },
+      { x: pos.x + xAdjust(pos.y), y: pos.y - 1, face: Dir.l },
+      { x: pos.x - 1 + xAdjust(pos.y), y: pos.y - 1, face: Dir.r },
+    ]
+  }
+
+  let results = maybe
+    .filter(m => {
+      const cell = grid[m.y]?.[m.x]
+
+      if (allowDoubleVisits) {
+        return !!cell
+      } else {
+        return !(cell?.taken.includes(m.face) ?? true)
+      }
+    });
+
+  if (!sort || allowDoubleVisits) return results
+  results = results
+    .map(m => ({ ...m, count: eligibleFaces(grid, m, allowDoubleVisits, false).length }))
+    .sort((a,b) =>  a.count > b.count ? -1 : a.count < b.count ? 1 : 0);
+  return results.filter(m => m.count >= results[0].count)
+}

@@ -1,6 +1,10 @@
 import { renderSvg, map, vec2, randomSeed, createRng, Vector2, random, circle, ColorRgb, randomFromArray, rect, hypot, Grid, range, hsl, lineSegment, Rectangle, randomInt, PI, cos, sin, clamp, ColorSequence, shuffle, Polygon, rangeWithIndex, createOscNoise, Hexagon, TAU, path, polyline, Polyline, createOscCurl, randomFromObject, PHI, LineSegment, Circle, Svg, ColorHsl } from '@salamivg/core'
 
 /**
+ * To any possible future readers of this code -- it is super ugly and shitty!
+ * I hope you're not trying to emulate it because this is absolutely awful code.
+ * It works but it is really hard to read and convoluted.
+ * 
  * - I want a line or sequence of points which "snakes through" the hex grid
  * - Rules for the "snake":
  *    1. Cannot visit a "side" (l, r, t) more than once
@@ -21,7 +25,7 @@ const config = {
   width: 800,
   height: 800,
   scale: 1,
-  loopCount: 1,
+  loopCount: 10,
   // openEveryFrame: false
 }
 
@@ -266,6 +270,8 @@ const Dir = {
 }
 
 function buildGrid(strokeWidth, nWide) {
+  let nTall = Math.max(3, nWide - 2)
+  if (nTall % 2 === 0) { nTall++ }
   const rng = createRng(seed)
   const xStart = config.width * 0.15
   const xEnd = config.width * 0.85
@@ -275,30 +281,37 @@ function buildGrid(strokeWidth, nWide) {
 
   const grid = []
 
-  // top row
-  let row = []
-  for (let i = 0; i < nWide-1; i++) {
-    // offset x by "apothem" so they are staggered appopriately
-    const x = map(0, nWide-1, xStart + apothem, xEnd + apothem, i)
-    // offset y by "circumradius * 1.5" so the edges line up
-    row.push(new SplitHex(vec2(x, config.height/2 - circumradius * 1.5), rng, circumradius, strokeWidth, stroke))
+  for (let iRow = 0; iRow < nTall; iRow++) {
+    const isEvenRow = iRow % 2 === 0
+    const row = []
+    // alternate row counts so the hex grid is staggered
+    const nHexes = isEvenRow ? nWide - 1 : nWide
+    for (let i = 0; i < nHexes; i++) {
+      // offset x by "apothem" so they are staggered appopriately
+      const xOffset = isEvenRow ? apothem : 0
+      const x = map(0, nWide - 1, xStart + xOffset, xEnd + xOffset, i)
+      // offset y by "circumradius * 1.5" so the edges line up
+      const y = map(0, nTall - 1, config.height/2 - circumradius * 1.5 * Math.floor(nTall/2), config.height/2 + circumradius * 1.5 * Math.floor(nTall/2), iRow)
+      row.push(new SplitHex(vec2(x, y), rng, circumradius, strokeWidth, stroke))
+    }
+    grid.push(row)
   }
-  grid.push(row)
 
-  // center row - has one extra
-  row = []
-  for (let i = 0; i < nWide; i++) {
-    const x = map(0, nWide-1, xStart, xEnd, i)
-    row.push(new SplitHex(vec2(x, config.height/2), rng, circumradius, strokeWidth, stroke))
-  }
-  grid.push(row)
 
-  row = []
-  for (let i = 0; i < nWide-1; i++) {
-    const x = map(0, nWide-1, xStart + apothem, xEnd + apothem, i)
-    row.push(new SplitHex(vec2(x, config.height/2 + circumradius * 1.5), rng, circumradius, strokeWidth, stroke))
-  }
-  grid.push(row)
+  // // center row - has one extra
+  // row = []
+  // for (let i = 0; i < nWide; i++) {
+  //   const x = map(0, nWide-1, xStart, xEnd, i)
+  //   row.push(new SplitHex(vec2(x, config.height/2), rng, circumradius, strokeWidth, stroke))
+  // }
+  // grid.push(row)
+
+  // row = []
+  // for (let i = 0; i < nWide-1; i++) {
+  //   const x = map(0, nWide-1, xStart + apothem, xEnd + apothem, i)
+  //   row.push(new SplitHex(vec2(x, config.height/2 + circumradius * 1.5), rng, circumradius, strokeWidth, stroke))
+  // }
+  // grid.push(row)
   return grid
 }
 
@@ -322,7 +335,8 @@ renderSvg(config, (svg) => {
 
   // primary parameters
   const strokeWidth = 4
-  const nWide = 5
+  // TODO: there is a bug in "eligibleFaces" when more than 3 rows exist
+  const nWide = 5 // randomInt(4, 9, rng)
   const allowDoubleVisits = snakeSeed % 3 === 0
   const grid = buildGrid(strokeWidth, nWide)
 
@@ -333,7 +347,7 @@ renderSvg(config, (svg) => {
     // const shadow = new ColorRgb(0.9, 0.9, 0.9, 0.99).toString()
     p.stroke = '#eeeeee'
     const shadow = new ColorRgb(0.05, 0.05, 0.05, 0.99).toString()
-    p.strokeWidth = strokeWidth
+    p.strokeWidth = random(3, 9, rng)
 
     // hm, might need to play with these more
     const blur = 5
@@ -346,8 +360,10 @@ renderSvg(config, (svg) => {
 
     // start position
     let pos = startPos(grid, rng)
-    if (pos.y === 2) { console.log(pos) }
-    p.moveTo(grid[pos.y][pos.x].findFaceCenter(pos.face))
+    const startEdge = edgePos(pos, grid, rng)
+    p.moveTo(startEdge)
+
+    p.lineTo(grid[pos.y][pos.x].findFaceCenter(pos.face))
     grid[pos.y][pos.x].taken.push(pos.face)
     
     let count = 0
@@ -375,6 +391,9 @@ renderSvg(config, (svg) => {
 
       pos = next
     }
+
+    const endEdge = edgePos(pos, grid, rng)
+    if (endEdge) { p.lineTo(endEdge) }
   })
 
   // draw everything
@@ -390,11 +409,19 @@ renderSvg(config, (svg) => {
 })
 
 function startPos(grid, rng) {
-  // return {x:0, y:1, face: Dir.l}
   const y = randomInt(0, grid.length, rng)
-  if (y === 0 || y === grid.length - 1) {
+  if (y === 0) {
     const x = randomInt(0, grid[y].length, rng)
-    const dirOptions = y === 0 ? [Dir.l, Dir.r, Dir.t] : [Dir.l, Dir.r]
+    // top can be any on the edges, only top in center
+    const dirOptions = x === 0 || x === grid[y].length
+      ? [Dir.l, Dir.r, Dir.t]
+      : [Dir.t]
+    const face = randomFromArray(dirOptions, rng)
+    return { x, y, face }
+  } else if (y === grid.length - 1) {
+    const x = randomInt(0, grid[y].length, rng)
+    // bottom can be left or right
+    const dirOptions = [Dir.l, Dir.r]
     const face = randomFromArray(dirOptions, rng)
     return { x, y, face }
   } else {
@@ -455,4 +482,69 @@ function eligibleFaces(grid, pos, allowDoubleVisits, sort = true) {
     .map(m => ({ ...m, count: eligibleFaces(grid, m, allowDoubleVisits, false).length }))
     .sort((a,b) =>  a.count > b.count ? -1 : a.count < b.count ? 1 : 0);
   return results.filter(m => m.count >= results[0].count)
+}
+
+function edgePos(pos, grid, rng) {
+  if (isInternal(pos, grid)) {
+    return null
+  }
+
+  let angle = 0
+  let face = pos.face === Dir.t ? 'tFaceCenter' : pos.face === Dir.l ? 'lFaceCenter' : 'rFaceCenter'
+
+  // bottom row
+  if (pos.y === grid.length - 1) {
+    angle = PI/2
+  }
+
+  // middle rows
+  else if (pos.y !== 0) {
+    // angle upwards
+    angle = pos.x === 0 ? PI * 7/6 : PI * -1/6
+  }
+
+  // top row
+  else {
+    if (pos.face === Dir.t) {
+      angle = randomFromArray([PI * 7/6, PI * 11/6], rng)
+    }
+
+    else if (pos.face === Dir.l) {
+      if (pos.x !== 0) {
+        angle = PI * 3 / 2
+      } else {
+        angle = randomFromArray([PI * 7/6, PI * 5/6], rng)
+      }
+    }
+
+    else {
+      if (pos.x !== grid[0].length - 1) {
+        angle = PI * 3 / 2
+      } else {
+        angle = randomFromArray([PI * 11/6, PI * 1/6], rng)
+      }
+    }
+  }
+
+  return grid[pos.y][pos.x][face].add(Vector2.fromAngle(angle).scale(config.width))
+}
+
+function isInternal(pos, grid) {
+  // on top row, everything is in play (not always ideal depending on the direction of the last line, but it's fine)
+  if (pos.y === 0) {
+    return false
+  }
+
+  // on the bottom row, the top face is internal
+  if (pos.y === grid.length - 1) {
+    return pos.face === Dir.t
+  }
+
+  // on left side, the right face is internal
+  if (pos.x === 0) {
+    return pos.face === Dir.r
+  }
+
+  // on right side, the left face is internal
+  return pos.face === Dir.l
 }

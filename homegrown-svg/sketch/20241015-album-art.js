@@ -291,27 +291,18 @@ function buildGrid(strokeWidth, nWide) {
       const xOffset = isEvenRow ? apothem : 0
       const x = map(0, nWide - 1, xStart + xOffset, xEnd + xOffset, i)
       // offset y by "circumradius * 1.5" so the edges line up
-      const y = map(0, nTall - 1, config.height/2 - circumradius * 1.5 * Math.floor(nTall/2), config.height/2 + circumradius * 1.5 * Math.floor(nTall/2), iRow)
+      const y = map(
+        0,
+        nTall - 1,
+        config.height/2 - circumradius * 1.5 * Math.floor(nTall/2),
+        config.height/2 + circumradius * 1.5 * Math.floor(nTall/2),
+        iRow
+      )
       row.push(new SplitHex(vec2(x, y), rng, circumradius, strokeWidth, stroke))
     }
     grid.push(row)
   }
 
-
-  // // center row - has one extra
-  // row = []
-  // for (let i = 0; i < nWide; i++) {
-  //   const x = map(0, nWide-1, xStart, xEnd, i)
-  //   row.push(new SplitHex(vec2(x, config.height/2), rng, circumradius, strokeWidth, stroke))
-  // }
-  // grid.push(row)
-
-  // row = []
-  // for (let i = 0; i < nWide-1; i++) {
-  //   const x = map(0, nWide-1, xStart + apothem, xEnd + apothem, i)
-  //   row.push(new SplitHex(vec2(x, config.height/2 + circumradius * 1.5), rng, circumradius, strokeWidth, stroke))
-  // }
-  // grid.push(row)
   return grid
 }
 
@@ -328,8 +319,6 @@ renderSvg(config, (svg) => {
   const rng = createRng(snakeSeed)
   svg.filenameMetadata = { seed, snakeSeed }
   svg.numericPrecision = 3
-  // svg.fill = grad
-  // svg.stroke = grad
   svg.setBackground(grad)
   svg.setAttributes({'stroke-linecap': 'round'})
 
@@ -404,27 +393,31 @@ renderSvg(config, (svg) => {
   }
   svg.path(snake)
 
-
   return () => { seed = randomSeed(); snakeSeed = randomSeed(); }
 })
 
 function startPos(grid, rng) {
   const y = randomInt(0, grid.length, rng)
+  // top can be any on the edges, only top in center
   if (y === 0) {
     const x = randomInt(0, grid[y].length, rng)
-    // top can be any on the edges, only top in center
     const dirOptions = x === 0 || x === grid[y].length
       ? [Dir.l, Dir.r, Dir.t]
       : [Dir.t]
     const face = randomFromArray(dirOptions, rng)
     return { x, y, face }
-  } else if (y === grid.length - 1) {
+  }
+  
+  // bottom can be left or right
+  else if (y === grid.length - 1) {
     const x = randomInt(0, grid[y].length, rng)
-    // bottom can be left or right
     const dirOptions = [Dir.l, Dir.r]
     const face = randomFromArray(dirOptions, rng)
     return { x, y, face }
-  } else {
+  }
+  
+  // middle can be left/top on the left side, or right/top on right side
+  else {
     const x = randomFromArray([0, grid[y].length - 1], rng)
     const dirOptions = x === 0 ? [Dir.l, Dir.t] : [Dir.r, Dir.t]
     const face = randomFromArray(dirOptions, rng)
@@ -492,18 +485,17 @@ function edgePos(pos, grid, rng) {
   let angle = 0
   let face = pos.face === Dir.t ? 'tFaceCenter' : pos.face === Dir.l ? 'lFaceCenter' : 'rFaceCenter'
 
-  // bottom row
+  // bottom row always points downwards
   if (pos.y === grid.length - 1) {
     angle = PI/2
   }
 
-  // middle rows
+  // middle rows always angle upwards
   else if (pos.y !== 0) {
-    // angle upwards
     angle = pos.x === 0 ? PI * 7/6 : PI * -1/6
   }
 
-  // top row
+  // top row usually angles upwards, but sometimes goes straight up, or even angles downwards
   else {
     if (pos.face === Dir.t) {
       angle = randomFromArray([PI * 7/6, PI * 11/6], rng)

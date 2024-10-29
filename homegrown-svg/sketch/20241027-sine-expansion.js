@@ -11,11 +11,17 @@ const config = {
   width: 800,
   height: 800,
   scale: 1,
-  loopCount: 10,
+  loopCount: 15,
   // openEveryFrame: false
 }
 
 let seed = randomSeed()
+// seed = 8180884357964691
+// seed = 7391022712813691
+// seed = 5651293227607627
+// seed = 92306707012873
+// seed = 144379427891799
+// seed = 8599043095752115
 
 const colors = [
   '785A96',
@@ -42,9 +48,10 @@ renderSvg(config, (svg) => {
   /**
    * Parameters
    */
-  const nLines = 600
-  const terminalRandomness = randomFromArray(['low', 'high'], rng)
-  const curveType = randomFromArray(['exponential', 'sinusoidal'], rng)
+  const nLines = 500
+  const curviness = randomFromArray([config.height / 0.25, config.height / 0.1, config.height / 0.35], rng)
+  const curveType = 'sinusoidal' // randomFromArray(['exponential', 'sinusoidal'], rng)
+  const sineCurveAmount = 2 // random(1.8, 2.2, rng)
 
   for (let i = 0; i < nLines; i++) {
     svg.path(p => {
@@ -60,14 +67,12 @@ renderSvg(config, (svg) => {
       let x = config.width / 2 + sin(y * freqStart + phase) * ampStart
       p.moveTo(vec2(x, y))
 
-      const targetAmp = terminalRandomness === 'low'
-        ? random(config.width / PHI / 1.3, config.width / PHI / 1.1, rng)
-        : random(config.width / PHI / 2.4, config.width / PHI / 1.1, rng)
-      const targetPeriod = random(config.height / 0.2, config.height / 0.3, rng)
+      const targetAmp = random(config.width / PHI / 1.5, config.width / PHI / 1.3, rng)
+      const targetPeriod = random(curviness * 0.8, curviness * 1.2, rng)
       
-      const exp = terminalRandomness === 'low'
-      ? random(1.5, 1.9, rng)
-      : random(2.1, 3.5, rng)
+      const exp = curveType === 'exponential'
+        ? random(1.5, 2.4, rng)
+        : random(3.1, 4.5, rng)
 
       // for some reason it seems like the first x is bad... but the second one is good???
       let spectrumIndex = null
@@ -96,6 +101,20 @@ renderSvg(config, (svg) => {
           )
         } else {
           //// sinusoidal amplitude curve
+          amp = map(
+            0,
+            1,
+            ampStart,
+            targetAmp,
+            Math.sin(PI * y / config.height / sineCurveAmount) ** exp,
+          )
+          period = map(
+            0,
+            1,
+            periodStart,
+            targetPeriod,
+            Math.sin(PI * y / config.height / sineCurveAmount) ** exp,
+          )
           //// this curve is interesting because it is has a "double bump", but visually I don't like it as much
           // amp = map(
           //   Math.sin(-PI/2),
@@ -111,20 +130,6 @@ renderSvg(config, (svg) => {
           //   targetPeriod,
           //   Math.sin(PI * (y-config.height/2) / config.height) ** 3,
           // )
-          amp = map(
-            Math.sin(0),
-            Math.sin(PI/2),
-            ampStart,
-            targetAmp,
-            Math.sin(PI * y / config.height / 2) ** exp,
-          )
-          period = map(
-            Math.sin(0),
-            Math.sin(PI/2),
-            periodStart,
-            targetPeriod,
-            Math.sin(PI * y / config.height / 2) ** exp,
-          )
         }
 
         const freq = (2 * Math.PI) / period

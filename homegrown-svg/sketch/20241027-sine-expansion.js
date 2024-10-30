@@ -49,7 +49,7 @@ renderSvg(config, (svg) => {
    * Parameters
    */
   const nLines = 500
-  const curviness = randomFromArray([config.height / 0.25, config.height / 0.1, config.height / 0.35], rng)
+  const curviness = random(config.height / 0.07, config.height / 0.4, rng) // randomFromArray([config.height / 0.25, config.height / 0.1, config.height / 0.35], rng)
   const curveType = 'sinusoidal' // randomFromArray(['exponential', 'sinusoidal'], rng)
   const sineCurveAmount = 2 // random(1.8, 2.2, rng)
 

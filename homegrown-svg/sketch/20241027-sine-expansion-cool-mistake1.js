@@ -16,7 +16,6 @@ const config = {
 }
 
 let seed = randomSeed()
-// seed = 1681020833317955
 // seed = 3629904562570931
 // seed = 6903882123970721
 // seed = 1446312498313953
@@ -47,7 +46,8 @@ renderSvg(config, (svg) => {
   svg.filenameMetadata = { seed }
   svg.numericPrecision = 3
   svg.setBackground(bg)
-  svg.setAttributes({'stroke-linecap': 'round', style: 'transform: rotate(180deg);'})
+  svg.strokeWidth = 5
+  // svg.setAttributes({'stroke-linecap': 'round', style: 'transform: rotate(180deg);'})
   const spectrum = ColorSequence.fromColors(shuffle(colors, rng))
   
   /**
@@ -58,25 +58,24 @@ renderSvg(config, (svg) => {
   const sineCurveAmount = 2 // random(1.8, 2.2, rng)
  
   const center = vec2(config.width, config.height).scale(0.5)
-  const nCircles = 10
+  const nCircles = 5
   for (let i = 0; i < nCircles; i++) {
-    const radius = map(0, nCircles - 1, hypot(center.x, center.y) * 0.25, hypot(center.x, center.y) * 0.75, i)
+    const radius = map(0, nCircles - 1, hypot(center.x, center.y) / 4, hypot(center.x, center.y) / 2, i)
     svg.circle({ center, radius, stroke: ColorRgb.fromHex('#eedc53'), fill: 'none' })
   }
   const maxAmp = config.width / PHI / 1.3
   const maxPeriod = curviness * 1.2
 
-  // this path "covers up" the circles
   svg.path(p => {
     p.fill = bg
-    p.stroke = bg
+    p.stroke = '#fff'
 
     const ampStart = 10
     const periodStart = config.width / 20 // random(config.width / 20, config.width / 10, rng)
     const phase = 0 // random(0, 2 * PI, rng)
     const targetAmp = maxAmp
     const targetPeriod = maxPeriod
-    const exp = 3
+    const exp = 4.5
     let y = config.height + 1
 
     let amp = map(
@@ -143,13 +142,12 @@ renderSvg(config, (svg) => {
       )
       const freq = (2 * Math.PI) / period
       x = config.width / 2 + sin(y * freq + phase) * amp
-      x = ((x - 400) * -1) + 400
       p.lineTo(vec2(x, y))
     }
 
     p.close()
   })
-  
+  return () => { seed = randomSeed(); }
   for (let i = 0; i < nLines; i++) {
     svg.path(p => {
       p.fill = null

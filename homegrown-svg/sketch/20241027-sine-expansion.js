@@ -61,7 +61,7 @@ renderSvg(config, (svg) => {
   const nCircles = 10
   for (let i = 0; i < nCircles; i++) {
     const radius = map(0, nCircles - 1, hypot(center.x, center.y) * 0.25, hypot(center.x, center.y) * 0.75, i)
-    svg.circle({ center, radius, stroke: ColorRgb.fromHex('#eedc53'), fill: 'none' })
+    svg.circle({ center, radius, stroke: ColorRgb.fromHex('#eedc53'), fill: 'none', 'stroke-width': 2 })
   }
   const maxAmp = config.width / PHI / 1.3
   const maxPeriod = curviness * 1.2

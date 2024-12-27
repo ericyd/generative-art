@@ -16,17 +16,9 @@ const config = {
 }
 
 let seed = randomSeed()
-// seed = 1681020833317955
-// seed = 3629904562570931
-// seed = 6903882123970721
-// seed = 1446312498313953
-// seed = 6672370654924951
-// seed = 8180884357964691
-// seed = 7391022712813691
-// seed = 5651293227607627
-// seed = 92306707012873
-// seed = 144379427891799
-// seed = 8599043095752115
+// seed = 7752683482142645
+// seed = 4675473297851789
+// seed = 5942214124469463
 
 const colors = [
   '785A96',
@@ -58,9 +50,9 @@ renderSvg(config, (svg) => {
   const sineCurveAmount = 2 // random(1.8, 2.2, rng)
  
   const center = vec2(config.width, config.height).scale(0.5)
-  const nCircles = 10
+  const nCircles = 5
   for (let i = 0; i < nCircles; i++) {
-    const radius = map(0, nCircles - 1, hypot(center.x, center.y) * 0.25, hypot(center.x, center.y) * 0.75, i)
+    const radius = map(0, nCircles - 1, hypot(center.x, center.y) * 0.3, hypot(center.x, center.y) * 0.6, i)
     svg.circle({ center, radius, stroke: ColorRgb.fromHex('#eedc53'), fill: 'none', 'stroke-width': 2 })
   }
   const maxAmp = config.width / PHI / 1.3

@@ -1,0 +1,17 @@
+title: Hex packing and tracing
+imageSeries:
+  # /c_scale,w_500
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1736612767/art/hex-packing-tracing-2_rbdgqu.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1736612767/art/hex-packing-tracing-2_rbdgqu.png
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1736612769/art/hex-packing-tracing-1_rr0yfs.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1736612769/art/hex-packing-tracing-1_rr0yfs.png
+  
+description: >
+  This was originally going to be album art for my new album, but I ended up liking a different design better.
+  Unfortunately the path finding algorithm is as brute force as they come, no cleverness at all.
+  It works, unless you have more than 3 rows of hexagons.
+
+sourceCodeLinks:
+  - https://github.com/ericyd/generative-art/blob/b24c5e595a73841195e47c2f9b86294a1fc56f8d/homegrown-svg/sketch/20241015-hex-packing-tracing.js
+
+createdAt: 2025-01-11

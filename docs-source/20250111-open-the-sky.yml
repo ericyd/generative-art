@@ -1,0 +1,19 @@
+title: Open the Sky album art
+imageSeries:
+  # /c_scale,w_500
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1736613385/art/Album_art_2024-12-29_at_14-05-43_v8aiby.jpg
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1736613385/art/Album_art_2024-12-29_at_14-05-43_v8aiby.jpg
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1736613335/art/sine-expansion-7752683482142645_iyj3sc.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1736613335/art/sine-expansion-7752683482142645_iyj3sc.png
+  - src: https://res.cloudinary.com/ericyd/image/upload/v1736613338/art/sine-expansion-4675473297851789_hoqg2d.png
+    srcSmall: https://res.cloudinary.com/ericyd/image/upload/c_scale,w_500/v1736613338/art/sine-expansion-4675473297851789_hoqg2d.png
+  
+description: >
+  My newest EP, [Open the Sky](https://ericyd.com/music/) is now available on major streaming platforms!
+  This is the album art for this release, including a few variations.
+  I had a lot of fun making this one, I'm always amazed what the humble sine wave can do!
+
+sourceCodeLinks:
+  - https://github.com/ericyd/generative-art/blob/a820c5f7b94f5216c64b1d2f9b70ff7a4999296e/homegrown-svg/sketch/20241027-sine-expansion.js
+
+createdAt: 2025-01-11

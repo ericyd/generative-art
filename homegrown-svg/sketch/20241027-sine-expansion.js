@@ -16,7 +16,7 @@ const config = {
 }
 
 let seed = randomSeed()
-// seed = 7752683482142645
+// seed = 7752683482142645 // needs: `const maxPeriod = curvindss * 0.8;` `const phase = PI*1.25;`
 // seed = 4675473297851789
 // seed = 5942214124469463
 
@@ -56,7 +56,7 @@ renderSvg(config, (svg) => {
     svg.circle({ center, radius, stroke: ColorRgb.fromHex('#eedc53'), fill: 'none', 'stroke-width': 2 })
   }
   const maxAmp = config.width / PHI / 1.3
-  const maxPeriod = curviness * 1.2
+  const maxPeriod = seed === 7752683482142645 ? curviness * 0.8 : curviness * 1.2
 
   // this path "covers up" the circles
   svg.path(p => {
@@ -65,7 +65,7 @@ renderSvg(config, (svg) => {
 
     const ampStart = 10
     const periodStart = config.width / 20 // random(config.width / 20, config.width / 10, rng)
-    const phase = 0 // random(0, 2 * PI, rng)
+    const phase = seed === 7752683482142645 ? PI * 1.25 : 0 // random(0, 2 * PI, rng)
     const targetAmp = maxAmp
     const targetPeriod = maxPeriod
     const exp = 3

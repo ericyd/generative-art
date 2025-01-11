@@ -25,15 +25,20 @@ const config = {
   width: 800,
   height: 800,
   scale: 1,
-  loopCount: 10,
+  loopCount: 1,
   // openEveryFrame: false
 }
 
 let seed = randomSeed()
-// seed = 8211922090159339
 let snakeSeed = randomSeed()
 // snakeSeed = 4992160343199125
 // snakeSeed = 2391314494864797
+
+// seed = 5718411477433695
+// snakeSeed = 5064432954259233
+
+// seed = 8211922090159339
+// snakeSeed = 1203830363292797
 
 const colors = [
   '785A96',

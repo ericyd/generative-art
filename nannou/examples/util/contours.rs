@@ -142,7 +142,7 @@ pub fn connect_contour_segments(mut segments: Vec<Deque2>) -> Vec<Deque2> {
   let mut contour_lines = vec![];
 
   'outer: loop {
-    // grab random segment
+    // grab arbitrary segment
     match segments.pop() {
       None => break 'outer,
       Some(mut line) => {

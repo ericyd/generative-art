@@ -76,7 +76,7 @@ renderSvg(config, (svg) => {
   const ts = calcTriangles(noise, g)
   console.log(ts.length, 'triangles')
 
-  const nThresholds = 10
+  const nThresholds = 30
   const thresholds = Array(nThresholds).fill(0).map((_, i) => map(0, nThresholds - 1, -zScale, zScale, i))
   console.log('calculating contours')
   // this MUST be flatMapped to ensure we get an unordered list of contour segments for the given threshold

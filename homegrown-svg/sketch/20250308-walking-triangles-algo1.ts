@@ -46,19 +46,6 @@ const config = {
 let seed = randomSeed()
 seed = 5823994192365817
 
-const colors = [
-  '785A96',
-  'E4BF70',
-  'B2C566',
-  '6887A1',
-  'CC7171',
-  'E2A554',
-  'A4CAC8',
-  '9D689C',
-].map(h => ColorRgb.fromHex(h).toHsl())
-
-const bg = '#332C2B'
-
 renderSvg(config, (svg) => {
 
   const rng = createRng(seed)

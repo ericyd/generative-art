@@ -1,0 +1,47 @@
+
+```
+docker pull badlandsmodel/badlands
+
+docker run -it -p 8888:8888 -v "$PWD":/live/share badlandsmodel/badlands
+```
+
+Navigate to localhost:8888 to see the notebooks.
+
+Open a `ipynb` notebook, and run each cell in order.
+
+When you get to the last step:
+
+```
+model.run_to_time(1000000)
+```
+
+Running it will print outputs such as:
+
+```
+- Writing outputs (1.03 seconds; tNow = 0.0)
+- Writing outputs (0.85 seconds; tNow = 10000.0)
+```
+
+Move files from /workshop/basic/output/** into /share/badlands/basin/**
+
+Download "HDFView": https://www.hdfgroup.org/download-hdfview/
+
+
+
+
+FUCK YES!!!!! FUCKING YES!!!!!!!!!!
+
+1. With HDFView, open the file `h5/tin.time100.hdf5`
+2. Open the "cells" dataset, copy/paste to text file
+3. `processToJSON()`
+  - replace all `\t` with `,`
+  - replace all `\n` with `],\n[`
+  - prepend `[[` to beginning of file
+  - append `]]` to end of file
+  - yes, this could be done in the script file, just hasn't been done yet.
+4. Open the "coords" dataset, copy/paste to text file
+5. `processToJSON()`
+6. Use the algo from `homegrown-svg/sketch/20250310-badlands1.ts` to process. TLDR:
+  - `cells.json` contains triangle definitions, where the indices of each element correspond to the index in the `coords.json` array.
+  - `coords.json` are the spatial vertices in `[x, y, z]` format
+  - Combining these together gives a TIN with the elevations.

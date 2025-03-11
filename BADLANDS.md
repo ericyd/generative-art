@@ -26,7 +26,28 @@ Move files from /workshop/basic/output/** into /share/badlands/basin/**
 
 Download "HDFView": https://www.hdfgroup.org/download-hdfview/
 
+Probably better: Download the hdf5 program directly: https://www.hdfgroup.org/download-hdf5/
 
+The running a command like this: `~/Downloads/HDF_Group/HDF5/1.14.6/bin/./h5dump --dataset cells --noindex tin.time9.hdf5 > cells.txt`
+
+Outputs a file like this:
+```
+HDF5 "tin.time9.hdf5" {
+DATASET "cells" {
+   DATATYPE  H5T_STD_I32LE
+   DATASPACE  SIMPLE { ( 414534, 3 ) / ( 414534, 3 ) }
+   DATA {
+      9398, 4666, 4667,
+      4671, 4672, 9857,
+      4665, 4666, 9317,
+...
+      193322, 214257, 193316
+   }
+}
+}
+```
+
+Maybe I extract the data using a regex/strip and process it as a 1-D array.
 
 
 FUCK YES!!!!! FUCKING YES!!!!!!!!!!

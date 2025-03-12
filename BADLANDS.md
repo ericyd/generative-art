@@ -28,7 +28,19 @@ Download "HDFView": https://www.hdfgroup.org/download-hdfview/
 
 Probably better: Download the hdf5 program directly: https://www.hdfgroup.org/download-hdf5/
 
-The running a command like this: `~/Downloads/HDF_Group/HDF5/1.14.6/bin/./h5dump --dataset cells --noindex tin.time9.hdf5 > cells.txt`
+The running a command like this: 
+
+```shell
+dataset="cells"
+echo "[" > "$dataset.txt"
+~/Downloads/HDF_Group/HDF5/1.14.6/bin/./h5dump --dataset $dataset --noindex tin.time9.hdf5 | rg -Uo 'DATA \{[\n\s0-9,]*}' | rg -v 'DATA \{|\}' >> "$dataset.txt"
+echo "]" >> "$dataset.txt"
+
+dataset="coords"
+echo "[" > "$dataset.txt"
+~/Downloads/HDF_Group/HDF5/1.14.6/bin/./h5dump --dataset $dataset --noindex tin.time9.hdf5 | rg -Uo 'DATA \{[\n\s0-9,.-]*}' | rg -v 'DATA \{|\}' >> "$dataset.txt"
+echo "]" >> "$dataset.txt"
+```
 
 Outputs a file like this:
 ```

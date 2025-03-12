@@ -6,10 +6,10 @@ type IntersectingLine = [Vector2, Vector2]
 type Triangle3 = [Vector3, Vector3, Vector3]
 
 // const file = readFileSync('./flow.time100.hd5.coords.json').toString()
-const coordsFile = readFileSync('./tin.time9.varCanyon.coords.txt').toString().replace(/\t/g, ',').replace(/\n/g, '],\n[')
-const cellsFile = readFileSync('./tin.time9.varCanyon.cells.txt').toString().replace(/\t/g, ',').replace(/\n/g, '],\n[')
-const coords: [number, number, number][] = JSON.parse('[[' + coordsFile + ']]')
-const cells: [number, number, number][] = JSON.parse('[[' + cellsFile + ']]')
+const coordsFile = readFileSync('./coords.txt').toString()
+const cellsFile = readFileSync('./cells.txt').toString()
+const coords: number[] = JSON.parse(coordsFile)
+const cells: number[] = JSON.parse(cellsFile)
 console.log('coords length', coords.length)
 
 
@@ -26,13 +26,13 @@ let yMax = 0
 let zMin = 0
 let zMax = 0
 // calculate the minimum x value by manually looping through coords
-for (let i = 0; i < coords.length; i += 1) {
-  xMin = Math.min(xMin, coords[i][0])
-  xMax = Math.max(xMax, coords[i][0])
-  yMin = Math.min(yMin, coords[i][1])
-  yMax = Math.max(yMax, coords[i][1])
-  zMin = Math.min(zMin, coords[i][2])
-  zMax = Math.max(zMax, coords[i][2])
+for (let i = 0; i < coords.length; i += 3) {
+  xMin = Math.min(xMin, coords[i])
+  xMax = Math.max(xMax, coords[i])
+  yMin = Math.min(yMin, coords[i+1])
+  yMax = Math.max(yMax, coords[i+1])
+  zMin = Math.min(zMin, coords[i+2])
+  zMax = Math.max(zMax, coords[i+2])
 }
 
 
@@ -47,22 +47,49 @@ console.log({
 
 console.log('processing array', Date.now())
 const ts: Triangle3[] = []
-for (let i = 0; i < cells.length; i += 1) {
-  if (cells[i][0] > coords.length || cells[i][1] > coords.length || cells[i][2] > coords.length) {
+for (let i = 0; i < cells.length; i += 3) {
+  if (cells[i] > coords.length || cells[i+1] > coords.length || cells[i+2] > coords.length) {
     console.warn(`cell ${i} contains coordinates outside bounds`)
     continue
   }
 
-  if (cells[i][0] === 0 || cells[i][1] === 0 || cells[i][2] === 0) {
+  if (cells[i] === 0 || cells[i+1] === 0 || cells[i+2] === 0) {
     console.warn(`cell ${i} contains a 0`)
     continue
   }
 
-  const [v1Index, v2Index, v3Index] = cells[i]
+  // cells[i] is the coordinate index for point 1 of the triangle
+  // cells[i] refers to the index in the [num, num, num] array, which has been flattened.
+  // if cells[i] == 900; in the original array it would correspond to index 900-1=899.
+  // in the new array, it corresponds to (900-1)*3
+  // cells[i] used to contain 3 values
+  /**
+   * ORIGINAL
+   * cells[i] = [900, 734, 870]
+   * coords[900] = [3.4, 5.6, 7.8]
+   * coords[734] = [3.4, 5.6, 7.8]
+   * coords[870] = [3.4, 5.6, 7.8]
+   * 
+   * NEW
+   * cells[i] = 900
+   * cells[i+1] = 734
+   * cells[i+2] = 870
+   * coords[900*3] = 3.4
+   * coords[900*3+1] = 5.6
+   * coords[900*3+2] = 7.8
+   * coords[734*3] = 3.4
+   * coords[734*3+1] = 5.6
+   * coords[734*3+2] = 7.8
+   * coords[870*3] = 3.4
+   * coords[870*3+1] = 5.6
+   * coords[870*3+2] = 7.8
+   * 
+   * 
+   */
 
-  const v1 = vec3(...coords[v1Index-1])
-  const v2 = vec3(...coords[v2Index-1])
-  const v3 = vec3(...coords[v3Index-1])
+  const v1 = vec3(coords[(cells[i+0]-1)*3+0], coords[(cells[i+0]-1)*3+1], coords[(cells[i+0]-1)*3+2])
+  const v2 = vec3(coords[(cells[i+1]-1)*3+0], coords[(cells[i+1]-1)*3+1], coords[(cells[i+1]-1)*3+2])
+  const v3 = vec3(coords[(cells[i+2]-1)*3+0], coords[(cells[i+2]-1)*3+1], coords[(cells[i+2]-1)*3+2])
   ts.push([v1, v2, v3])
 }
 console.log('finish processing array', Date.now())
@@ -84,6 +111,16 @@ renderSvg(config, (svg) => {
   svg.numericPrecision = 3
   svg.setBackground('#fff')
   svg.setAttributes({'stroke-linecap': 'round' })
+
+  // TIN only
+  // for (const t of ts) {
+  //   svg.polygon(p => {
+  //     p.points = t.map(t => vec2(t.x, t.y))
+  //     p.fill = null
+  //     p.stroke = '#000'
+  //     p.strokeWidth = 10
+  //   })
+  // }
 
   const connected = getContourPaths({
     contourCount: 50,

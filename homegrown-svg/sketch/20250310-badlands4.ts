@@ -2,8 +2,9 @@ import { renderSvg, map, vec2, randomSeed, createRng, random, circle, ColorRgb, 
 
 import {readFileSync} from 'node:fs'
 
-const coordsFile = readFileSync('./coords.txt').toString()
-const cellsFile = readFileSync('./cells.txt').toString()
+// const file = readFileSync('./flow.time100.hd5.coords.json').toString()
+const coordsFile = readFileSync('./mountain-coords.txt').toString()
+const cellsFile = readFileSync('./mountain-cells.txt').toString()
 const coords: number[] = JSON.parse(coordsFile)
 const cells: number[] = JSON.parse(cellsFile)
 console.log('coords length', coords.length)
@@ -24,7 +25,6 @@ for (let i = 0; i < coords.length; i += 3) {
   zMin = Math.min(zMin, coords[i+2])
   zMax = Math.max(zMax, coords[i+2])
 }
-
 
 console.log({
   minX: xMin,
@@ -92,6 +92,16 @@ const config = {
   scale: 1,
   loopCount: 1,
 }
+const colors = [
+  '785A96',
+  'E4BF70',
+  'B2C566',
+  '6887A1',
+  'CC7171',
+  'E2A554',
+  'A4CAC8',
+  '9D689C',
+].map(h => ColorRgb.fromHex(h).toHsl())
 
 let seed = randomSeed()
 
@@ -101,6 +111,7 @@ renderSvg(config, (svg) => {
   svg.numericPrecision = 3
   svg.setBackground('#fff')
   svg.setAttributes({'stroke-linecap': 'round' })
+  
 
   // TIN only
   // for (const t of ts) {
@@ -115,6 +126,7 @@ renderSvg(config, (svg) => {
   const start = process.hrtime.bigint()
   const thresholdCount = 100
 
+  const spectrum = ColorSequence.fromColors([hsl(340, 0.8, 0.3), hsl(220, 0.8, 0.5)])
   const connected = contoursFromTIN({
     thresholdCount,
     zMin,
@@ -128,11 +140,11 @@ renderSvg(config, (svg) => {
   const diffFormat = diff.slice(0, -9) + '.' + diff.slice(-9)
   console.log(`TIN size: ${ts.length}, Threshold count: ${thresholdCount}, Time: ${diffFormat}s`);
 
-  for (const [_threshold, segmentsList] of connected.entries()) {
+  for (const [threshold, segmentsList] of connected.entries()) {
     for (const segments of segmentsList) {
       const contour = Path.fromPoints(segments, false, 'absolute')
       contour.fill = null
-      contour.stroke = '#000'
+      contour.stroke = spectrum.at(map(zMin, zMax, 0, 1, threshold))
       contour.strokeWidth = 50
       svg.path(contour)
     }

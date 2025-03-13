@@ -31,15 +31,17 @@ Probably better: Download the hdf5 program directly: https://www.hdfgroup.org/do
 The running a command like this: 
 
 ```shell
+file_prefix="stream-power-law"
+
 dataset="cells"
-echo "[" > "$dataset.txt"
-~/Downloads/HDF_Group/HDF5/1.14.6/bin/./h5dump --dataset $dataset --noindex tin.time9.hdf5 | rg -Uo 'DATA \{[\n\s0-9,]*}' | rg -v 'DATA \{|\}' >> "$dataset.txt"
-echo "]" >> "$dataset.txt"
+echo "[" > "$file_prefix-$dataset.txt"
+~/Downloads/HDF_Group/HDF5/1.14.6/bin/./h5dump --dataset $dataset --noindex tin.time9.hdf5 | rg -Uo 'DATA \{[\n\s0-9,]*}' | rg -v 'DATA \{|\}' >> "$file_prefix-$dataset.txt"
+echo "]" >> "$file_prefix-$dataset.txt"
 
 dataset="coords"
-echo "[" > "$dataset.txt"
-~/Downloads/HDF_Group/HDF5/1.14.6/bin/./h5dump --dataset $dataset --noindex tin.time9.hdf5 | rg -Uo 'DATA \{[\n\s0-9,.-]*}' | rg -v 'DATA \{|\}' >> "$dataset.txt"
-echo "]" >> "$dataset.txt"
+echo "[" > "$file_prefix-$dataset.txt"
+~/Downloads/HDF_Group/HDF5/1.14.6/bin/./h5dump --dataset $dataset --noindex tin.time9.hdf5 | rg -Uo 'DATA \{[\n\s0-9e,.-]*}' | rg -v 'DATA \{|\}' >> "$file_prefix-$dataset.txt"
+echo "]" >> "$file_prefix-$dataset.txt"
 ```
 
 Outputs a file like this:

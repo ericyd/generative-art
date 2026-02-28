@@ -134,106 +134,44 @@ renderSvg(config, (svg) => {
 
   svg.layer(drawInscribedCircleLines);
 
-  svg.layer(
-    addRectGroup(
-      vec2(config.width / 20, config.height / 10),
-      gradients.rect1,
-      gradients.rect2,
-      gradients.rect3,
-      gradients.rect4,
-    ),
-  );
-  svg.layer(
-    addRectGroup(
-      vec2((config.width / 20) * 5, (config.height / 10) * 2),
-      gradients.rect5,
-      gradients.rect6,
-      gradients.rect7,
-      gradients.rect8,
-    ),
-  );
-  svg.layer(
-    addRectGroup(
-      vec2((config.width / 20) * 9, (config.height / 10) * 3),
-      gradients.rect9,
-      gradients.rect10,
-      gradients.rect11,
-      gradients.rect12,
-    ),
-  );
+  const rectGroups = [
+    {
+      start: vec2(config.width / 20, config.height / 10),
+      gradients: [
+        gradients.rect1,
+        gradients.rect2,
+        gradients.rect3,
+        gradients.rect4,
+      ],
+    },
+    {
+      start: vec2((config.width / 20) * 5, (config.height / 10) * 2),
+      gradients: [
+        gradients.rect5,
+        gradients.rect6,
+        gradients.rect7,
+        gradients.rect8,
+      ],
+    },
+    {
+      start: vec2((config.width / 20) * 9, (config.height / 10) * 3),
+      gradients: [
+        gradients.rect9,
+        gradients.rect10,
+        gradients.rect11,
+        gradients.rect12,
+      ],
+    },
+  ];
+
+  for (const rectGroup of rectGroups) {
+    svg.layer(addRectGroup(rectGroup.start, rectGroup.gradients));
+  }
 
   // define "film grain" filter, based on Inkscape's "Film grain" filter
   svg.addChild(
     tag("defs", (t) => {
-      // lower is more coarse
-      const coarseness = "0.8";
-
-      t.addChild(
-        tag("filter", (filterTag) => {
-          filterTag.setAttributes({
-            id: "film_gain_filter",
-            x: "0",
-            y: "0",
-            width: "1",
-            height: "1",
-            style: "color-interpolation-filters:sRGB",
-          });
-          filterTag.addChild(
-            tag("feTurbulence", (fe) =>
-              fe.setAttributes({
-                type: "fractalNoise",
-                numOctaves: "3",
-                baseFrequency: coarseness,
-                seed: String(randomSeed()),
-                result: "result0",
-              }),
-            ),
-          );
-          filterTag.addChild(
-            tag("feColorMatrix", (fe) =>
-              fe.setAttributes({
-                result: "result4",
-                values: "0",
-                type: "saturate",
-              }),
-            ),
-          );
-          filterTag.addChild(
-            tag("feComposite", (fe) =>
-              fe.setAttributes({
-                in: "SourceGraphic",
-                in2: "result4",
-                operator: "arithmetic",
-                k1: "1.25",
-                k2: "0.5",
-                k3: "0.5",
-                k4: "0",
-                result: "result2",
-              }),
-            ),
-          );
-          filterTag.addChild(
-            tag("feBlend", (fe) =>
-              fe.setAttributes({
-                result: "result5",
-                mode: "normal",
-                in: "result2",
-                in2: "SourceGraphic",
-              }),
-            ),
-          );
-          filterTag.addChild(
-            tag("feComposite", (fe) =>
-              fe.setAttributes({
-                in: "result5",
-                in2: "SourceGraphic",
-                operator: "in",
-                result: "result3",
-              }),
-            ),
-          );
-        }),
-      );
+      t.addChild(tag("filter", filmGrainFilter));
     }),
   );
 
@@ -258,49 +196,29 @@ renderSvg(config, (svg) => {
   };
 });
 
-function addRectGroup(
-  start: Vector2,
-  gradient1: LinearGradient,
-  gradient2: LinearGradient,
-  gradient3: LinearGradient,
-  gradient4: LinearGradient,
-) {
+function addRectGroup(start: Vector2, gradients: LinearGradient[]) {
   const width = config.width / 3.33333333;
   const height = (config.width * 2) / 3.33333333;
   const borderRadius = width * 0.2;
+
+  const coords = [
+    vec2(start.x, start.y),
+    vec2(start.x + width / 3, start.y),
+    vec2(start.x + width / 3, start.y),
+    vec2(start.x + (width * 2) / 3, start.y),
+  ];
+
   return (tag: Layer) => {
-    tag.rect({
-      x: start.x,
-      y: start.y,
-      width: width,
-      height: height,
-      borderRadius: borderRadius,
-      fill: gradient1,
-    });
-    tag.rect({
-      x: start.x + width / 3,
-      y: start.y,
-      width: width,
-      height: height,
-      borderRadius: borderRadius,
-      fill: gradient2,
-    });
-    tag.rect({
-      x: start.x + width / 3,
-      y: start.y,
-      width: width,
-      height: height,
-      borderRadius: borderRadius,
-      fill: gradient3,
-    });
-    tag.rect({
-      x: start.x + (width * 2) / 3,
-      y: start.y,
-      width: width,
-      height: height,
-      borderRadius: borderRadius,
-      fill: gradient4,
-    });
+    for (let i = 0; i < coords.length; i++) {
+      tag.rect({
+        x: coords[i].x,
+        y: coords[i].y,
+        width: width,
+        height: height,
+        borderRadius: borderRadius,
+        fill: gradients[i],
+      });
+    }
   };
 }
 
@@ -323,4 +241,71 @@ function drawInscribedCircleLines(tag: Layer) {
     tag.lineSegment(line);
     y += stepSize;
   }
+}
+
+function filmGrainFilter(filterTag: Tag) {
+  // lower is more coarse
+  const coarseness = "0.8";
+  filterTag.setAttributes({
+    id: "film_gain_filter",
+    x: "0",
+    y: "0",
+    width: "1",
+    height: "1",
+    style: "color-interpolation-filters:sRGB",
+  });
+  filterTag.addChild(
+    tag("feTurbulence", (fe) =>
+      fe.setAttributes({
+        type: "fractalNoise",
+        numOctaves: "3",
+        baseFrequency: coarseness,
+        seed: String(randomSeed()),
+        result: "result0",
+      }),
+    ),
+  );
+  filterTag.addChild(
+    tag("feColorMatrix", (fe) =>
+      fe.setAttributes({
+        result: "result4",
+        values: "0",
+        type: "saturate",
+      }),
+    ),
+  );
+  filterTag.addChild(
+    tag("feComposite", (fe) =>
+      fe.setAttributes({
+        in: "SourceGraphic",
+        in2: "result4",
+        operator: "arithmetic",
+        k1: "1.25",
+        k2: "0.5",
+        k3: "0.5",
+        k4: "0",
+        result: "result2",
+      }),
+    ),
+  );
+  filterTag.addChild(
+    tag("feBlend", (fe) =>
+      fe.setAttributes({
+        result: "result5",
+        mode: "normal",
+        in: "result2",
+        in2: "SourceGraphic",
+      }),
+    ),
+  );
+  filterTag.addChild(
+    tag("feComposite", (fe) =>
+      fe.setAttributes({
+        in: "result5",
+        in2: "SourceGraphic",
+        operator: "in",
+        result: "result3",
+      }),
+    ),
+  );
 }

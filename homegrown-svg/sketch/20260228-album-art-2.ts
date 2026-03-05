@@ -45,7 +45,7 @@ import {
   tag,
   Tag,
   LinearGradient,
-  Layer,
+  Group,
 } from "@salamivg/core";
 
 const config = {
@@ -132,7 +132,7 @@ renderSvg(config, (svg) => {
   svg.setBackground(gradients.bg);
   svg.setAttributes({ "stroke-linecap": "round" });
 
-  svg.layer(drawInscribedCircleLines);
+  svg.group(drawInscribedCircleLines);
 
   const rectGroups = [
     {
@@ -173,10 +173,10 @@ renderSvg(config, (svg) => {
   );
 
   for (const rectGroup of rectGroups) {
-    svg.layer(addRectGroup(rectGroup.start, rectGroup.gradients));
+    svg.group(addRectGroup(rectGroup.start, rectGroup.gradients));
   }
 
-  // // "Film grain" layer
+  // // "Film grain" Group
   // svg.addChild(
   //   tag("g", (tag) =>
   //     tag.addChild(
@@ -225,7 +225,7 @@ function addRectGroup(start: Vector2, gradients: LinearGradient[]) {
     vec2(start.x + (width * 2) / 3, start.y),
   ];
 
-  return (tag: Layer) => {
+  return (tag: Group) => {
     for (let i = 0; i < coords.length; i++) {
       tag.rect({
         x: coords[i].x,
@@ -240,7 +240,7 @@ function addRectGroup(start: Vector2, gradients: LinearGradient[]) {
   };
 }
 
-function drawInscribedCircleLines(tag: Layer) {
+function drawInscribedCircleLines(tag: Group) {
   const center = vec2(config.width / 2, config.height / 2);
   const radius = config.width * 0.8 * 0.5;
 

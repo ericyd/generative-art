@@ -56,7 +56,24 @@ const config = {
   // openEveryFrame: false
 };
 
+const baseColors = [
+  "#8d42ac77",
+  "#428bac77",
+  "#cc9c43cd",
+  "#4265ac77",
+  "#6dac4277", //
+  "#e4b314ff",
+  "#f67f37d5",
+  "#c8265577",
+  "#a62a2877",
+  "#5e388f87",
+  "#49a58d97", //
+  "#fc8d2fa8",
+];
+
 let seed = randomSeed();
+// #fc8d2fa8 #49a58d97
+seed = 944556595314299;
 
 renderSvg(config, (svg) => {
   const rng = createRng(seed);
@@ -64,110 +81,61 @@ renderSvg(config, (svg) => {
   svg.filenameMetadata = { seed: String(seed) };
   svg.numericPrecision = 3;
 
-  const gradients = {
-    bg: svg.defineLinearGradient({
-      colors: ["#f5b993ff", "#f4de7bfe"],
-    }),
-    rect1: svg.defineLinearGradient({
-      colors: ["#8d42ac77", "#8d42ac00"],
-      start: vec2(0, 0),
-      end: vec2(0.7, 0),
-    }),
-    rect2: svg.defineLinearGradient({
-      colors: ["#428bac77", "#428bac00"],
-      start: vec2(0, 1),
-      end: vec2(0, 0.3),
-    }),
-    rect3: svg.defineLinearGradient({
-      colors: ["#cc9c43cd", "#cc9c4300"],
-      start: vec2(0, 0),
-      end: vec2(0, 0.7),
-    }),
-    rect4: svg.defineLinearGradient({
-      colors: ["#4265ac77", "#4265ac00"],
-      start: vec2(1, 0),
-      end: vec2(0.3, 0),
-    }),
-    rect5: svg.defineLinearGradient({
-      colors: ["#6dac4277", "#6dac4200"],
-      start: vec2(0, 0),
-      end: vec2(0.7, 0),
-    }),
-    rect6: svg.defineLinearGradient({
-      colors: ["#e4b314ff", "#e4b31400"],
-      start: vec2(0, 1),
-      end: vec2(0, 0.3),
-    }),
-    rect7: svg.defineLinearGradient({
-      colors: ["#f67f37d5", "#f67f3700"],
-      start: vec2(0, 0),
-      end: vec2(0, 0.7),
-    }),
-    rect8: svg.defineLinearGradient({
-      colors: ["#c8265577", "#c8265500"],
-      start: vec2(1, 0),
-      end: vec2(0.3, 0),
-    }),
-    rect9: svg.defineLinearGradient({
-      colors: ["#a62a2877", "#a62a2800"],
-      start: vec2(0, 0),
-      end: vec2(0.7, 0),
-    }),
-    rect10: svg.defineLinearGradient({
-      colors: ["#5e388f87", "#5e388f00"],
-      start: vec2(0, 1),
-      end: vec2(0, 0.3),
-    }),
-    rect11: svg.defineLinearGradient({
-      colors: ["#49a58d97", "#49a58d00"],
-      start: vec2(0, 0),
-      end: vec2(0, 0.7),
-    }),
-    rect12: svg.defineLinearGradient({
-      colors: ["#fc8d2fa8", "#fc8d2f00"],
-      start: vec2(1, 0),
-      end: vec2(0.3, 0),
-    }),
-  };
+  const colors = shuffle(baseColors, rng).map(ColorRgb.fromHex);
 
-  svg.setBackground(gradients.bg);
-  svg.setAttributes({ "stroke-linecap": "round" });
+  const bg = svg.defineLinearGradient({
+    colors: ["#f5b993ff", "#f4de7bfe"],
+  });
+  console.log("colors", colors[0].toHex(), colors[1].toHex());
 
-  svg.group(drawInscribedCircleLines);
-
-  const rectGroups = [
-    {
-      start: vec2(config.width / 20, config.height / 10),
-      gradients: [
-        gradients.rect1,
-        gradients.rect2,
-        gradients.rect3,
-        gradients.rect4,
-      ],
-    },
-    {
-      start: vec2((config.width / 20) * 5, (config.height / 10) * 2),
-      gradients: [
-        gradients.rect5,
-        gradients.rect6,
-        gradients.rect7,
-        gradients.rect8,
-      ],
-    },
-    {
-      start: vec2((config.width / 20) * 9, (config.height / 10) * 3),
-      gradients: [
-        gradients.rect9,
-        gradients.rect10,
-        gradients.rect11,
-        gradients.rect12,
-      ],
-    },
+  const gradients = [
+    ...colors.map((color) => {
+      // Randomize start and end vectors for gradient direction
+      // const angle = Math.random() * Math.PI * 2;
+      // const len = 1;
+      // const start = vec2(Math.cos(angle) * len, Math.sin(angle) * len);
+      // const end = vec2(Math.cos(angle + Math.PI) * len, Math.sin(angle + Math.PI) * len);
+      const start = vec2(0, 0);
+      const end = vec2(0, 1);
+      const invert = random(0, 1, rng) > 0.5;
+      return svg.defineLinearGradient({
+        colors: [color, color.opacify(0)],
+        start: invert ? end : start,
+        end: invert ? start : end,
+      });
+    }),
   ];
 
-  for (const rectGroup of rectGroups) {
-    svg.group(addRectGroup(rectGroup.start, rectGroup.gradients));
+  svg.setBackground(bg);
+  svg.setAttributes({ "stroke-linecap": "round" });
+
+  svg.fill = null;
+
+  // start: vec2(config.width / 20, config.height / 10);
+  let i = 0;
+  for (
+    let x = config.width * 0.35;
+    x < config.width * 0.67;
+    x += config.width * 0.025 // let x = 0;
+    // x < config.width;
+  ) // x += config.width * 0.025
+  {
+    const width = config.width / 3.33333333;
+    const height = config.height * 0.5;
+    const borderRadius = width * 0.2;
+    svg.circle(
+      circle({
+        x,
+        y: config.height * 0.5,
+        radius: height / 2,
+        stroke: gradients[i % 2],
+        strokeWidth: config.width * 0.05,
+      }),
+    );
+    i++;
   }
+
+  svg.group(drawInscribedCircleLines);
 
   // define "film grain" filter, based on Inkscape's "Film grain" filter
   svg.addChild(
@@ -196,32 +164,6 @@ renderSvg(config, (svg) => {
     seed = randomSeed();
   };
 });
-
-function addRectGroup(start: Vector2, gradients: LinearGradient[]) {
-  const width = config.width / 3.33333333;
-  const height = (config.width * 2) / 3.33333333;
-  const borderRadius = width * 0.2;
-
-  const coords = [
-    vec2(start.x, start.y),
-    vec2(start.x + width / 3, start.y),
-    vec2(start.x + width / 3, start.y),
-    vec2(start.x + (width * 2) / 3, start.y),
-  ];
-
-  return (tag: Group) => {
-    for (let i = 0; i < coords.length; i++) {
-      tag.rect({
-        x: coords[i].x,
-        y: coords[i].y,
-        width: width,
-        height: height,
-        borderRadius: borderRadius,
-        fill: gradients[i],
-      });
-    }
-  };
-}
 
 function drawInscribedCircleLines(tag: Group) {
   const center = vec2(config.width / 2, config.height / 2);

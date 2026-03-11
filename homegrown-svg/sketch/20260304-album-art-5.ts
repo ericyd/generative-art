@@ -111,31 +111,30 @@ renderSvg(config, (svg) => {
 
   svg.fill = null;
 
-  const radius = config.height * 0.5 * 0.5;
-  // const radius = config.width * 0.8 * 0.5;
-  svg.group(drawInscribedCircleLines(radius));
+  // const radius = config.height * 0.5 * 0.5;
+  const radius = config.width * 0.8 * 0.5;
 
-  // start: vec2(config.width / 20, config.height / 10);
-  let i = 0;
-  for (
-    let x = config.width * 0.35;
-    x < config.width * 0.67;
-    x += config.width * 0.025 // let x = 0; // x += config.width * 0.025 // x < config.width;
-  ) {
-    const width = config.width / 3.33333333;
-    const height = config.height * 0.5;
-    const borderRadius = width * 0.2;
-    svg.circle(
-      circle({
-        x,
-        y: config.height * 0.5,
-        radius,
-        stroke: gradients[i % 2],
-        strokeWidth: config.width * 0.05,
-      })
-    );
-    i++;
+  const centerX = config.width / 2;
+  const centerY = config.height / 2;
+  const numRects = 24;
+  const maxWidth = radius * 2;
+  for (let i = 0; i < numRects; i++) {
+    const t = (i + 1) / numRects;
+    const width = t * maxWidth;
+    const height = radius * 2;
+    const borderRadius = config.width * 0.2;
+    svg.rect((r) => {
+      r.x = centerX - width / 2;
+      r.y = centerY - height / 2;
+      r.width = width;
+      r.height = height;
+      r.borderRadius = borderRadius;
+      r.stroke = gradients[i % 2];
+      r.strokeWidth = config.width * 0.05;
+    });
   }
+
+  svg.group(drawInscribedCircleLines(radius));
 
   // define "film grain" filter, based on Inkscape's "Film grain" filter
   svg.addChild(

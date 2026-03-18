@@ -45,7 +45,8 @@ renderSvg(config, (svg) => {
 
   const radius = config.width * 0.4;
   const center = vec2(config.width / 2, config.height / 2);
-  const ballRadius = 4;
+  const ballRadius = 3;
+  const stepSize = ballRadius * 0.85;
   const gradientAngle = random(0, TAU, rng);
   const projExtent = [
     Math.min(
@@ -67,18 +68,22 @@ renderSvg(config, (svg) => {
     xMax: config.width,
     yMin: 0,
     yMax: config.height,
-    xStep: ballRadius,
-    yStep: ballRadius,
+    xStep: stepSize,
+    yStep: stepSize,
   })) {
-    // discard if (x,y) is outside of circle defined by <radius,center>
-    if (hypot(x - center.x, y - center.y) > radius) {
-      continue;
+    // discard based on position relative to horizontal center
+    if (y > center.y) {
+      // below center: must be inside the circle
+      if (hypot(x - center.x, y - center.y) > radius) continue;
+    } else {
+      // at or above center: allow any dot within the max width (radius * 2)
+      if (Math.abs(x - center.x) > radius) continue;
     }
 
     // discard if chance is lower than threshold
     const discardThreshold = map(
-      config.height * 0.5 - radius,
-      config.height * 0.5 + radius * 0.5,
+      config.height * 0.5 + radius * 1.25,
+      config.height * 0.5 - radius * 1.25,
       0,
       1,
       y
@@ -106,6 +111,8 @@ renderSvg(config, (svg) => {
         radius: ballRadius,
         fill: grad,
         stroke: null,
+        // stroke: baseColor,
+        // strokeWidth: ballRadius * 0.2,
       })
     );
   }

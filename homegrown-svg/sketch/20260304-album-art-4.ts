@@ -113,6 +113,7 @@ renderSvg(config, (svg) => {
 
   const radius = config.height * 0.5 * 0.5;
   // const radius = config.width * 0.8 * 0.5;
+  // svg.group(drawInscribedCircleLines(radius * 1.65));
   svg.group(drawInscribedCircleLines(radius));
 
   // start: vec2(config.width / 20, config.height / 10);
@@ -169,6 +170,7 @@ function drawInscribedCircleLines(radius: number) {
   return (tag: Group) => {
     const center = vec2(config.width / 2, config.height / 2);
 
+    // 0.75
     const strokeWidth = 0.75 * (config.width / 800);
     const stepSize = config.height * 0.006;
 

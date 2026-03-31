@@ -25,6 +25,8 @@ import {
   Random,
   hsl,
   ColorRgb,
+  polyline,
+  path,
 } from "@salamivg/core";
 
 const config = { width: 800, height: 800, scale: 1, loopCount: 1 };
@@ -32,6 +34,7 @@ const config = { width: 800, height: 800, scale: 1, loopCount: 1 };
 const baseColors = ["#88c4e0ff", "#cee5c3ff"];
 
 let seed = randomSeed();
+seed = 8715798022807551;
 
 renderSvg(config, (svg) => {
   const rnd = Random.create(seed);
@@ -47,18 +50,11 @@ renderSvg(config, (svg) => {
   const colors = ColorSequence.fromColors(["#cbebf2ff", "#f4fbfcff"]);
 
   svg.setBackground(
-    svg.defineLinearGradient({ colors: ["#cbebf2ff", "#f4fbfcff"] })
-  );
-
-  svg.addChild(
-    tag("defs", (t) => {
-      // t.addChild(tag("filter", filmGrainFilter));
-      t.addChild(tag("filter", stippleFilter));
-    })
+    svg.defineLinearGradient({ colors: ["#cbebf2ff", "#f4fbfcff"] }),
   );
 
   svg.group(
-    halftoneStipple(rnd, ColorSequence.fromColors(["#ffffff", "#cdcdcd"]))
+    halftoneStipple(rnd, ColorSequence.fromColors(["#ffffff", "#cdcdcd"])),
   );
 
   const radius = config.width * 0.3;
@@ -72,40 +68,44 @@ renderSvg(config, (svg) => {
 
   const yStart = center.y - radius;
   const yEnd = center.y + radius;
-  for (let y = yStart; y < yEnd; y += stepY) {
-    const dy = y - center.y;
-    const halfChord = Math.sqrt(Math.max(0, radius * radius - dy * dy));
-    const xStart = center.x - halfChord;
-    const xEnd = center.x + halfChord;
 
-    for (let x = xStart; x < xEnd * 2; x += stepX) {
-      const t_x = map(xStart, xEnd, 0, 1, x, true);
+  const strokeColor = ColorRgb.fromHex("#0d0d0d81");
+  svg.group((group) => {
+    group.stroke = "rgba(13, 13, 13, 0.5058823529411764)";
+    group.fill = "none";
+    for (let y = yStart; y < yEnd; y += stepY) {
+      const dy = y - center.y;
+      const halfChord = Math.sqrt(Math.max(0, radius * radius - dy * dy));
+      const xStart = center.x - halfChord;
+      const xEnd = center.x + halfChord;
 
-      if (rnd.value(0, 1) < t_x) {
-        continue;
+      let p = path({
+        style: `stroke: rgba(13, 13, 13, 0.5058823529411764)`,
+        strokeWidth: strokeWidth,
+      });
+      p.moveTo(vec2(xStart, y));
+
+      for (let x = xStart; x < xEnd * 2; x += stepX) {
+        const t_x = map(xStart, xEnd, 0, 1, x, true);
+        const offset = noise(x, y) * t_x;
+        const endPoint = vec2(x + stepX, y + offset);
+
+        if (rnd.value(0, 1) < t_x) {
+          p.moveTo(endPoint);
+          continue;
+        }
+
+        // if resulting end point `line.points[1]` is outside the bounds of the circle, skip this line
+        if (hypot(endPoint.x - center.x, endPoint.y - center.y) > radius) {
+          p.moveTo(endPoint);
+          continue;
+        }
+
+        p.lineTo(endPoint);
       }
-
-      const t_y = map(yStart, yEnd, 0, 1, y, true);
-      const offset = noise(x, y) * t_x;
-      // const offset = map(0, 1, 0, config.width * 0.2, t_x ** 3) * t_y;
-
-      const line = lineSegment(
-        vec2(x, y + offset),
-        vec2(x + stepX, y + offset)
-      );
-
-      // if resulting end point `line.points[1]` is outside the bounds of the circle, skip this line
-      if (
-        hypot(line.points[1].x - center.x, line.points[1].y - center.y) > radius
-      ) {
-        continue;
-      }
-
-      line.stroke = "#0d0d0d81";
-      line.strokeWidth = strokeWidth;
-      svg.lineSegment(line);
+      group.path(p);
     }
-  }
+  });
 
   return () => {
     seed = randomSeed();
@@ -137,94 +137,8 @@ function halftoneStipple(rnd: Random, colors: ColorSequence) {
 
           let color = colors.at(map(0, config.height, 0, 1, pos.y));
           r.fill = color.opacify(0.6);
-        })
+        }),
       );
     }
   };
-}
-
-function stippleFilter(filterTag: Tag) {
-  // lower = coarser dots, higher = finer stipple
-  const baseFrequency = "0.4";
-  // Subtle vintage paper texture (current - narrow range, centered)
-  // const tableValues = "0.4 0.45 0.5 0.55 0.6";
-
-  // High contrast stipple dots (wide range)
-  // const tableValues = "0.1 0.5 0.9";
-
-  // Bold 2-tone halftone (binary threshold)
-  // const tableValues = "0.3 0.7";
-
-  // Darker/moodier grain (values below 0.5)
-  // const tableValues = "0.2 0.3 0.4 0.5";
-
-  // Lighter/washed out (values above 0.5)
-  // const tableValues = "0.5 0.6 0.7 0.8";
-
-  // More gradual steps (smoother but still textured)
-  const tableValues = "0.35 0.4 0.45 0.5 0.55 0.6 0.65";
-
-  // Asymmetric - bright highlights, crushed shadows
-  // const tableValues = "0.1 0.2 0.5 0.8 0.9";
-  filterTag.setAttributes({
-    id: "stipple_filter",
-    x: "0",
-    y: "0",
-    width: "1",
-    height: "1",
-    style: "color-interpolation-filters:sRGB",
-  });
-  // generate noise
-  filterTag.addChild(
-    tag("feTurbulence", (fe) =>
-      fe.setAttributes({
-        type: "fractalNoise",
-        numOctaves: "3",
-        baseFrequency,
-        seed: String(randomSeed()),
-        result: "noise",
-      })
-    )
-  );
-  // quantize to discrete levels for stipple dots
-  filterTag.addChild(
-    tag("feComponentTransfer", (fe) => {
-      fe.setAttributes({
-        in: "noise",
-        result: "stipple_gray",
-      });
-      for (const channel of ["feFuncR", "feFuncG", "feFuncB"]) {
-        fe.addChild(
-          tag(channel, (fn) =>
-            fn.setAttributes({ type: "discrete", tableValues })
-          )
-        );
-      }
-      fe.addChild(
-        tag("feFuncA", (fn) => fn.setAttributes({ type: "identity" }))
-      );
-    })
-  );
-  // subtle blend with source using soft-light for vintage look
-  filterTag.addChild(
-    tag("feBlend", (fe) =>
-      fe.setAttributes({
-        in: "SourceGraphic",
-        in2: "stipple_gray",
-        mode: "soft-light",
-        result: "blended",
-      })
-    )
-  );
-  // clip to original shape
-  filterTag.addChild(
-    tag("feComposite", (fe) =>
-      fe.setAttributes({
-        in: "blended",
-        in2: "SourceGraphic",
-        operator: "in",
-        result: "final",
-      })
-    )
-  );
 }

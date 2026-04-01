@@ -8,35 +8,69 @@ import {
   Random,
   ColorRgb,
   ColorHsl,
+  hypot,
 } from "@salamivg/core";
 
-const config = { width: 800, height: 800, scale: 1, loopCount: 1 };
+// header image
+// Spotify artist header min dimensions: 2660x1140px
+const config = { width: 2660, height: 1140, scale: 1, loopCount: 1 };
+// const config = { width: 800, height: 800, scale: 1, loopCount: 1 };
+const REFERENCE_DIM = hypot(800, 800);
+const BASE_DIM = hypot(config.width, config.height);
+const DIM_SCALE = BASE_DIM / REFERENCE_DIM;
+const INV_DIM_SCALE = REFERENCE_DIM / BASE_DIM;
 
-const CLUSTER_COUNT_RING_0 = 12;
-const CLUSTER_COUNT_RING_1 = 20;
-const CLUSTER_COUNT_RING_2 = 22;
-const CLUSTER_COUNT_RING_3 = 26;
+/**
+ *
+ * BASE SETTINGS
+ *
+ */
+const CLUSTERS_PER_RING = 10;
 const PATHS_PER_CLUSTER = 20;
 const MAX_ROUNDS = 360;
-const CLUSTER_STEPS_PER_TURN = 20;
-const STEP_LENGTH = 5.5;
-const CLUSTER_SEED_RADIUS = 50;
+const CLUSTER_GROWTH_PER_TURN = 40;
+const STEP_LENGTH = 2.5 * DIM_SCALE;
+const CLUSTER_SEED_RADIUS = 25 * DIM_SCALE;
 const CLUSTERS_PER_ACTIVATION_BATCH = 6;
 const ACTIVATION_INTERVAL_ROUNDS = 4;
-const OUTER_MARGIN = 12;
+const OUTER_MARGIN = 0;
 const TURN_SMOOTHING = 0.35;
+
+/**
+ *
+ * RING QUANTITY/SPACING
+ *
+ */
 /** larger = more space required between paths */
-const COLLISION_CELL_SIZE = 8;
-const STROKE_WIDTH = COLLISION_CELL_SIZE * 0.42;
-const CLUSTER_RING_RADIUS_0 = config.width * 0.07;
-const CLUSTER_RING_RADIUS = config.width * 0.15;
-const CLUSTER_RING_RADIUS_2 = config.width * 0.25;
-const CLUSTER_RING_RADIUS_3 = config.width * 0.35;
-const CLUSTER_POSITION_JITTER = config.width * 0.012;
-const CLUSTER_NOISE_ANGLE_STRENGTH = PI / 55;
-const CLUSTER_NOISE_MIX = 0.2;
-const CLUSTER_NOISE_XY_SCALE = [0.01, 0.05];
-const CLUSTER_NOISE_Z_SCALE = [0.04, 0.07];
+const COLLISION_CELL_SIZE = 5 * DIM_SCALE;
+const STROKE_WIDTH = COLLISION_CELL_SIZE * 0.52;
+const CLUSTER_RING_START_RADIUS = BASE_DIM * 0.04;
+const CLUSTER_RING_SPACING = BASE_DIM * 0.03;
+const CLUSTER_RING_MAX_RADIUS = BASE_DIM * 0.4;
+const RING_COUNT = Math.max(
+  1,
+  Math.floor(
+    (CLUSTER_RING_MAX_RADIUS - CLUSTER_RING_START_RADIUS) / CLUSTER_RING_SPACING
+  ) + 1
+);
+const CLUSTER_POSITION_JITTER = BASE_DIM * 0.006;
+
+/**
+ *
+ * NOISE MIXING
+ *
+ */
+const CLUSTER_NOISE_ANGLE_STRENGTH = PI / 60;
+const CLUSTER_NOISE_MIX = 0.35;
+const CLUSTER_NOISE_XY_SCALE = [0.015 * INV_DIM_SCALE, 0.035 * INV_DIM_SCALE];
+const CLUSTER_NOISE_Z_SCALE = [0.037 * INV_DIM_SCALE, 0.043 * INV_DIM_SCALE];
+
+/**
+ *
+ *
+ * ADAPTIVE DENSITY
+ *
+ */
 const ADAPT_INTERVAL_ROUNDS = 5;
 const ADAPT_BIN_COUNT = 18;
 const MIN_ACTIVE_PATHS = 16;
@@ -46,6 +80,12 @@ const OVERFULL_BIN_LIMIT = 4;
 const WIDE_SPREAD_BIN_RATIO = 0.4;
 const VERY_WIDE_SPREAD_BIN_RATIO = 0.58;
 const PATH_LIGHTNESS_JITTER = 0.06;
+
+/**
+ *
+ * OUTLINE
+ *
+ */
 const PATH_OUTLINE_COLOR = "#000000";
 const PATH_OUTLINE_EXTRA_WIDTH = COLLISION_CELL_SIZE * 0.18;
 
@@ -91,6 +131,8 @@ renderSvg(config, (svg) => {
 
   svg.filenameMetadata = { seed: String(seed) };
   svg.numericPrecision = 3;
+  svg.setBackground("#000000");
+  svg.setAttributes({ "stroke-linecap": "round" });
 
   const clusterCenters = pickClusterCenters(rnd, canvasCenter);
   const clusters: Cluster[] = clusterCenters.map((center, id) => {
@@ -99,8 +141,7 @@ renderSvg(config, (svg) => {
     const clusterNoise = createOscNoise(
       seed + id * 97 + 11,
       rnd.value(CLUSTER_NOISE_XY_SCALE[0], CLUSTER_NOISE_XY_SCALE[1]),
-      config.width *
-        rnd.value(CLUSTER_NOISE_Z_SCALE[0], CLUSTER_NOISE_Z_SCALE[1])
+      BASE_DIM * rnd.value(CLUSTER_NOISE_Z_SCALE[0], CLUSTER_NOISE_Z_SCALE[1])
     );
     const paths: PathState[] = [];
 
@@ -135,17 +176,18 @@ renderSvg(config, (svg) => {
       initialized: false,
     };
   });
+  const clustersRandomized = rnd.shuffle([...clusters]);
   assignActivationRounds(clusters, rnd);
 
   for (let round = 0; round < MAX_ROUNDS; round++) {
-    for (const cluster of clusters) {
+    for (const cluster of clustersRandomized) {
       if (!cluster.initialized && round >= cluster.activationRound) {
         initializeCluster(cluster);
       }
       if (!cluster.initialized) {
         continue;
       }
-      for (let step = 0; step < CLUSTER_STEPS_PER_TURN; step++) {
+      for (let step = 0; step < CLUSTER_GROWTH_PER_TURN; step++) {
         growClusterStep(cluster);
       }
       if (round % ADAPT_INTERVAL_ROUNDS === 0) {
@@ -154,15 +196,19 @@ renderSvg(config, (svg) => {
     }
   }
 
-  for (const cluster of clusters) {
+  for (const cluster of clustersRandomized) {
     for (const state of cluster.paths) {
+      const outlineCommands = withLeadingCap(
+        state.commands,
+        PATH_OUTLINE_EXTRA_WIDTH
+      );
       svg.path((p) => {
         p.fill = "none";
         p.stroke = PATH_OUTLINE_COLOR;
         p.strokeWidth = STROKE_WIDTH + PATH_OUTLINE_EXTRA_WIDTH;
 
-        for (let i = 0; i < state.commands.length; i++) {
-          const cmd = state.commands[i];
+        for (let i = 0; i < outlineCommands.length; i++) {
+          const cmd = outlineCommands[i];
           if (i === 0 || !cmd.draw) {
             p.moveTo(vec2(cmd.to.x, cmd.to.y));
           } else {
@@ -402,6 +448,39 @@ renderSvg(config, (svg) => {
     }
     return base.mix(BLACK_HSL, -offset);
   }
+
+  function withLeadingCap(
+    commands: PathCommand[],
+    capLength: number
+  ): PathCommand[] {
+    if (commands.length < 2 || capLength <= 0) {
+      return commands;
+    }
+    for (let i = 1; i < commands.length; i++) {
+      const current = commands[i];
+      if (!current.draw) {
+        continue;
+      }
+      const from = commands[i - 1].to;
+      const to = current.to;
+      const dx = to.x - from.x;
+      const dy = to.y - from.y;
+      const len = Math.hypot(dx, dy);
+      if (len <= 1e-6) {
+        continue;
+      }
+      const capStart = vec2(
+        from.x - (dx / len) * capLength,
+        from.y - (dy / len) * capLength
+      );
+      return [
+        { to: capStart, draw: false },
+        { to: from, draw: true },
+        ...commands,
+      ];
+    }
+    return commands;
+  }
 });
 
 function assignActivationRounds(clusters: Cluster[], rnd: Random) {
@@ -420,39 +499,19 @@ function assignActivationRounds(clusters: Cluster[], rnd: Random) {
 
 function pickClusterCenters(rnd: Random, center: Point): Point[] {
   const centers: Point[] = [];
-  for (let i = 0; i < CLUSTER_COUNT_RING_0; i++) {
-    const angle = (i / CLUSTER_COUNT_RING_0) * TAU;
-    const base = vec2(
-      center.x + Math.cos(angle) * CLUSTER_RING_RADIUS_0,
-      center.y + Math.sin(angle) * CLUSTER_RING_RADIUS_0
-    );
-    centers.push(base.jitter(CLUSTER_POSITION_JITTER, rnd.rng));
-  }
-  for (let i = 0; i < CLUSTER_COUNT_RING_1; i++) {
-    const angle = (i / CLUSTER_COUNT_RING_1) * TAU;
-    const base = vec2(
-      center.x + Math.cos(angle) * CLUSTER_RING_RADIUS,
-      center.y + Math.sin(angle) * CLUSTER_RING_RADIUS
-    );
-    centers.push(base.jitter(CLUSTER_POSITION_JITTER, rnd.rng));
-  }
-  for (let i = 0; i < CLUSTER_COUNT_RING_2; i++) {
-    const angle =
-      (i / CLUSTER_COUNT_RING_2) * TAU + TAU / (CLUSTER_COUNT_RING_2 * 2);
-    const base = vec2(
-      center.x + Math.cos(angle) * CLUSTER_RING_RADIUS_2,
-      center.y + Math.sin(angle) * CLUSTER_RING_RADIUS_2
-    );
-    centers.push(base.jitter(CLUSTER_POSITION_JITTER, rnd.rng));
-  }
-  for (let i = 0; i < CLUSTER_COUNT_RING_3; i++) {
-    const angle =
-      (i / CLUSTER_COUNT_RING_3) * TAU + TAU / (CLUSTER_COUNT_RING_3 * 3);
-    const base = vec2(
-      center.x + Math.cos(angle) * CLUSTER_RING_RADIUS_3,
-      center.y + Math.sin(angle) * CLUSTER_RING_RADIUS_3
-    );
-    centers.push(base.jitter(CLUSTER_POSITION_JITTER, rnd.rng));
+  for (let ringIndex = 0; ringIndex < RING_COUNT; ringIndex++) {
+    const radius = CLUSTER_RING_START_RADIUS + ringIndex * CLUSTER_RING_SPACING;
+    const ringClusterCount = CLUSTERS_PER_RING * (ringIndex + 1);
+    const phaseOffset =
+      (ringIndex % 2 === 0 ? 0 : 0.5) * (TAU / ringClusterCount);
+    for (let i = 0; i < ringClusterCount; i++) {
+      const angle = (i / ringClusterCount) * TAU + phaseOffset;
+      const base = vec2(
+        center.x + Math.cos(angle) * radius,
+        center.y + Math.sin(angle) * radius
+      );
+      centers.push(base.jitter(CLUSTER_POSITION_JITTER, rnd.rng));
+    }
   }
 
   return centers;

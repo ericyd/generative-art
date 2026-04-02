@@ -104,7 +104,7 @@ const WHITE_HSL = ColorRgb.fromHex("#ffffff").toHsl();
 const BLACK_HSL = ColorRgb.fromHex("#000000").toHsl();
 
 let seed = randomSeed();
-// seed = 2062394539652777;
+seed = 6991748853577565;
 
 type Point = { x: number; y: number };
 type PathCommand = { to: Point; draw: boolean };

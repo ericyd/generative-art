@@ -9,3 +9,8 @@ _.file = '.env'
 run = """
   git config core.hooksPath .git-hooks
 """
+
+[tasks.sketch]
+usage = 'arg "<file>" help="sketch file name in homegrown-svg/sketch"'
+run = "node homegrown-svg/sketch/${usage_file}"
+description = "runs a sketch"
